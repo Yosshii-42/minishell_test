@@ -7,6 +7,7 @@ static int	wait_process(int count)
 	int	i;
 	int	exit_status;
 
+	status = 0;
 	i = -1;
 	while (++i < count)
 	{
@@ -45,7 +46,7 @@ static void	child_process(t_cmd *cmd, int i, int count)
 	close(cmd->pp[0]);
 	close(cmd->pp[1]);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
-		exit(EXIT_FAILURE);
+		exit(1);
 }
 
 static void	make_fork(pid_t *pid)
