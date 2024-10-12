@@ -32,7 +32,7 @@ static char	*check_access(char *command, char **path)
 		free(str);
 		str = NULL;
 	}
-	return (strjoin_with_free("", command, NO_FREE));
+	return (strjoin_with_free("x", command, NO_FREE));
 }
 
 void	set_str_to_path_and_cmd(t_cmd *cmd, char *line)

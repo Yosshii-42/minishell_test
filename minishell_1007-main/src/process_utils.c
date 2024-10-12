@@ -16,5 +16,5 @@ void	exit_child_process(t_cmd *cmd)
 	if (cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);
 	// close_fds(cmd);
-	exit(EXIT_FAILURE);
+	exit(127);
 }

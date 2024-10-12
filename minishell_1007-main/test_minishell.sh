@@ -23,7 +23,19 @@ assert() {
   echo
 }
 
+
+# Search command path without args
+assert 'pwd'
+assert 'echo'
 assert 'ls'
+assert './a.out'
+
+## no such command
+assert 'a.out'
+assert 'nosuchfile'
+
 assert 'echo hello'
 assert '/bin/pwd'
 assert '/bin/echo'
+assert 'cat +e'
+assert 'ls | cat | cat | cat | cat'
