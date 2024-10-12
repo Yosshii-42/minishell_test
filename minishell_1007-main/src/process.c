@@ -98,5 +98,6 @@ int	run_process(char *line, t_env *env)
 		else if (pid > 0)
 			parent_process(cmd, i, count);
 	}
+	ft_free_split(cmd_line);
 	return (wait_process(i));
 }

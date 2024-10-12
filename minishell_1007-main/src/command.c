@@ -107,6 +107,7 @@ t_cmd	*make_cmd(char *cmd_line, t_env *env, int i)
 	// 	open_write_file(cmd, info, argv[info->outfile_index]);
 	// cmd->pathname = make_path_and_cmd(argv[info->cmd_start + index], cmd, env);
 	make_path_and_cmd(cmd_line, cmd, path);
+	ft_free_split(path);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	return (cmd);
