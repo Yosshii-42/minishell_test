@@ -2,8 +2,13 @@
 
 static void	init(int argc, char **argv)
 {
+	int	fd;
+
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
+	fd = 3;
+	while (fd < 1024)
+		close(fd++);
 }
 
 static void	handle_sigint(int sig)
@@ -29,7 +34,6 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_env	*env;
 
-    close_extra_fds();  // シェル起動時に余分なFDを閉じる
 	// signal(SIGINT, handle_sigint);
 	setup_sigint_handler();
 	// setup_sigchld_handler();
