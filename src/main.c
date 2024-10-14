@@ -3,8 +3,13 @@
 
 static void	initial_error(int argc, char **argv)
 {
+	int	fd;
+
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
+	fd = 3;
+	while (fd < 1024)
+		close(fd++);
 }
 
 static void	handle_sigint(int sig)
@@ -12,14 +17,7 @@ static void	handle_sigint(int sig)
 	(void)sig;
 
 	rl_on_new_line();
-	rl_replace_line("", 0);
 	rl_redisplay();
-}
-
-void close_extra_fds(void) {
-    for (int fd = 3; fd < 1024; fd++) {
-        close(fd);  // 不要なファイルディスクリプタを閉じる
-    }
 }
 
 void	setup_sigint_handler(void)
@@ -37,7 +35,6 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_env	*env;
 
-    close_extra_fds();  // シェル起動時に余分なFDを閉じる
 	// signal(SIGINT, handle_sigint);
 	setup_sigint_handler();
 	initial_error(argc, argv);
