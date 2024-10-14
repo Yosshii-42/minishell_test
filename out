@@ -1,0 +1,9 @@
+Makefile
+Makefile_for_mac
+cmp
+libft
+minishell
+minishell.h
+out
+src
+test_minishell.sh

@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <signal.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <errno.h>
@@ -19,12 +20,33 @@
 # define FREE_S2 2
 # define NO_FREE 0
 
+// typedef enum e_kind
+// {
+// 	TK_WORD,
+// 	TK_RESERVED,
+// 	TK_FILE,
+// 	TK_EOF
+// } t_kind;
+
 typedef struct s_env
 {
 	char			*key;
 	char			*value;
 	struct s_env	*next;
 }t_env;
+
+// typedef struct minishell
+// {
+// 	char	*word;
+// 	t_token	*kind;
+// };
+
+// typedef struct s_token
+// {
+// 	char	*word;
+// 	t_kind	kind;
+// 	t_token	*next;
+// };
 
 typedef struct s_cmd
 {
@@ -43,7 +65,8 @@ t_env	*set_env(char **envp);
 t_cmd	*make_cmd(char *line, t_env *env, int i);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
-char	*make_pwd_path(char *command);
+char	*make_pwd_path(char *command, char *pwd);
+char    *getenv_str(t_env *env, char *str);
 
 // process
 int		run_process(char *line, t_env *env);

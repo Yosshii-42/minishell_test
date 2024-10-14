@@ -14,14 +14,14 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	}
 }
 
-static char	*check_access(char *command, char **path)
+static char	*check_access(char *command, char **path, char *pwd)
 {
 	char	*str;
 	int	i;
 
 	str = NULL;
 	if (!path)
-		return (make_pwd_path(command));
+		return (make_pwd_path(command, pwd));
 	i = -1;
 	while (path[++i])
 	{
@@ -32,7 +32,7 @@ static char	*check_access(char *command, char **path)
 		free(str);
 		str = NULL;
 	}
-	return (strjoin_with_free("", command, NO_FREE));
+	return (strjoin_with_free("x", command, NO_FREE));
 }
 
 void	set_str_to_path_and_cmd(t_cmd *cmd, char *line)
@@ -55,7 +55,7 @@ void	set_str_to_path_and_cmd(t_cmd *cmd, char *line)
 	cmd->cmd[1] = NULL;
 }
 
-void	make_path_and_cmd(char *line, t_cmd *cmd, char **path)
+void	make_path_and_cmd(char *line, t_cmd *cmd, char **path, char *pwd)
 {
 	// if (!str)
 	// 	return (NULL);
@@ -71,9 +71,9 @@ void	make_path_and_cmd(char *line, t_cmd *cmd, char **path)
 		if (cmd->cmd[0][0] == '/')
 			cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 		else if (cmd->cmd[0][0] == '.')
-			cmd->pathname = make_pwd_path(cmd->cmd[0]);
+			cmd->pathname = make_pwd_path(cmd->cmd[0], pwd);
 		else
-			cmd->pathname = check_access(cmd->cmd[0], path);
+			cmd->pathname = check_access(cmd->cmd[0], path, pwd);
 		if (cmd->pathname)
 			return ;
 	}
@@ -84,21 +84,14 @@ t_cmd	*make_cmd(char *cmd_line, t_env *env, int i)
 {
 	t_cmd	*cmd;
 	char	**path;
-	t_env	*tmp;
+	// t_env	*tmp;
 
 	cmd = NULL;
 	path = NULL;
 	cmd = safe_malloc(1, sizeof(t_cmd));
 	init_cmd(cmd);
     path = NULL;
-	tmp = env;
-    while (tmp)
-    {
-        if (!ft_memcmp(tmp->key, "PATH", 5))
-            break;
-        tmp = tmp->next;
-    }
-    path = ft_split(tmp->value, ':');
+	path = ft_split(getenv_str(env, "PATH"), ':');
 	// if (i)
 		safe_pipe(cmd);
 	// if (index == 0)
@@ -106,7 +99,8 @@ t_cmd	*make_cmd(char *cmd_line, t_env *env, int i)
 	// if (index == info->cmd_count - 1)
 	// 	open_write_file(cmd, info, argv[info->outfile_index]);
 	// cmd->pathname = make_path_and_cmd(argv[info->cmd_start + index], cmd, env);
-	make_path_and_cmd(cmd_line, cmd, path);
+	make_path_and_cmd(cmd_line, cmd, path, getenv_str(env, "PWD"));
+	ft_free_split(path);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	return (cmd);

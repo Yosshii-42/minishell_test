@@ -7,12 +7,14 @@ static int	wait_process(int count)
 	int	i;
 	int	exit_status;
 
+	status = 0;
 	i = -1;
 	while (++i < count)
 	{
 		if (waitpid(-1, &status, 0) == -1)
 			print_error_and_exit(strerror(errno));
-		exit_status = WEXITSTATUS(status); 
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
 	}
 	// if (info->here_doc == YES)
 	// {
@@ -26,8 +28,7 @@ static void	parent_process(t_cmd *cmd, int i, int count)
 {
 	if (i != count - 1)
 		dup2(cmd->pp[0], STDIN_FILENO);
-	close(cmd->pp[0]);
-	close(cmd->pp[1]);
+	close_fds(cmd);
 	ft_free_cmd(cmd);
 }
 
@@ -40,12 +41,11 @@ static void	child_process(t_cmd *cmd, int i, int count)
 	// if (cmd->writefd > 0)
 	// 	dup2(cmd->writefd, 1);
 	// else
-	if (i != count - 1)
-		dup2(cmd->pp[1], STDOUT_FILENO);
-	close(cmd->pp[0]);
-	close(cmd->pp[1]);
+	if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
+		print_error_and_exit(strerror(errno));
+	close_fds(cmd);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
-		exit(EXIT_FAILURE);
+		exit(1);
 }
 
 static void	make_fork(pid_t *pid)
@@ -98,5 +98,6 @@ int	run_process(char *line, t_env *env)
 		else if (pid > 0)
 			parent_process(cmd, i, count);
 	}
+	ft_free_split(cmd_line);
 	return (wait_process(i));
 }
