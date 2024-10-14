@@ -1,15 +1,9 @@
 #include "../minishell.h"
-#include <asm-generic/signal-defs.h>
 
-static void	initial_error(int argc, char **argv)
+static void	init(int argc, char **argv)
 {
-	int	fd;
-
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
-	fd = 3;
-	while (fd < 1024)
-		close(fd++);
 }
 
 static void	handle_sigint(int sig)
@@ -35,11 +29,13 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_env	*env;
 
+    close_extra_fds();  // シェル起動時に余分なFDを閉じる
 	// signal(SIGINT, handle_sigint);
 	setup_sigint_handler();
-	initial_error(argc, argv);
+	// setup_sigchld_handler();
+	init(argc, argv);
 	env = set_env(envp);
-	rl_outstream = stderr;
+	rl_outstream = stdout;
 	while (1)
 	{
 		if (!(line = readline("minishell$ ")))
@@ -48,15 +44,16 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!ft_memcmp(line, "clear", 6))
-				rl_clear_history();
+				clear_history();
 			//if () シグナルを受信したら
 			// rl_on_new_line(); 新しい行に移ったことを明示
 			// rl_redisplay(); 　プロンプトを再表示
 			else
 				run_process(line, env);
-			free(line);
+			if (line)
+				free(line);
 		}
 	}
-	rl_clear_history();
+	clear_history();
 	exit(0);
 }

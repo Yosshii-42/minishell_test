@@ -17,14 +17,30 @@ void    safe_pipe(t_cmd *cmd)
         print_error_and_exit(strerror(errno));
 }
 
-char	*make_pwd_path(char *command)
+char	*make_pwd_path(char *command, char *pwd)
 {
 	char	*str;
 
-    if (!getenv("PWD"))
+    if (!pwd)
         return (strjoin_with_free("", command, NO_FREE));
     str = NULL;
-    str = strjoin_with_free(getenv("PWD"), "/", NO_FREE);
+    str = strjoin_with_free(pwd, "/", NO_FREE);
     str = strjoin_with_free(str, command, FREE_S1);
     return (str);
+}
+
+char    *getenv_str(t_env *env, char *str)
+{
+    t_env   *tmp;
+
+    if (!env)
+        return (NULL);
+    tmp = env;
+    while (tmp->key)
+    {
+        if (!ft_memcmp(tmp->key, str, ft_strlen(str) + 1))
+            return (tmp->value);
+        tmp = tmp->next;
+    }
+    return (NULL);
 }

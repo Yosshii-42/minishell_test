@@ -13,7 +13,8 @@ static int	wait_process(int count)
 	{
 		if (waitpid(-1, &status, 0) == -1)
 			print_error_and_exit(strerror(errno));
-		exit_status = WEXITSTATUS(status); 
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
 	}
 	// if (info->here_doc == YES)
 	// {

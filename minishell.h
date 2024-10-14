@@ -44,7 +44,8 @@ t_env	*set_env(char **envp);
 t_cmd	*make_cmd(char *line, t_env *env, int i);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
-char	*make_pwd_path(char *command);
+char	*make_pwd_path(char *command, char *pwd);
+char    *getenv_str(t_env *env, char *str);
 
 // process
 int		run_process(char *line, t_env *env);
