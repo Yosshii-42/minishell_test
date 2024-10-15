@@ -18,15 +18,14 @@ RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
-# %.o:%.c
-# 	$(CC) $(FLAGS) -I$(HEADDIR) $-c $< -o $@
+%.o:%.c
+	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	# $(CC) $(FLAGS) -I. $(HEADDER) $(LIBS) -o $(NAME) $(OBJS) 
-	$(CC) $(FLAGS) -L$(RLDIR)/include -I$(RLDIR)/lib $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) -L$(RLDIR)/Lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
 
 clean:
 	make fclean -C ./libft
