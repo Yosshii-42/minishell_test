@@ -80,7 +80,7 @@ void	make_path_and_cmd(char *line, t_cmd *cmd, char **path, char *pwd)
 	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 }
 
-t_cmd	*make_cmd(char *cmd_line, t_env *env, int i)
+t_cmd	*make_cmd(char *cmd_line, t_env *env)
 {
 	t_cmd	*cmd;
 	char	**path;

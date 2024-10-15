@@ -21,7 +21,7 @@ static int	wait_process(int count)
 	// 	unlink(FILE_NAME);
 	// 	info->here_doc = NO;
 	// }
-	return (WEXITSTATUS(status));
+	return (exit_status);
 }
 
 static void	parent_process(t_cmd *cmd, int i, int count)
@@ -58,7 +58,6 @@ static void	make_fork(pid_t *pid)
 char	**split_by_pipe(char *line)
 {
 	char	**split;
-	int		i;
 
 	split = ft_split(line, '|');
 	if (!split)
@@ -91,7 +90,7 @@ int	run_process(char *line, t_env *env)
 	while (cmd_line[++i])
 	{
 		cmd = NULL;
-		cmd = make_cmd(cmd_line[i], env, i);
+		cmd = make_cmd(cmd_line[i], env);
 		make_fork(&pid);
 		if (pid == 0)
 			child_process(cmd, i, count);

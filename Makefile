@@ -9,7 +9,7 @@ SRCS	= src/main.c \
 		  src/free.c
 OBJS	= $(SRCS:.c=.o)
 CC		= gcc
-FLAGS	= -Wall -Wextra -Werror -fsanitize=address
+FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
 HEADDIR	= ./minishell.h
@@ -18,8 +18,8 @@ RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
-# %.o:%.c
-# 	$(CC) $(FLAGS) -I$(HEADDIR) $-c $< -o $@
+%.o:%.c
+	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 

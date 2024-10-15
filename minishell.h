@@ -35,12 +35,6 @@ typedef struct s_env
 	struct s_env	*next;
 }t_env;
 
-// typedef struct minishell
-// {
-// 	char	*word;
-// 	t_token	*kind;
-// };
-
 // typedef struct s_token
 // {
 // 	char	*word;
@@ -62,7 +56,7 @@ typedef struct s_cmd
 t_env	*set_env(char **envp);
 
 // command
-t_cmd	*make_cmd(char *line, t_env *env, int i);
+t_cmd	*make_cmd(char *line, t_env *env);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
