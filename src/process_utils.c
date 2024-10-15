@@ -7,9 +7,9 @@ void	close_fds(t_cmd *cmd)
 	// 	close(cmd->readfd);
 	// if (cmd->writefd > 0)
 	// 	close(cmd->writefd);
-	if (cmd->pp[0] >= 0)
+	if (cmd->pp[0] > 0)
 		close(cmd->pp[0]);
-	if (cmd->pp[1] >= 0)
+	if (cmd->pp[1] > 0)
 		close(cmd->pp[1]);
 }
 

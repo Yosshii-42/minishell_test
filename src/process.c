@@ -45,7 +45,10 @@ static void	child_process(t_cmd *cmd, int i, int count)
 		print_error_and_exit(strerror(errno));
 	close_fds(cmd);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
+	{
+		ft_printf(2, "here\n");
 		exit(1);
+	}
 }
 
 static void	make_fork(pid_t *pid)
