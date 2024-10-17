@@ -19,6 +19,7 @@
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
+# define SPECIAL_CHAR "~`#&*()[]{};!?"
 
 // typedef enum e_kind
 // {
