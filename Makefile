@@ -1,6 +1,8 @@
 NAME 	= minishell
 SRCS	= src/main.c \
 		  src/set_env.c \
+		  src/make_token_lst.c \
+		  src/add_token_kind.c \
 		  src/command.c \
 		  src/command_utils.c \
 		  src/process.c \
@@ -11,7 +13,7 @@ OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline -lhistory
-FLAGS   += -fsanitize=address
+# FLAGS   += -fsanitize=address
 HEADDIR	= .
 LIBFT	= ./libft/libft.a
 # RLDIR   = $(shell brew --prefix readline)

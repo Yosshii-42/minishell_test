@@ -20,14 +20,21 @@
 # define FREE_S2 2
 # define NO_FREE 0
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
+# define SPECIAL_TOKEN "<>|$"
+# define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 
-// typedef enum e_kind
-// {
-// 	TK_WORD,
-// 	TK_RESERVED,
-// 	TK_FILE,
-// 	TK_EOF
-// } t_kind;
+typedef enum e_kind
+{
+	PIPE,
+	COMMAND,
+	ARGUMENT,
+	SKIP,
+	RDFILE,
+	WRFILE,
+	WRFILE_APP,
+	LIMITTER,
+	END
+} t_kind;
 
 typedef struct s_env
 {
@@ -36,17 +43,18 @@ typedef struct s_env
 	struct s_env	*next;
 }t_env;
 
-// typedef struct s_token
-// {
-// 	char	*word;
-// 	t_kind	kind;
-// 	t_token	*next;
-// };
+typedef struct s_token
+{
+	char			*word;
+	t_kind			kind;
+	struct s_token	*next;
+	struct s_token	*pre;
+}t_token;
 
 typedef struct s_cmd
 {
-	// int		readfd;
-	// int		writefd;
+	int		readfd;
+	int		writefd;
 	int		pp[2];
 	char	*pathname;
 	char	**cmd;
@@ -56,12 +64,21 @@ typedef struct s_cmd
 // env
 t_env	*set_env(char **envp);
 
+//token
+t_token	*split_by_space(char *line);
+void add_token_kind(t_token *token);
+
 // command
-t_cmd	*make_cmd(char *line, t_env *env);
+// t_cmd	*make_cmd(char *line, t_env *env);
+t_cmd	*make_cmd(t_token *token, t_env *env);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char    *getenv_str(t_env *env, char *str);
+
+// file open
+void	open_write_file(t_cmd *cmd, t_token *token);
+void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(char *line, t_env *env);
@@ -70,6 +87,7 @@ void	close_fds(t_cmd *cmd);
 
 // free functions
 void	free_env(t_env *env);
+void	free_env_and_exit(t_env *env);
 void	ft_free(char **str, int i);
 void	ft_free_split(char **split);
 void	ft_free_cmd(t_cmd *cmd);

@@ -2,8 +2,8 @@
 
 void	init_cmd(t_cmd *cmd)
 {
-	// cmd->readfd = -1;
-	// cmd->writefd = -1;
+	cmd->readfd = -1;
+	cmd->writefd = -1;
 	cmd->pp[0] = -1;
 	cmd->pp[1] = -1;
 	cmd->pathname = NULL;

@@ -15,8 +15,14 @@ void	free_env(t_env *env)
 			env->value = NULL;
 		}
 		free(env);
-		env = env->next;
+		if (env->next)
+			env = env->next;
 	}
+}
+
+void	free_env_and_exit(t_env *env)
+{
+	free_env(env);
 	exit(EXIT_FAILURE);
 }
 

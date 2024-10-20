@@ -48,16 +48,16 @@ static void	lstnew(t_env **start, char *env)
 
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
-		free_env(*start);
+		free_env_and_exit(*start);
 	len = 0;
 	len = strchr_len(env, '=');
 	new->key = (char *)malloc((len + 1) * sizeof(char));
 	if (!new->key)
-		free_env(*start);
+		free_env_and_exit(*start);
 	ft_strlcpy(new->key, env, len + 1);
 	new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	if (!new->value)
-		free_env(*start);
+		free_env_and_exit(*start);
 	new->next = NULL;
 	lstadd_back(start, new);
 }

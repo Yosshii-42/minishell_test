@@ -58,24 +58,48 @@ static void	make_fork(pid_t *pid)
 		print_error_and_exit(strerror(errno));
 }
 
-char	**split_by_pipe(char *line)
-{
-	char	**split;
+// char	**split_by_pipe(char *line)
+// {
+// 	char	**split;
 
-	split = ft_split(line, '|');
-	if (!split)
-		return (NULL);
-	return (split);
+// 	split = ft_split(line, '|');
+// 	if (!split)
+// 		return (NULL);
+// 	return (split);
+// }
+
+static void	lstclear(t_token *token)
+{
+	while (token)
+	{
+		free(token->word);
+		free(token);
+		if (token->next)
+			token = token->next;
+		else
+			break;
+	}
 }
 
-int	cmd_count(char **cmd_line)
+
+// int	cmd_count(char **cmd_line)
+int	cmd_count(t_token *token)
 {
-	int	count;
+	int		count;
+	t_token	*ptr;
 
 	count = 0;
-	while (cmd_line[count])
-		count++;
-	return (count);
+	ptr = token;
+	// while (cmd_line[count])
+	if (!token)
+		return (0);
+	while (ptr)
+	{
+		if (*(ptr->word) == '|')
+			count++;
+		ptr = ptr->next;
+	}
+	return (count + 1);
 }
 
 int	run_process(char *line, t_env *env)
@@ -84,22 +108,38 @@ int	run_process(char *line, t_env *env)
 	t_cmd	*cmd;
 	int		i;
 	int		count;
-	char	**cmd_line;
+	// char	**cmd_line;
+	t_token	*token;
+	t_token	*ptr;
 
-	cmd_line = NULL;
-	cmd_line = split_by_pipe(line);
-	count = cmd_count(cmd_line);
+	// cmd_line = NULL;
+	token = split_by_space(line);
+	ptr = token;
+	while (ptr)
+	{
+		printf("token = %s\tkind = %d\n", ptr->word, ptr->kind);
+		ptr = ptr->next;
+	}
+	// printf("sizeof token = %lu\n", sizeof(t_token));
+	// return (0);
+	// cmd_line = split_by_pipe(line);
+	// count = cmd_count(cmd_line);
+	count = cmd_count(token);
+printf("here\n");
 	i = -1;
-	while (cmd_line[++i])
+	// while (cmd_line[++i])
+	while (++i <= count)
 	{
 		cmd = NULL;
-		cmd = make_cmd(cmd_line[i], env);
+		// cmd = make_cmd(cmd_line[i], env);
+		cmd = make_cmd(token, env);
 		make_fork(&pid);
 		if (pid == 0)
 			child_process(cmd, i, count);
 		else if (pid > 0)
 			parent_process(cmd, i, count);
 	}
-	ft_free_split(cmd_line);
+	lstclear(ptr);
+	// ft_free_split(cmd_line);
 	return (wait_process(i));
 }
