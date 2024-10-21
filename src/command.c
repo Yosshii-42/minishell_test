@@ -35,26 +35,6 @@ static char	*check_access(char *command, char **path, char *pwd)
 	return (strjoin_with_free("x", command, NO_FREE));
 }
 
-void	set_str_to_path_and_cmd(t_cmd *cmd, char *line)
-{
-	int		len;
-	int		i;
-
-	len = ft_strlen(line);
-	cmd->pathname = safe_malloc(len + 1, sizeof(char));
-	cmd->cmd = safe_malloc(2, sizeof(char *));
-	cmd->cmd[0] = safe_malloc(len + 1, sizeof(char));
-	i = -1;
-	while (++i < len)
-	{
-		cmd->pathname[i] = line[i];
-		cmd->cmd[0][i] = line[i];
-	}
-	cmd->pathname[i] = '\0';
-	cmd->cmd[0][i] = '\0';
-	cmd->cmd[1] = NULL;
-}
-
 static char **make_command_array(t_token *token)
 {
 	char	**cmd;
@@ -117,7 +97,9 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 	t_token	*ptr;
 
 	path = NULL;
-	cmd = safe_malloc(1, sizeof(t_cmd));
+	cmd = (t_cmd *)malloc(sizeof (t_cmd));
+	if (!cmd)
+		return (NULL);
 	init_cmd(cmd);
     path = NULL;
 	path = ft_split(getenv_str(env, "PATH"), ':');

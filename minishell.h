@@ -66,11 +66,10 @@ typedef struct s_cmd
 t_env	*set_env(char **envp);
 
 //token
-t_token	*split_by_space(char *line);
+t_token	*make_token_lst(char *line);
 void add_token_kind(t_token *token);
 
 // command
-// t_cmd	*make_cmd(char *line, t_env *env);
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
@@ -83,8 +82,13 @@ void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(char *line, t_env *env);
+
+// process utils
+int		cmd_count(t_token *token);
+void	make_fork(pid_t *pid);
 void	exit_child_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
+void	token_lstclear(t_token *token);
 
 // free functions
 void	free_env(t_env *env);
@@ -96,6 +100,5 @@ void	ft_free_cmd(t_cmd *cmd);
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 void	print_error_and_exit(char *err_message);
-void	*safe_malloc(size_t count, size_t size);
 
 #endif

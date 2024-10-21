@@ -5,6 +5,7 @@ SRCS	= src/main.c \
 		  src/add_token_kind.c \
 		  src/command.c \
 		  src/command_utils.c \
+		  src/open_file.c \
 		  src/process.c \
 		  src/process_utils.c \
 		  src/utils.c \

@@ -16,11 +16,6 @@ static int	wait_process(int count)
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 	}
-	// if (info->here_doc == YES)
-	// {
-	// 	unlink(FILE_NAME);
-	// 	info->here_doc = NO;
-	// }
 	return (exit_status);
 }
 
@@ -50,66 +45,28 @@ static void	child_process(t_cmd *cmd, int i, int count)
 	}
 }
 
-static void	make_fork(pid_t *pid)
-{
-	*pid = fork();
-	if (*pid == -1)
-		print_error_and_exit(strerror(errno));
-}
-
-static void	lstclear(t_token *token)
-{
-	while (token)
-	{
-		free(token->word);
-		free(token);
-		if (token->next)
-			token = token->next;
-		else
-			break;
-	}
-}
-
-int	cmd_count(t_token *token)
-{
-	int		count;
-	t_token	*ptr;
-
-	count = 0;
-	ptr = token;
-	if (!token)
-		return (0);
-	while (ptr)
-	{
-		if (*(ptr->word) == '|')
-			count++;
-		ptr = ptr->next;
-	}
-	return (count + 1);
-}
-
 int	run_process(char *line, t_env *env)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
 	int		i;
-	int		count;
 	t_token	*token;
 	t_token	*ptr;
 
-	token = split_by_space(line);
+	token = make_token_lst(line);
 	ptr = token;
-	while (ptr)
-	{
-		if (ptr->next)
-			ptr = ptr->next;
-		else
-			break;
-	}
+	// while (ptr)
+	// {
+	// 	printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
+	// 	if (ptr->next)
+	// 		ptr = ptr->next;
+	// 	else
+	// 		break;
+	// }
 	// printf("sizeof token = %lu\n", sizeof(t_token));
-	count = cmd_count(token);
+	// count = cmd_count(token);
 	i = -1;
-	while (++i < count)
+	while (++i < cmd_count(ptr))
 	{
 		cmd = NULL;
 		cmd = make_cmd(token, cmd, env);
@@ -119,11 +76,11 @@ int	run_process(char *line, t_env *env)
 			token = token->next;
 		make_fork(&pid);
 		if (pid == 0)
-			child_process(cmd, i, count);
+			child_process(cmd, i, cmd_count(ptr));
 		else if (pid > 0)
-			parent_process(cmd, i, count);
+			parent_process(cmd, i, cmd_count(ptr));
 	}
-	lstclear(ptr);
+	token_lstclear(ptr);
 	// ft_free_split(cmd_line);
 	return (wait_process(i));
 }

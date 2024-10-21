@@ -41,20 +41,18 @@ static void lstnew(t_token **start, char *token)
 	lstadd_back(start, new);
 }
 
-t_token	*split_by_space(char *line)
+t_token	*make_token_lst(char *line)
 {
 	char	**split;
 	int		i;
 	t_token	*token;
-
 	split = ft_split(line, ' ');
 	if (!split)
-		print_error_and_exit(strerror(errno));
+		return (NULL);
 	token = NULL;
 	i = -1;
 	while (split[++i])
 		lstnew(&token, split[i]);
-	// lstnew(&token, "");
 	add_token_kind(token);
 	ft_free_split(split);
     free(line);
