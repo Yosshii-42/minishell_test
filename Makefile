@@ -10,7 +10,7 @@ SRCS	= src/main.c \
 		  src/utils.c \
 		  src/free.c
 OBJS	= $(SRCS:.c=.o)
-CC		= cc
+CC		= gcc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline -lhistory
 # FLAGS   += -fsanitize=address

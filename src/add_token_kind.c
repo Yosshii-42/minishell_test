@@ -1,16 +1,20 @@
 #include "../minishell.h"
 
+void	print_error(char *err_message)
+{
+	ft_printf(2, "%s\n", err_message);
+	exit(EXIT_FAILURE);
+}
+
 static void	set_file_err(t_cmd *cmd, char *filename, char *err_msg)
 {
 	char	*message;
 
 	message = NULL;
-	message = ft_strjoin("bash: ", filename);
-	if (!message)
-		print_error(strerror(errno));
-	message = ft_strjoin2(message, ": ", FREE_S1);
-	message = ft_strjoin2(message, err_msg, FREE_S1);
-	message = ft_strjoin2(message, "\n", FREE_S1);
+	message = strjoin_with_free("bash: ", filename, NO_FREE);
+	message = strjoin_with_free(message, ": ", FREE_S1);
+	message = strjoin_with_free(message, err_msg, FREE_S1);
+	message = strjoin_with_free(message, "\n", FREE_S1);
 	cmd->err_msg = message;
 }
 
@@ -32,7 +36,7 @@ void	open_read_file(t_cmd *cmd, t_token *token)
 
 void	open_write_file(t_cmd *cmd, t_token *token)
 {
-	if (token->word == WRFILE_APP)
+	if (token->kind == WRFILE_APP)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_APPEND, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)
@@ -85,12 +89,10 @@ void add_token_kind(t_token *token)
 		}
 		else
 		{
-			if (!*(ptr->word))
-				ptr->kind = END;
-			else if (!ptr->pre || ptr->pre->kind != COMMAND)
-			{
+			if (!ptr->next)
+				ptr->end = END;
+			if (!ptr->pre || ptr->pre->kind != COMMAND)
 				ptr->kind = COMMAND;
-			}
 			else if (ptr->pre->kind == COMMAND)
 				ptr->kind = ARGUMENT;
 			if (ptr->next)

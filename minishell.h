@@ -47,6 +47,7 @@ typedef struct s_token
 {
 	char			*word;
 	t_kind			kind;
+	t_kind			end;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -70,7 +71,7 @@ void add_token_kind(t_token *token);
 
 // command
 // t_cmd	*make_cmd(char *line, t_env *env);
-t_cmd	*make_cmd(t_token *token, t_env *env);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);

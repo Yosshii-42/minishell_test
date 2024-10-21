@@ -28,15 +28,15 @@ static void	lstadd_back(t_token **start, t_token *new)
 static void lstnew(t_token **start, char *token)
 {
 	t_token *new;
-	int		len;
 
 	new = (t_token *)malloc(sizeof(t_token));
 	if (!new)
 		return ;
-	len = ft_strlen(token);
 	new->word = ft_strdup(token);
 	if (!(new->word))
 		return ;
+	new->kind = -1;
+	new->end = -1;
 	new->next = NULL;
 	lstadd_back(start, new);
 }
@@ -54,7 +54,7 @@ t_token	*split_by_space(char *line)
 	i = -1;
 	while (split[++i])
 		lstnew(&token, split[i]);
-	lstnew(&token, "");
+	// lstnew(&token, "");
 	add_token_kind(token);
 	ft_free_split(split);
     free(line);
