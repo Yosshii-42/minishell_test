@@ -64,8 +64,10 @@ char	**ft_split(char const *s, char c)
 	char	**result;
 
 	if (!s)
-		print_error_and_exit(strerror(errno));
-	result = safe_malloc(ft_count_i(s, c) + 1, sizeof(char *));
+		return (NULL);
+	result = (char **)malloc(sizeof(char *) * (ft_count_i(s, c) + 1));
+	if (!result)
+		return (NULL);
 	i = 0;
 	while (*s)
 	{
@@ -75,14 +77,12 @@ char	**ft_split(char const *s, char c)
 		{
 			result[i] = ft_make_string_i(s, c);
 			if (!result[i])
-			{
-				free_split(result, i);
-				print_error_and_exit(strerror(errno));
-			}
+				return (free_split(result, i), NULL);
 			i++;
 			while (*s && *s != c)
 				s++;
 		}
 	}
+	result[i] = NULL;
 	return (result);
 }

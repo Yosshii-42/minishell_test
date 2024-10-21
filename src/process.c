@@ -16,11 +16,6 @@ static int	wait_process(int count)
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 	}
-	// if (info->here_doc == YES)
-	// {
-	// 	unlink(FILE_NAME);
-	// 	info->here_doc = NO;
-	// }
 	return (exit_status);
 }
 
@@ -36,12 +31,11 @@ static void	child_process(t_cmd *cmd, int i, int count)
 {
 	if (cmd->err_msg)
 		exit_child_process(cmd);
-	// if (cmd->readfd > 0)
-	// 	dup2(cmd->readfd, 0);
-	// if (cmd->writefd > 0)
-	// 	dup2(cmd->writefd, 1);
-	// else
-	if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
+	if (cmd->readfd > 0)
+		dup2(cmd->readfd, 0);
+	if (cmd->writefd > 0)
+		dup2(cmd->writefd, 1);
+	else if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
 		print_error_and_exit(strerror(errno));
 	close_fds(cmd);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
@@ -51,55 +45,42 @@ static void	child_process(t_cmd *cmd, int i, int count)
 	}
 }
 
-static void	make_fork(pid_t *pid)
-{
-	*pid = fork();
-	if (*pid == -1)
-		print_error_and_exit(strerror(errno));
-}
-
-char	**split_by_pipe(char *line)
-{
-	char	**split;
-
-	split = ft_split(line, '|');
-	if (!split)
-		return (NULL);
-	return (split);
-}
-
-int	cmd_count(char **cmd_line)
-{
-	int	count;
-
-	count = 0;
-	while (cmd_line[count])
-		count++;
-	return (count);
-}
-
 int	run_process(char *line, t_env *env)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
 	int		i;
-	int		count;
-	char	**cmd_line;
+	t_token	*token;
+	t_token	*ptr;
 
-	cmd_line = NULL;
-	cmd_line = split_by_pipe(line);
-	count = cmd_count(cmd_line);
+	token = make_token_lst(line);
+	ptr = token;
+	// while (ptr)
+	// {
+	// 	printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
+	// 	if (ptr->next)
+	// 		ptr = ptr->next;
+	// 	else
+	// 		break;
+	// }
+	// printf("sizeof token = %lu\n", sizeof(t_token));
+	// count = cmd_count(token);
 	i = -1;
-	while (cmd_line[++i])
+	while (++i < cmd_count(ptr))
 	{
 		cmd = NULL;
-		cmd = make_cmd(cmd_line[i], env);
+		cmd = make_cmd(token, cmd, env);
+		while (!(token->end == END || token->kind == PIPE) && token->next)
+			token = token->next;
+		if (token->kind == PIPE && token->next)
+			token = token->next;
 		make_fork(&pid);
 		if (pid == 0)
-			child_process(cmd, i, count);
+			child_process(cmd, i, cmd_count(ptr));
 		else if (pid > 0)
-			parent_process(cmd, i, count);
+			parent_process(cmd, i, cmd_count(ptr));
 	}
-	ft_free_split(cmd_line);
+	token_lstclear(ptr);
+	// ft_free_split(cmd_line);
 	return (wait_process(i));
 }

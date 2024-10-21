@@ -58,11 +58,10 @@ int	main(int argc, char **argv, char **envp)
 				rl_clear_history();
 			else
 				run_process(line, env);
-			if (line)
-				free(line);
 		}
 		close_duped_stdin(&original_stdin_fd);
 	}
 	clear_history();
+	// free_env(env);
 	exit(0);
 }
