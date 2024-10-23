@@ -1,23 +1,21 @@
 #include "../minishell.h"
 
-static void	set_file_err(t_cmd *cmd, char *filename, char *err_msg)
+static char	*set_file_err(char *filename, char *err_msg)
 {
 	char	*message;
 
 	message = NULL;
 	message = strjoin_with_free("bash: ", filename, NO_FREE);
-    if (!message)
-        return (NULL);
-	message = strjoin_with_free(message, ": ", FREE_S1);
-    if (!message)
-        return (NULL);
-	message = strjoin_with_free(message, err_msg, FREE_S1);
-    if (!message)
-        return (NULL);
-	message = strjoin_with_free(message, "\n", FREE_S1);
-    if (!message)
-        return (NULL);
-	cmd->err_msg = message;
+	if (message)
+		message = strjoin_with_free(message, ": ", FREE_S1);
+    if (message)
+		message = strjoin_with_free(message, err_msg, FREE_S1);
+    if (message)
+		message = strjoin_with_free(message, "\n", FREE_S1);
+    // if (!message)
+    //     return (NULL);
+	// cmd->err_msg = message;
+	return (message);
 }
 
 static void	here_doc_process(char *eof)
@@ -55,13 +53,13 @@ void	open_read_file(t_cmd *cmd, t_token *token)
 		here_doc_process(token->word);
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
 		if (cmd->readfd < 0)
-			set_file_err(cmd, FILE_NAME, strerror(errno));
+			cmd->err_msg = set_file_err(FILE_NAME, strerror(errno));
 	}
 	else if (token->kind == RDFILE)
 	{
 		cmd->readfd = open(token->word, O_RDONLY);
 		if (cmd->readfd < 0)
-			set_file_err(cmd, token->word, strerror(errno));
+			cmd->err_msg = set_file_err(token->word, strerror(errno));
 	}
 }
 
@@ -71,12 +69,12 @@ void	open_write_file(t_cmd *cmd, t_token *token)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_APPEND, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)
-			set_file_err(cmd, token->word, strerror(errno));
+			cmd->err_msg = set_file_err(token->word, strerror(errno));
 	}
 	else if (token->kind == WRFILE)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)
-			set_file_err(cmd, token->word, strerror(errno));
+			cmd->err_msg = set_file_err(token->word, strerror(errno));
 	}
 }
