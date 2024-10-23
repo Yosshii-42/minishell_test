@@ -67,12 +67,12 @@ static char **make_command_array(t_token *token)
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env)
+static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **path)
 {
-	char	**path;
+	// char	**path;
 	char	*pwd;
 
-	path = ft_split(getenv_str(env, "PATH"), ':');
+	// path = ft_split(getenv_str(env, "PATH"), ':');
 	pwd = getenv_str(env, "PWD");
 	cmd->cmd = make_command_array(token);
 	if (!cmd)
@@ -118,7 +118,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 			open_write_file(cmd, ptr);
 		else if (ptr->kind == COMMAND)
 		{
-			make_path_and_cmd(ptr, cmd, env);
+			make_path_and_cmd(ptr, cmd, env, path);
 			while (ptr->next)
 			{
 				if (ptr->next->kind == ARGUMENT)
@@ -127,8 +127,8 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 					break;
 			}
 		}
-		if (token->kind == END)
-			break;
+		// if (token->kind == END)
+		// 	break;
 		if (ptr->next)
 			ptr = ptr->next;
 		else
