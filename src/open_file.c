@@ -12,9 +12,6 @@ static char	*set_file_err(char *filename, char *err_msg)
 		message = strjoin_with_free(message, err_msg, FREE_S1);
     if (message)
 		message = strjoin_with_free(message, "\n", FREE_S1);
-    // if (!message)
-    //     return (NULL);
-	// cmd->err_msg = message;
 	return (message);
 }
 

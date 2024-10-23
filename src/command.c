@@ -94,43 +94,38 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **pat
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 {
 	char	**path;
-	t_token	*ptr;
 
 	path = NULL;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
-    path = NULL;
 	path = ft_split(getenv_str(env, "PATH"), ':');
-	ptr = token;
-	while (ptr)
+	while (token)
 	{
-		if (ptr->kind == PIPE)
+		if (token->kind == PIPE)
 		{
 			safe_pipe(cmd);
-			ptr = ptr->next;
+			token = token->next;
 			break;
 		}
-		else if (ptr->kind == RDFILE || ptr->kind == LIMITTER)
-			open_read_file(cmd, ptr);
-		else if (ptr->kind == WRFILE || ptr->kind == WRFILE_APP)
-			open_write_file(cmd, ptr);
-		else if (ptr->kind == COMMAND)
+		else if (token->kind == RDFILE || token->kind == LIMITTER)
+			open_read_file(cmd, token);
+		else if (token->kind == WRFILE || token->kind == WRFILE_APP)
+			open_write_file(cmd, token);
+		else if (token->kind == COMMAND)
 		{
-			make_path_and_cmd(ptr, cmd, env, path);
-			while (ptr->next)
+			make_path_and_cmd(token, cmd, env, path);
+			while (token->next)
 			{
-				if (ptr->next->kind == ARGUMENT)
-					ptr = ptr->next;
+				if (token->next->kind == ARGUMENT)
+					token = token->next;
 				else
 					break;
 			}
 		}
-		// if (token->kind == END)
-		// 	break;
-		if (ptr->next)
-			ptr = ptr->next;
+		if (token->next)
+			token = token->next;
 		else
 			break;
 	}
