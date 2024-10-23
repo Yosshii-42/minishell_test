@@ -17,7 +17,7 @@ static void	handle_sigint(int sig)
 	(void)sig;
 
 	rl_on_new_line();
-    rl_replace_line("", 0);
+    // rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -55,13 +55,12 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!ft_memcmp(line, "clear", 6))
-				rl_clear_history();
+				clear_history();
 			else
 				run_process(line, env);
 		}
 		close_duped_stdin(&original_stdin_fd);
 	}
 	clear_history();
-	// free_env(env);
 	exit(0);
 }
