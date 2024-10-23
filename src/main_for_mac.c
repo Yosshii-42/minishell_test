@@ -58,8 +58,6 @@ int	main(int argc, char **argv, char **envp)
 				clear_history();
 			else
 				run_process(line, env);
-			if (line)
-				free(line);
 		}
 		close_duped_stdin(&original_stdin_fd);
 	}
