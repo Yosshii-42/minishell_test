@@ -14,7 +14,7 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	}
 }
 
-static char	*check_access(char *command, char **path, char *pwd)
+static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 {
 	char	*str;
 	int	i;
@@ -84,7 +84,7 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **pat
 		else if (cmd->cmd[0][0] == '.')
 			cmd->pathname = make_pwd_path(cmd->cmd[0], pwd);
 		else
-			cmd->pathname = check_access(cmd->cmd[0], path, pwd);
+			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0], path, pwd);
 		if (cmd->pathname)
 			return ;
 	}
