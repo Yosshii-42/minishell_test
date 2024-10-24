@@ -44,7 +44,7 @@ static char **make_command_array(t_token *token)
 
 	ptr = token;
 	count = 0;
-	while (ptr->kind == COMMAND || ptr->kind == ARGUMENT)
+	while (ptr->kind == COMMAND || ptr->kind == OPTION)
 	{
 		count++;
 		if (ptr->next)
@@ -118,7 +118,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 			make_path_and_cmd(token, cmd, env, path);
 			while (token->next)
 			{
-				if (token->next->kind == ARGUMENT)
+				if (token->next->kind == OPTION)
 					token = token->next;
 				else
 					break;

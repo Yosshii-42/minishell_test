@@ -27,7 +27,7 @@ typedef enum e_kind
 {
 	PIPE,
 	COMMAND,
-	ARGUMENT,
+	OPTION,
 	SKIP,
 	RDFILE,
 	WRFILE,
