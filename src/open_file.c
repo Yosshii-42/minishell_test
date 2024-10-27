@@ -23,7 +23,7 @@ void	print_limitter_warning(char *eof)
 	ft_printf(2, "end-of-file (wanted `%s')\n", eof);
 }
 
-static int	here_doc_process(char *eof)
+static int	heredoc_process(char *eof)
 {
 	char	*str;
 	int		fd;
@@ -56,7 +56,7 @@ void	open_read_file(t_cmd *cmd, t_token *token)
 {
 	if (token->kind == LIMITTER)
 	{
-		if (here_doc_process(token->word) == FALSE)
+		if (heredoc_process(token->word) == FALSE)
 			return ;
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
 		if (cmd->readfd < 0)
