@@ -15,7 +15,7 @@ CC		= gcc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
-HEADDIR	= ./minishell.h
+HEADDIR	= /.
 LIBFT	= ./libft/libft.a
 RLDIR   = $(shell brew --prefix readline)
 
