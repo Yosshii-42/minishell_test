@@ -26,20 +26,20 @@ void	free_env_and_exit(t_env *env)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_free(char **str, int i)
-{
-	char	**tmp;
+// void	ft_free(char **str, int i)
+// {
+// 	char	**tmp;
 
-	tmp = str;
-	if (!str)
-		return ;
-	while (tmp[i])
-		free(tmp[i++]);
-	if (str)
-		free(str);
-}
+// 	tmp = str;
+// 	if (!str)
+// 		return ;
+// 	while (tmp[i])
+// 		free(tmp[i++]);
+// 	if (str)
+// 		free(str);
+// }
 
-void	ft_free_split(char **split)
+void	free_split(char **split)
 {
 	int	i;
 
@@ -51,16 +51,12 @@ void	ft_free_split(char **split)
 	free(split);
 }
 
-void	ft_free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
-	int	i;
-
 	if (cmd->pathname)
 		free(cmd->pathname);
-	i = 0;
-	while (cmd->cmd[i])
-		free(cmd->cmd[i++]);
-	free(cmd->cmd);
+	if (cmd->cmd)
+		free_split(cmd->cmd);
 	if (cmd->err_msg)
 		free(cmd->err_msg);
 	free(cmd);

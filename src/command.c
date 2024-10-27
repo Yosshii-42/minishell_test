@@ -61,7 +61,7 @@ static char **make_command_array(t_token *token)
 		cmd[i] = ft_strdup(token->word);
 		token = token->next;
 		if (!cmd[i])
-			return (ft_free_split(cmd), NULL);
+			return (free_split(cmd), NULL);
 	}
 	cmd[i] = NULL;
 	return (cmd);
@@ -129,7 +129,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 		else
 			break;
 	}
-	ft_free_split(path);
+	free_split(path);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	return (cmd);

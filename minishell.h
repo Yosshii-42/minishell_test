@@ -94,9 +94,9 @@ void	token_lstclear(t_token *token);
 // free functions
 void	free_env(t_env *env);
 void	free_env_and_exit(t_env *env);
-void	ft_free(char **str, int i);
-void	ft_free_split(char **split);
-void	ft_free_cmd(t_cmd *cmd);
+// void	ft_free(char **str, int i);
+void	free_split(char **split);
+void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);

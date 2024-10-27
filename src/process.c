@@ -24,7 +24,7 @@ static void	parent_process(t_cmd *cmd, int i, int count)
 	if (i != count - 1)
 		dup2(cmd->pp[0], STDIN_FILENO);
 	close_fds(cmd);
-	ft_free_cmd(cmd);
+	free_cmd(cmd);
 }
 
 static void	child_process(t_cmd *cmd, int i, int count)
@@ -81,6 +81,6 @@ int	run_process(char *line, t_env *env)
 			parent_process(cmd, i, cmd_count(ptr));
 	}
 	token_lstclear(ptr);
-	// ft_free_split(cmd_line);
+	// free_split(cmd_line);
 	return (wait_process(i));
 }

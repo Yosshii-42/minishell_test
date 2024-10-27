@@ -14,7 +14,7 @@ OBJS	= $(SRCS:.c=.o)
 CC		= gcc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
+FLAGS   += -fsanitize=address -g
 HEADDIR	= /.
 LIBFT	= ./libft/libft.a
 RLDIR   = $(shell brew --prefix readline)

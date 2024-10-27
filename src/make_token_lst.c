@@ -54,7 +54,7 @@ t_token	*make_token_lst(char *line)
 	while (split[++i])
 		lstnew(&token, split[i]);
 	add_token_kind(token);
-	ft_free_split(split);
+	free_split(split);
     free(line);
 	return (token);
 }
