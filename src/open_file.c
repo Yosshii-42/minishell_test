@@ -42,11 +42,8 @@ static int	heredoc_process(char *eof, t_cmd *cmd)
 			break ;
 		}
 		(cmd->count)++;
-		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
-		{
-			free(str);
+		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10 && (free(str), 1))
 			break ;
-		}
 		ft_printf(fd, "%s", str);
 		free(str);
 		str = NULL;
