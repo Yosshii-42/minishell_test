@@ -56,6 +56,7 @@ typedef struct s_cmd
 {
 	int		readfd;
 	int		writefd;
+	int		count;
 	int		pp[2];
 	char	*pathname;
 	char	**cmd;

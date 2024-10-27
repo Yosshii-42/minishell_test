@@ -17,13 +17,13 @@ static char	*set_file_err(char *filename, char *err_msg)
 	return (message);
 }
 
-void	print_limitter_warning(char *eof)
+void	print_limitter_warning(int count, char *eof)
 {
-	ft_printf(2, "\nbash: warning: here-document delimited by ");
-	ft_printf(2, "end-of-file (wanted `%s')\n", eof);
+	ft_printf(2, "\nbash: warning: here-document delimited at ");
+	ft_printf(2, "line%d by end-of-file (wanted `%s')\n", count, eof);
 }
 
-static int	heredoc_process(char *eof)
+static int	heredoc_process(char *eof, t_cmd *cmd)
 {
 	char	*str;
 	int		fd;
@@ -32,14 +32,16 @@ static int	heredoc_process(char *eof)
 	if (fd < 0)
 		return (FALSE);
 	str = NULL;
+	cmd->count = 0;
 	while (1)
 	{
 		ft_printf(1, "> ");
 		if (!(str = get_next_line(0)))
 		{
-			print_limitter_warning(eof);
+			print_limitter_warning(cmd->count + 1, eof);
 			break ;
 		}
+		(cmd->count)++;
 		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
 		{
 			free(str);
@@ -56,7 +58,7 @@ void	open_read_file(t_cmd *cmd, t_token *token)
 {
 	if (token->kind == LIMITTER)
 	{
-		if (heredoc_process(token->word) == FALSE)
+		if (heredoc_process(token->word, cmd) == FALSE)
 			return ;
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
 		if (cmd->readfd < 0)
