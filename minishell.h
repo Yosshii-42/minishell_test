@@ -71,7 +71,7 @@ t_token	*make_token_lst(char *line);
 void add_token_kind(t_token *token);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
@@ -82,7 +82,7 @@ void	open_write_file(t_cmd *cmd, t_token *token);
 void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(char *line, t_env *env);
+int		run_process(char *line, char **path, char *pwd);
 
 // process utils
 int		cmd_count(t_token *token);

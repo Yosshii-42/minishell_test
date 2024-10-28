@@ -27,7 +27,7 @@ static void	parent_process(t_cmd *cmd, int i, int count)
 	free_cmd(cmd);
 }
 
-static void	child_process(t_cmd *cmd, int i, int count)
+static void	child_process(t_cmd *cmd, int i, int count, char **path)
 {
 	if (cmd->err_msg)
 		exit_child_process(cmd);
@@ -38,14 +38,14 @@ static void	child_process(t_cmd *cmd, int i, int count)
 	else if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
 		print_error_and_exit(strerror(errno));
 	close_fds(cmd);
-	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
+	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
 		exit(1);
 	}
 }
 
-int	run_process(char *line, t_env *env)
+int	run_process(char *line, char **path, char *pwd)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
@@ -55,32 +55,21 @@ int	run_process(char *line, t_env *env)
 
 	token = make_token_lst(line);
 	ptr = token;
-	// while (ptr)
-	// {
-	// 	printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
-	// 	if (ptr->next)
-	// 		ptr = ptr->next;
-	// 	else
-	// 		break;
-	// }
-	// printf("sizeof token = %lu\n", sizeof(t_token));
-	// count = cmd_count(token);
 	i = -1;
 	while (++i < cmd_count(ptr))
 	{
 		cmd = NULL;
-		cmd = make_cmd(token, cmd, env);
+		cmd = make_cmd(token, cmd, path, pwd);
 		while (!(token->end == END || token->kind == PIPE) && token->next)
 			token = token->next;
 		if (token->kind == PIPE && token->next)
 			token = token->next;
 		make_fork(&pid);
 		if (pid == 0)
-			child_process(cmd, i, cmd_count(ptr));
+			child_process(cmd, i, cmd_count(ptr), path);
 		else if (pid > 0)
 			parent_process(cmd, i, cmd_count(ptr));
 	}
 	token_lstclear(ptr);
-	// free_split(cmd_line);
 	return (wait_process(i));
 }
