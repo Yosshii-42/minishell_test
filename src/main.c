@@ -62,7 +62,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		path = NULL;
-		path = ft_split(getenv_str(env, "PATH"), ':');
+		if (getenv_str(env, "PATH"))
+			path = ft_split(getenv_str(env, "PATH"), ':');
 		pwd = NULL;
 		pwd = getenv_str(env, "PWD");
 		if (*line)
@@ -71,12 +72,14 @@ int	main(int argc, char **argv, char **envp)
 			if (!ft_memcmp(line, "clear", 6))
 				clear_history();
 			else
-				run_process(line, path, pwd);//env);
+				ft_printf(1, "status = %d\n", run_process(line, path, pwd));//env);
 		}
+		free(line);
 		close_duped_stdin(&original_stdin_fd);
 	}
-	free_split(path);
-	// free_env(env);
+	if (path)
+		free_split(path);
+	free_env(env);
 	clear_history();
 	exit(0);
 }

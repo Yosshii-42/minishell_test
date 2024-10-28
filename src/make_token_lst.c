@@ -56,6 +56,6 @@ t_token	*make_token_lst(char *line)
 		lstnew(&token, split[i]);//nullが帰った時の処理
 	add_token_kind(token);
 	free_split(split);
-    free(line);
+    // free(line);
 	return (token);
 }

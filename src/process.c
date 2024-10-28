@@ -41,7 +41,7 @@ static void	child_process(t_cmd *cmd, int i, int count, char **path)
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
-		exit(1);
+		exit(127);
 	}
 }
 

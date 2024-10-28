@@ -17,10 +17,12 @@ static void	lstadd_back(t_env **start, t_env *new)
 	if (!*start)
 	{
 		*start = new;
+		new->pre = NULL;
 		return ;
 	}	
 	ptr = lstlast(*start);
 	ptr->next = new;
+	new->pre = ptr;
 }
 
 static size_t	strchr_len(const char *s, int c)
@@ -41,25 +43,26 @@ static size_t	strchr_len(const char *s, int c)
 		return (0);
 }
 
-static void	lstnew(t_env **start, char *env)
+static int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
 
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
-		free_env_and_exit(*start);
+		return (free_env(*start), FALSE);
 	len = 0;
 	len = strchr_len(env, '=');
 	new->key = (char *)malloc((len + 1) * sizeof(char));
 	if (!new->key)
-		free_env_and_exit(*start);
+		return (free_env(*start), FALSE);
 	ft_strlcpy(new->key, env, len + 1);
 	new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	if (!new->value)
-		free_env_and_exit(*start);
+		return (free_env(*start), FALSE);
 	new->next = NULL;
 	lstadd_back(start, new);
+	return (TRUE);
 }
 
 t_env	*set_env(char **envp)
@@ -67,9 +70,14 @@ t_env	*set_env(char **envp)
 	t_env	*start;
 	int	i;
 
+	if (!envp)
+		return (NULL);
 	i = -1;
 	start = NULL;
 	while (envp[++i])
-		lstnew(&start, envp[i]);
+	{
+		if (!lstnew(&start, envp[i]))
+			return (NULL);
+	}
 	return (start);
 }

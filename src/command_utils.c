@@ -32,16 +32,16 @@ char	*make_pwd_path(char *command, char *pwd)
 
 char    *getenv_str(t_env *env, char *str)
 {
-    t_env   *tmp;
-
     if (!env)
         return (NULL);
-    tmp = env;
-    while (tmp->key)
+    while (env->key)
     {
-        if (!ft_memcmp(tmp->key, str, ft_strlen(str) + 1))
-            return (tmp->value);
-        tmp = tmp->next;
+        if (!ft_memcmp(env->key, str, ft_strlen(str) + 1))
+            return (env->value);
+        if (env->next)
+            env = env->next;
+        else
+            break ;
     }
     return (NULL);
 }
