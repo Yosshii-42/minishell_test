@@ -15,6 +15,8 @@
 # include "./libft/includes/libft.h"
 # include "./libft/includes/ft_printf.h"
 # include "./libft/includes/get_next_line.h"
+// 追加
+# include <signal.h>
 
 # define FREE_S1 1
 # define FREE_S2 2
@@ -22,6 +24,14 @@
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|$"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
+// シグナル状態の定義
+# define READLINE 1
+# define HEREDOC 2
+# define IN_CMD 3
+# define SIG_INT 4
+# define ERROR_PRESTR "minishell: "
+
+extern volatile sig_atomic_t	g_sig_status;
 
 typedef enum e_kind
 {
@@ -101,5 +111,18 @@ void	free_cmd(t_cmd *cmd);
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 void	print_error_and_exit(char *err_message);
+
+// signal
+void	reset_signal(int signum);
+void	ignore_signal(int signum);
+void	ready_signal(int signum);
+void	init_signal(void);
+void	destroy_signal(void);
+
+// signal_handler
+int		event(void);
+void	perror_prestr(void);
+void	fatal_error_exit(char *err_msg);
+void	signal_handler(int signum);
 
 #endif
