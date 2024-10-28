@@ -17,7 +17,7 @@ static void	handle_sigint(int sig)
 	(void)sig;
 
 	rl_on_new_line();
-    // rl_replace_line("", 0);
+    rl_replace_line("", 0);
 	rl_redisplay();
 }
 
@@ -40,6 +40,8 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_env	*env;
 	int original_stdin_fd;
+	char	**path;
+	char	*pwd;
 
 	original_stdin_fd = 0;
 	signal(SIGINT, handle_sigint);
@@ -51,16 +53,22 @@ int	main(int argc, char **argv, char **envp)
 		dup_stdin(&original_stdin_fd);
 		if (!(line = readline("minishell$ ")))
 			break ;
+		path = NULL;
+		path = ft_split(getenv_str(env, "PATH"), ':');
+		pwd = NULL;
+		pwd = getenv_str(env, "PWD");
 		if (*line)
 		{
 			add_history(line);
 			if (!ft_memcmp(line, "clear", 6))
 				clear_history();
 			else
-				run_process(line, env);
+				run_process(line, path, pwd);//env);
 		}
 		close_duped_stdin(&original_stdin_fd);
 	}
+	free_split(path);
+	// free_env(env);
 	clear_history();
 	exit(0);
 }

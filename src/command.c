@@ -61,19 +61,14 @@ static char **make_command_array(t_token *token)
 		cmd[i] = ft_strdup(token->word);
 		token = token->next;
 		if (!cmd[i])
-			return (ft_free_split(cmd), NULL);
+			return (free_split(cmd), NULL);
 	}
 	cmd[i] = NULL;
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **path)
+static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
 {
-	// char	**path;
-	char	*pwd;
-
-	// path = ft_split(getenv_str(env, "PATH"), ':');
-	pwd = getenv_str(env, "PWD");
 	cmd->cmd = make_command_array(token);
 	if (!cmd)
 		exit (1); //TODO error_exit
@@ -91,16 +86,12 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **pat
 	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 }
 
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
-	char	**path;
-
-	path = NULL;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
-	path = ft_split(getenv_str(env, "PATH"), ':');
 	while (token)
 	{
 		if (token->kind == PIPE)
@@ -115,7 +106,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 			open_write_file(cmd, token);
 		else if (token->kind == COMMAND)
 		{
-			make_path_and_cmd(token, cmd, env, path);
+			make_path_and_cmd(token, cmd, path, pwd);
 			while (token->next)
 			{
 				if (token->next->kind == OPTION)
@@ -129,7 +120,6 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
 		else
 			break;
 	}
-	ft_free_split(path);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	return (cmd);

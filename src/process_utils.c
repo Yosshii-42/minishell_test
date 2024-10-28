@@ -51,10 +51,13 @@ void	token_lstclear(t_token *token)
 	{
 		if (token->kind == LIMITTER)
 			unlink(FILE_NAME);
-		free(token->word);
-		free(token);
+		if (token->word)
+			free(token->word);
 		if (token->next)
+		{
 			token = token->next;
+			free(token->pre);
+		}
 		else
 			break;
 	}
