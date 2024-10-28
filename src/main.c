@@ -18,17 +18,10 @@ static void	init(int argc, char **argv)
 //{
 //	(void)sig;
 
-<<<<<<< HEAD
-	rl_on_new_line();
-    // rl_replace_line("", 0);
-	rl_redisplay();
-}
-=======
 //	rl_on_new_line();
 //    rl_replace_line("", 0);
 //	rl_redisplay();
 //}
->>>>>>> dev_urabe
 
 void	dup_stdin(int *fd)
 {
