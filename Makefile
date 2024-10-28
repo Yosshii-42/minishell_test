@@ -9,9 +9,12 @@ SRCS	= src/main.c \
 		  src/process.c \
 		  src/process_utils.c \
 		  src/utils.c \
-		  src/free.c
+		  src/free.c \
+		  src/signal.c \
+		  src/signal_handler.c
+
 OBJS	= $(SRCS:.c=.o)
-CC		= gcc
+CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
