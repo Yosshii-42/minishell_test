@@ -29,47 +29,47 @@ static int	close_duped_fd(int *fd)
 	return (close(*fd), TRUE);
 }
 
-int	main(int argc, char **argv, char **envp)
+static void	do_minishell(t_env *env, char *line)
 {
-	char	*line;
-	t_env	*env;
-	int original_stdin_fd;
 	char	**path;
 	char	*pwd;
+	int		original_stdin_fd;
 
 	original_stdin_fd = 0;
+	path = NULL;
+	if (getenv_str(env, "PATH"))
+		path = ft_split(getenv_str(env, "PATH"), ':');
+	pwd = NULL;
+	pwd = getenv_str(env, "PWD");
+	if (*line && dup_stdin(&original_stdin_fd))
+	{
+		add_history(line);
+		if (!ft_memcmp(line, "clear", 6))
+			clear_history();
+		else
+			run_process(line, path, pwd);
+		close_duped_fd(&original_stdin_fd);
+	}
+	if (path)
+		free_split(path);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_env	*env;
+	char	*line;
+
 	init_signal();
 	init(argc, argv);
 	env = set_env(envp);
 	rl_outstream = stdout;
 	while (1)
 	{
-		//if (!(line = readline("minishell$ ")))
-		//	break ;
-		line = readline("minishell$ ");
-		if (!line)
-		{
-			printf("exit\n");
+		if (!(line = readline("minishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
-		}
-		path = NULL;
-		if (getenv_str(env, "PATH"))
-			path = ft_split(getenv_str(env, "PATH"), ':');
-		pwd = NULL;
-		pwd = getenv_str(env, "PWD");
-		if (*line && dup_stdin(&original_stdin_fd))
-		{
-			add_history(line);
-			if (!ft_memcmp(line, "clear", 6))
-				clear_history();
-			else
-				run_process(line, path, pwd);
-			close_duped_fd(&original_stdin_fd);
-		}
+		do_minishell(env, line);
 		free(line);
 	}
-	if (path)
-		free_split(path);
 	free_env(env);
 	clear_history();
 	exit(0);
