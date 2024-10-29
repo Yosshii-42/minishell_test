@@ -22,7 +22,7 @@
 # define FREE_S2 2
 # define NO_FREE 0
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
-# define SPECIAL_TOKEN "<>|$"
+# define SPECIAL_TOKEN "<>|"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 // シグナル状態の定義
 # define READLINE 1
@@ -43,6 +43,7 @@ typedef enum e_kind
 	WRFILE,
 	WRFILE_APP,
 	LIMITTER,
+	ERR,
 	END
 } t_kind;
 
@@ -59,6 +60,7 @@ typedef struct s_token
 	char			*word;
 	t_kind			kind;
 	t_kind			end;
+	char			*syntax_msg;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -72,6 +74,7 @@ typedef struct s_cmd
 	char	*pathname;
 	char	**cmd;
 	char	*err_msg;
+
 }		t_cmd;
 
 // env
@@ -111,6 +114,7 @@ void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
+char	*strjoin_1char(char *s1, char c);
 
 // signal
 void	reset_signal(int signum);
