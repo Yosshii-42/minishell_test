@@ -84,7 +84,7 @@ void add_token_kind(t_token *token);
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
 void	init_cmd(t_cmd *cmd);
-void    safe_pipe(t_cmd *cmd);
+int    make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char    *getenv_str(t_env *env, char *str);
 
@@ -97,7 +97,7 @@ int		run_process(char *line, char **path, char *pwd);
 
 // process utils
 int		cmd_count(t_token *token);
-void	make_fork(pid_t *pid);
+int		make_fork(pid_t *pid);
 void	exit_child_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
 void	token_lstclear(t_token *token);
@@ -111,7 +111,6 @@ void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
-void	print_error_and_exit(char *err_message);
 
 // signal
 void	reset_signal(int signum);

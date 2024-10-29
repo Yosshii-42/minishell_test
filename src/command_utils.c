@@ -12,10 +12,11 @@ void	init_cmd(t_cmd *cmd)
 	cmd->err_msg = NULL;
 }
 
-void    safe_pipe(t_cmd *cmd)
+int    make_pipe(t_cmd *cmd)
 {
     if (pipe(cmd->pp) == -1)
-        print_error_and_exit(strerror(errno));//print error , return (NULL);
+        return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+    return (TRUE);
 }
 
 char	*make_pwd_path(char *command, char *pwd)

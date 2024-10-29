@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "../minishell.h"
 
-static int	ft_count_i(char const *s, char c)
+static int	count_word(char const *s, char c)
 {
 	int	count;
 
@@ -30,7 +30,7 @@ static int	ft_count_i(char const *s, char c)
 	return (count);
 }
 
-static char	*ft_make_string_i(char const *s, char c)
+static char	*ft_make_string(char const *s, char c)
 {
 	size_t	j;
 	size_t	len;
@@ -63,9 +63,9 @@ char	**ft_split(char const *s, char c)
 	int		i;
 	char	**result;
 
-	if (!s)
+	if (!s || !(count_word(s, c)))
 		return (NULL);
-	result = (char **)malloc(sizeof(char *) * (ft_count_i(s, c) + 1));
+	result = (char **)malloc(sizeof(char *) * (count_word(s, c) + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -75,13 +75,13 @@ char	**ft_split(char const *s, char c)
 			s++;
 		if (*s && *s != c)
 		{
-			result[i] = ft_make_string_i(s, c);
+			result[i] = ft_make_string(s, c);
 			if (!result[i])
 				return (ft_free_split(result, i), NULL);
 			i++;
-			while (*s && *s != c)
-				s++;
 		}
+		while (*s && *s != c)
+			s++;
 	}
 	result[i] = NULL;
 	return (result);

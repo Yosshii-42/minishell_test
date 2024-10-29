@@ -12,31 +12,31 @@ static int	wait_process(int count)
 	while (++i < count)
 	{
 		if (waitpid(-1, &status, 0) == -1)
-			print_error_and_exit(strerror(errno));
+			return (ft_printf(2, "%s\n", strerror(errno)), EXIT_FAILURE);
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 	}
 	return (exit_status);
 }
 
-static void	parent_process(t_cmd *cmd, int i, int count)
+static void	parent_process(t_cmd *cmd)
 {
-	if (i != count - 1)
+	if (cmd->pp[0] > 0)
 		dup2(cmd->pp[0], STDIN_FILENO);
 	close_fds(cmd);
 	free_cmd(cmd);
 }
 
-static void	child_process(t_cmd *cmd, int i, int count, char **path)
+static void	child_process(t_cmd *cmd, char **path)
 {
 	if (cmd->err_msg)
 		exit_child_process(cmd);
 	if (cmd->readfd > 0)
-		dup2(cmd->readfd, 0);
+		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
-		dup2(cmd->writefd, 1);
-	else if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
-		print_error_and_exit(strerror(errno));
+		dup2(cmd->writefd, STDOUT_FILENO);
+	else if (cmd->pp[1] > 0)
+		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
@@ -64,11 +64,12 @@ int	run_process(char *line, char **path, char *pwd)
 			token = token->next;
 		if (token->kind == PIPE && token->next)
 			token = token->next;
-		make_fork(&pid);
+		if (!make_fork(&pid))
+			return (token_lstclear(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)
-			child_process(cmd, i, cmd_count(ptr), path);
+			child_process(cmd, path);
 		else if (pid > 0)
-			parent_process(cmd, i, cmd_count(ptr));
+			parent_process(cmd);
 	}
 	token_lstclear(ptr);
 	return (wait_process(i));

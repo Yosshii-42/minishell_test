@@ -14,27 +14,19 @@ static void	init(int argc, char **argv)
 	
 }
 
-//static void	handle_sigint(int sig)
-//{
-//	(void)sig;
-
-//	rl_on_new_line();
-//    rl_replace_line("", 0);
-//	rl_redisplay();
-//}
-
-void	dup_stdin(int *fd)
+static int	dup_stdin(int *fd)
 {
 	*fd = dup(STDIN_FILENO);
 	if (*fd == -1)
-		print_error_and_exit(strerror(errno));
+		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+	return (TRUE);
 }
 
-void	close_duped_stdin(int *fd)
+static int	close_duped_fd(int *fd)
 {
 	if (dup2(*fd, STDIN_FILENO) == -1)
-		print_error_and_exit(strerror(errno));
-	close(*fd);
+		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+	return (close(*fd), TRUE);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -52,7 +44,6 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
-		dup_stdin(&original_stdin_fd);
 		//if (!(line = readline("minishell$ ")))
 		//	break ;
 		line = readline("minishell$ ");
@@ -66,16 +57,16 @@ int	main(int argc, char **argv, char **envp)
 			path = ft_split(getenv_str(env, "PATH"), ':');
 		pwd = NULL;
 		pwd = getenv_str(env, "PWD");
-		if (*line)
+		if (*line && dup_stdin(&original_stdin_fd))
 		{
 			add_history(line);
 			if (!ft_memcmp(line, "clear", 6))
 				clear_history();
 			else
-				ft_printf(1, "status = %d\n", run_process(line, path, pwd));//env);
+				run_process(line, path, pwd);
+			close_duped_fd(&original_stdin_fd);
 		}
 		free(line);
-		close_duped_stdin(&original_stdin_fd);
 	}
 	if (path)
 		free_split(path);
