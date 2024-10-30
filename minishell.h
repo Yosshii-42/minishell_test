@@ -21,8 +21,8 @@
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
-# define SPECIAL_CHAR "~`#&*()[]{};!?"
-# define SPECIAL_TOKEN "<>|"
+# define TOKEN_1 "<>|"
+# define TOKEN_2 "~`#&*()[]{};!?"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 // シグナル状態の定義
 # define READLINE 1
@@ -38,12 +38,18 @@ typedef enum e_kind
 	PIPE,
 	COMMAND,
 	OPTION,
-	SKIP,
+	LESSTHAN,
+	HERE_DOC,
+	MORETHAN,
+	APPEND,
 	RDFILE,
-	WRFILE,
-	WRFILE_APP,
 	LIMITTER,
+	WRFILE,
+	WRF_APP,
 	ERR,
+	FREE,
+	SKIP,
+	WRFILE_APP,
 	END
 } t_kind;
 
@@ -59,7 +65,7 @@ typedef struct s_token
 {
 	char			*word;
 	t_kind			kind;
-	t_kind			end;
+	t_kind			status;
 	char			*syntax_msg;
 	struct s_token	*next;
 	struct s_token	*pre;

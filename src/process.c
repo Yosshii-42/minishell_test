@@ -60,7 +60,7 @@ int	run_process(char *line, char **path, char *pwd)
 	{
 		cmd = NULL;
 		cmd = make_cmd(token, cmd, path, pwd);
-		while (!(token->end == END || token->kind == PIPE) && token->next)
+		while (!(token->status == END || token->kind == PIPE) && token->next)
 			token = token->next;
 		if (token->kind == PIPE && token->next)
 			token = token->next;

@@ -36,7 +36,7 @@ static void lstnew(t_token **start, char *token)
 	if (!(new->word))
 		return ;
 	new->kind = -1;
-	new->end = -1;
+	new->status = -1;
 	new->next = NULL;
 	lstadd_back(start, new);
 }
@@ -55,6 +55,8 @@ t_token	*make_token_lst(char *line)
 	while (split[++i])
 		lstnew(&token, split[i]);//nullが帰った時の処理
 	add_token_kind(token);
+	// if (add_token_kind(token) == FALSE)
+	// 	return (token_lstclear(token), free_split(split), NULL);
 	free_split(split);
     // free(line);
 	return (token);
