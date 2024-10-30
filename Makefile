@@ -14,17 +14,16 @@ SRCS	= src/main.c \
 		  src/signal_handler.c
 
 OBJS	= $(SRCS:.c=.o)
-CC		= cc
+CC		= gcc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
-HEADDIR	= ./
+HEADDIR	= ./  # minishell.hのあるディレクトリを指定
 LIBFT	= ./libft/libft.a
 RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
-%.o:%.c
+%.o: %.c
 	$(CC) $(FLAGS) -I$(RLDIR)/include -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
@@ -54,4 +53,3 @@ OS := $(shell uname -s)
 ifeq ($(OS), Linus)
 	# commands for Linux
 endif
-

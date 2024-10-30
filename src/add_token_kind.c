@@ -16,11 +16,12 @@
 // 	return (str);
 // }
 
+// // The case of the first word of the token is '|'.
 // static t_token	*add_kind_pipe(t_toke *token)
 // {
 // 	if (ft_memcmp(token->word, "|", 2)								// |が２つ以上続く
 // 		|| (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))	// 前のtokenが"<>|"のどれか
-// 			|| !(token->pre))										// 前のtokenが無い
+// 			|| !(token->pre))										// 前のtokenが無い, tokensize = 1でtoken->nextが無い
 // 	{
 // 		token->kind = ERR;
 // 		token->syntax_msg = make_syntax_str('|');
@@ -39,6 +40,7 @@
 // 	return (token);
 // }
 
+// // The case of the first word of the token is '<'.
 // static t_token	*add_kind_lessthan(t_toke *token)
 // {
 // 	if (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))
@@ -68,6 +70,37 @@
 // 			return (NULL);
 // 	}
 // 	return (token);
+// }
+
+// static t_token	*add_kind_morethan(t_token *token)
+// {
+// 	if (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))
+// 	{
+// 		if (*(token->pre->word) == '<' || *(token->pre->wore) == '>')
+// 			token->syntax_msg = make_syntax_str('<<');
+// 		else
+// 			token->syntax_msg = make_syntax_str('|');
+// 		token->kind = ERR;
+// 		if (!token->syntax_msg)										// mallocエラーならNULLを返す
+// 			return (NULL);
+// 		// return (token);
+// 	}
+// 	if (!ft_memcmp(token->word, ">", 2) || !ft_memcmp(token->word, ">>", 3))
+// 	{
+// 		token->kind = SKIP;
+// 		if (token->next)
+// 			token = token->next;
+// 		else
+// 			token->status = END;
+// 	}
+// 	else if (ft_memcmp(token->word, ">>", 3) > 0)
+// 	{
+// 		token->syntax_msg = make_syntax_str('>');
+// 		token->kind = ERR;
+// 		if (!token->syntax_msg)										// mallocエラーならNULLを返す
+// 			return (NULL);
+// 	}
+// 	return (token);	
 // }
 
 // int	add_token_kind(t_token *token)
