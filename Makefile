@@ -18,20 +18,20 @@ CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
-HEADDIR	= /.
+HEADDIR	= ./
 LIBFT	= ./libft/libft.a
 RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
+	$(CC) $(FLAGS) -I$(RLDIR)/include -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) -L$(RLDIR)/Lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) -L$(RLDIR)/lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
 
 clean:
 	make fclean -C ./libft
