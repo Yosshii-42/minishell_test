@@ -115,7 +115,7 @@ int	add_token_kind(t_token *token)
 			token = add_kind_morethan(token);
 		else
 			token = add_command_kind(token);
-			
+
 		{
 			if (!ptr->pre || ptr->pre->kind != COMMAND)
 				ptr->kind = COMMAND;

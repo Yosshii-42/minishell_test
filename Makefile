@@ -14,24 +14,23 @@ SRCS	= src/main.c \
 		  src/signal_handler.c
 
 OBJS	= $(SRCS:.c=.o)
-CC		= cc
+CC		= gcc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
-HEADDIR	= /.
+HEADDIR	= ./  # minishell.hのあるディレクトリを指定
 LIBFT	= ./libft/libft.a
 RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
-%.o:%.c
-	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
+%.o: %.c
+	$(CC) $(FLAGS) -I$(RLDIR)/include -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) -L$(RLDIR)/Lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) -L$(RLDIR)/lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
 
 clean:
 	make fclean -C ./libft
@@ -54,4 +53,3 @@ OS := $(shell uname -s)
 ifeq ($(OS), Linus)
 	# commands for Linux
 endif
-
