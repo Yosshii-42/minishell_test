@@ -4,13 +4,8 @@ volatile sig_atomic_t g_sig_status = READLINE;
 
 static void	init_main(int argc, char **argv)
 {
-	int	fd;
-
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
-	fd = 3;
-	while (fd < 1024)
-		close(fd++);
 }
 
 static int	dup_stdin(int *fd)
@@ -29,13 +24,15 @@ static int	close_duped_fd(int *fd)
 	return (TRUE);
 }
 
-static void	do_minishell(t_env *env, char *line)
+static int	do_minishell(t_env *env, char *line)
 {
 	char	**path;
 	char	*pwd;
 	int		original_stdin_fd;
+	int		status;
 
 	original_stdin_fd = 0;
+	status = 0;
 	path = NULL;
 	if (getenv_str(env, "PATH"))
 		path = ft_split(getenv_str(env, "PATH"), ':');
@@ -47,11 +44,12 @@ static void	do_minishell(t_env *env, char *line)
 		if (!ft_memcmp(line, "clear", 6))
 			clear_history();
 		else
-			run_process(line, path, pwd);
+			status = run_process(line, path, pwd);
 		close_duped_fd(&original_stdin_fd);
 	}
 	if (path)
 		free_split(path);
+	return (status);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -67,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (!(line = readline("minishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
-		do_minishell(env, line);
+		ft_printf(1, "status = %d\n", do_minishell(env, line));
 		free(line);
 	}
 	free_env(env);

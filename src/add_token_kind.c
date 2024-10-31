@@ -1,105 +1,133 @@
 #include "../minishell.h"
 
-// char	*make_syntax_str(char c, t_token *token)
-// {
-// 	char	*str;
+int	token_count(t_token *token)
+{
+	int	count;
 
-// 	str = NULL;
-// 	str = ft_strdup("bash: syntax error near unexpected token `");
-// 	if (str)
-// 		str = strjoin_1char(str, c);
-// 	if (str)
-// 		str = strjoin_with_free(str, "'\n", FREE_S1);
-// 	if (!str)
-// 		return (NULL);
-// 	token->kind = ERR;
-// 	return (str);
-// }
+	count = 0;
+	if (!token)
+		return (0);
+	while (token)
+	{
+		count++;
+		if (token->next)
+			token = token->next;
+		else
+			break;
+	}
+	return (count);
+}
 
-// static t_token	*add_kind_pipe(t_toke *token)
-// {
-// 	if (ft_memcmp(token->word, "|", 2)								// |が２つ以上続く
-// 		|| (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))	// 前のtokenが"<>|"のどれか
-// 			|| !(token->pre))										// 前のtokenが無い
-// 	{
-// 		token->kind = ERR;
-// 		token->syntax_msg = make_syntax_str('|');
-// 		if (!token->syntax_msg)										// mallocエラーならNULLを返す
-// 			return (NULL);
-// 		// return (token);
-// 	}
-// 	else
-// 	{
-// 		token->kind = PIPE;
-// 		if (token->next)											// 次のtokenに進める
-// 			token = token->next;
-// 		else
-// 			token->status = END;									//　次のtokenがない時はstatusをENDにする
-// 	}
-// 	return (token);
-// }
+char	*make_syntax_str(char c, t_token *token)
+{
+	char	*str;
 
-// static t_token	*add_kind_lessthan(t_toke *token)
-// {
-// 	if (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))
-// 	{
-// 		if (*(token->pre->word) == '<' || *(token->pre->wore) == '>')
-// 			token->syntax_msg = make_syntax_str('<');
-// 		else
-// 			token->syntax_msg = make_syntax_str('|');
-// 		token->kind = ERR;
-// 		if (!token->syntax_msg)										// mallocエラーならNULLを返す
-// 			return (NULL);
-// 		// return (token);
-// 	}
-// 	if (!ft_memcmp(token->word, "<", 2) || !ft_memcmp(token->word, "<<", 3))
-// 	{
-// 		token->kind = SKIP;
-// 		if (token->next)
-// 			token = token->next;
-// 		else
-// 			token->status = END;
-// 	}
-// 	else if (ft_memcmp(token->word, "<<", 3) > 0)
-// 	{
-// 		token->syntax_msg = make_syntax_str('<');
-// 		token->kind = ERR;
-// 		if (!token->syntax_msg)										// mallocエラーならNULLを返す
-// 			return (NULL);
-// 	}
-// 	return (token);
-// }
+	str = NULL;
+	str = ft_strdup("bash: syntax error\n");
+	if (!str)
+		return (NULL);
+	token->kind = ERR;
+	return (str);
+}
 
-// int	add_token_kind(t_token *token)
-// {
-// 	t_token	*ptr;
+static t_token	*add_kind_pipe(t_toke *token)
+{
+	if (ft_memcmp(token->word, "|", 2)								// |が２つ以上続く
+		|| (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)))	// 前のtokenが"<>|"のどれか
+			|| !(token->pre))										// 前のtokenが無い
+	{
+		token->kind = SYNTAX;
+		token->syntax_msg = make_syntax_str();
+		if (!token->syntax_msg)										// mallocエラー
+			token->status = ERR;
+	}
+	else
+	{
+		token->kind = PIPE;
+		if (token->next)											// 次のtokenに進める
+			token = token->next;
+		else
+			token->status = END;									//　次のtokenがない時はstatusをENDにする
+	}
+	return (token);
+}
 
-// 	ptr = token;
-// 	while (ptr)
-// 	{
-// 		if (ptr->status == FREE)
-// 			return (FALSE);
-// 		if (ptr->kind == ERR || ptr->status == END)
-// 			return (TRUE); //syntax err 又はtokenの最後なのでこれ以降は作業しなくて良い
-// 		if (*(ptr->word) == '|' && !(ptr = add_kind_pipe(ptr)))
-// 			return (FALSE);
-// 		else if (*(ptr->word) == '<' && !(ptr = add_kind_lessthan(ptr)))
-// 			return (FALSE);
-// 		else if (*(ptr->word) == '>' && !(ptr = add_kind_morethan(ptr)))
-// 			return (FALSE);
-// 		else
-// 		{
-// 			if (!ptr->pre || ptr->pre->kind != COMMAND)
-// 				ptr->kind = COMMAND;
-// 			else if (ptr->pre->kind == COMMAND)
-// 				ptr->kind = OPTION;
-// 			if (ptr->next)
-// 				ptr = ptr->next;
-// 			else
-// 				return (TRUE);
-// 		}
-// 	}
-// }
+static t_token	*add_kind_lessthan(t_toke *token)
+{
+	if (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)) ||
+		ft_strlen(token->word) > 2)
+	{
+		token->kind = SYNTAX;
+		token->syntax_msg = make_syntax_str();
+		if (!token->syntax_msg)										// mallocエラー
+			token->status = ERR;
+	}
+	if (!ft_memcmp(token->word, "<", 2) || !ft_memcmp(token->word, "<<", 3))
+	{
+		token->kind = SKIP;
+		if (token->next)
+			token = token->next;
+		else
+			token->status = END;
+	}
+	return (token);
+}
+
+static t_token	*add_kind_morethan(t_toke *token)
+{
+	if (token->pre && ft_strchr(TOKEN_1, *(token->pre->word)) ||
+		ft_strlen(token->word) > 2)
+	{
+		token->kind = SYNTAX;
+		token->syntax_msg = make_syntax_str();
+		if (!token->syntax_msg)										// mallocエラー
+			token->status = ERR;
+	}
+	if (!ft_memcmp(token->word, ">", 2) || !ft_memcmp(token->word, ">>", 3))
+	{
+		token->kind = SKIP;
+		if (token->next)
+			token = token->next;
+		else
+			token->status = END;
+	}
+	return (token);
+}
+
+static t_token	*add_command_kind(t_token *token)
+{
+
+}
+
+int	add_token_kind(t_token *token)
+{
+	while (token)
+	{
+		if (ptr->status == ERR)
+			return (FALSE);
+		if (ptr->kind == SYNTAX || ptr->status == END)
+			return (TRUE); //syntax err 又はtokenの最後なのでこれ以降は作業しなくて良い
+		if (*(ptr->word) == '|')
+			token = add_kind_pipe(token);	// 
+		else if (*(ptr->word) == '<')
+			token = add_kind_lessthan(token);
+		else if (*(ptr->word) == '>')
+			token = add_kind_morethan(token);
+		else
+			token = add_command_kind(token);
+			
+		{
+			if (!ptr->pre || ptr->pre->kind != COMMAND)
+				ptr->kind = COMMAND;
+			else if (ptr->pre->kind == COMMAND)
+				ptr->kind = OPTION;
+			if (ptr->next)
+				ptr = ptr->next;
+			else
+				return (TRUE);
+		}
+	}
+}
 
 void	add_token_kind(t_token *token)
 {

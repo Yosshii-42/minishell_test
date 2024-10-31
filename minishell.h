@@ -46,6 +46,7 @@ typedef enum e_kind
 	LIMITTER,
 	WRFILE,
 	WRF_APP,
+	SYNTAX,
 	ERR,
 	FREE,
 	SKIP,
