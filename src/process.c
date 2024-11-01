@@ -9,12 +9,15 @@ static int	wait_process(int count)
 
 	status = 0;
 	i = -1;
+	// 追加(SIGPIPE問題)
+	exit_status = 0;
 	while (++i < count)
 	{
 		if (waitpid(-1, &status, 0) == -1)
 			print_error_and_exit(strerror(errno));
-		if (WIFEXITED(status))
-			exit_status = WEXITSTATUS(status);
+		//if (WIFEXITED(status))
+		//	exit_status = WEXITSTATUS(status);
+		exit_status = get_exit_status(status);
 	}
 	return (exit_status);
 }

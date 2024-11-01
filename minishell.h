@@ -15,8 +15,6 @@
 # include "./libft/includes/libft.h"
 # include "./libft/includes/ft_printf.h"
 # include "./libft/includes/get_next_line.h"
-// 追加
-# include <signal.h>
 
 # define FREE_S1 1
 # define FREE_S2 2
@@ -123,5 +121,7 @@ int		event(void);
 void	perror_prestr(void);
 void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
+// SIGPIPE用
+int		get_exit_status(int status);
 
 #endif

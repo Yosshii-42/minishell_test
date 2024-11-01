@@ -67,6 +67,7 @@ int	main(int argc, char **argv, char **envp)
 			else
 				run_process(line, env);
 		}
+		//tokenizer();
 		close_duped_stdin(&original_stdin_fd);
 	}
 	clear_history();

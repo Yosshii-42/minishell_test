@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	reset_signal(int signum)
 {
@@ -42,6 +42,8 @@ void	init_signal(void)
 		rl_event_hook = event;
 	rl_catch_signals = 0;
 	ignore_signal(SIGQUIT);
+	// SIGPIPE追加
+	ignore_signal(SIGPIPE);
 	ready_signal(SIGINT);
 }
 
@@ -49,4 +51,6 @@ void	destroy_signal(void)
 {
 	reset_signal(SIGQUIT);
 	reset_signal(SIGINT);
+	// SIGPIPE追加
+	reset_signal(SIGPIPE);
 }
