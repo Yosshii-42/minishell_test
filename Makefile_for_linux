@@ -9,18 +9,15 @@ SRCS	= src/main.c \
 		  src/process.c \
 		  src/process_utils.c \
 		  src/utils.c \
-		  src/free.c \
-		  src/signal.c \
-		  src/signal_handler.c
-
+		  src/free.c
 OBJS	= $(SRCS:.c=.o)
-CC		= cc
-FLAGS	= -g -Wall -Wextra -Werror
-LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
-HEADDIR	= /.
+CC		= gcc
+FLAGS	= -Wall -Wextra -Werror
+LIBS	= -lreadline -lhistory
+# FLAGS   += -fsanitize=address
+HEADDIR	= .
 LIBFT	= ./libft/libft.a
-RLDIR   = $(shell brew --prefix readline)
+# RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
@@ -31,7 +28,8 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) -L$(RLDIR)/Lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) $(HEADDER) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+
 
 clean:
 	make fclean -C ./libft

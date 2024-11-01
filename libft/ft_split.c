@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 18:54:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/10/03 21:10:23 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/10/27 23:09:08 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static char	*ft_make_string_i(char const *s, char c)
 	return (str);
 }
 
-static void	*free_split(char **result, int i)
+static void	*ft_free_split(char **result, int i)
 {
 	while (result[i])
 		free(result[i--]);
@@ -77,7 +77,7 @@ char	**ft_split(char const *s, char c)
 		{
 			result[i] = ft_make_string_i(s, c);
 			if (!result[i])
-				return (free_split(result, i), NULL);
+				return (ft_free_split(result, i), NULL);
 			i++;
 			while (*s && *s != c)
 				s++;

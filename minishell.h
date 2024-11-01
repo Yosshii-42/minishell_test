@@ -35,7 +35,7 @@ typedef enum e_kind
 {
 	PIPE,
 	COMMAND,
-	ARGUMENT,
+	OPTION,
 	SKIP,
 	RDFILE,
 	WRFILE,
@@ -64,6 +64,7 @@ typedef struct s_cmd
 {
 	int		readfd;
 	int		writefd;
+	int		count;
 	int		pp[2];
 	char	*pathname;
 	char	**cmd;
@@ -78,7 +79,7 @@ t_token	*make_token_lst(char *line);
 void add_token_kind(t_token *token);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
 void	init_cmd(t_cmd *cmd);
 void    safe_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
@@ -89,7 +90,7 @@ void	open_write_file(t_cmd *cmd, t_token *token);
 void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(char *line, t_env *env);
+int		run_process(char *line, char **path, char *pwd, int *original_stdin_fd);
 
 // process utils
 int		cmd_count(t_token *token);
@@ -101,9 +102,9 @@ void	token_lstclear(t_token *token);
 // free functions
 void	free_env(t_env *env);
 void	free_env_and_exit(t_env *env);
-void	ft_free(char **str, int i);
-void	ft_free_split(char **split);
-void	ft_free_cmd(t_cmd *cmd);
+// void	ft_free(char **str, int i);
+void	free_split(char **split);
+void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);

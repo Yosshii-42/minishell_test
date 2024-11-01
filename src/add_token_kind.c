@@ -48,7 +48,7 @@ void add_token_kind(t_token *token)
 			if (!ptr->pre || ptr->pre->kind != COMMAND)
 				ptr->kind = COMMAND;
 			else if (ptr->pre->kind == COMMAND)
-				ptr->kind = ARGUMENT;
+				ptr->kind = OPTION;
 			if (ptr->next)
 				ptr = ptr->next;
 			else

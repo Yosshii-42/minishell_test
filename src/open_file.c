@@ -12,45 +12,51 @@ static char	*set_file_err(char *filename, char *err_msg)
 		message = strjoin_with_free(message, err_msg, FREE_S1);
     if (message)
 		message = strjoin_with_free(message, "\n", FREE_S1);
-    // if (!message)
-    //     return (NULL);
-	// cmd->err_msg = message;
+	if (!message)
+		return (ft_printf(2, "%s\n", strerror(errno)), NULL);
 	return (message);
 }
 
-static void	here_doc_process(char *eof)
+void	print_limitter_warning(int count, char *eof)
+{
+	ft_printf(2, "\nbash: warning: here-document delimited at ");
+	ft_printf(2, "line%d by end-of-file (wanted `%s')\n", count, eof);
+}
+
+static int	heredoc_process(char *eof, t_cmd *cmd)
 {
 	char	*str;
 	int		fd;
 
 	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0600);
 	if (fd < 0)
-		exit(EXIT_FAILURE);
+		return (FALSE);
 	str = NULL;
+	cmd->count = 0;
 	while (1)
 	{
-		ft_printf(1, "pipe heredoc> ");
-		str = get_next_line(0);
-		if (str == NULL)
-			break ;
-		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10 || !str)
+		ft_printf(1, "> ");
+		if (!(str = get_next_line(0)))
 		{
-			if (*str)
-				free(str);
+			print_limitter_warning(cmd->count + 1, eof);
 			break ;
 		}
+		(cmd->count)++;
+		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10 && (free(str), 1))
+			break ;
 		ft_printf(fd, "%s", str);
 		free(str);
 		str = NULL;
 	}
-	close(fd);
+	return (close(fd), TRUE);
 }
 
 void	open_read_file(t_cmd *cmd, t_token *token)
 {
 	if (token->kind == LIMITTER)
 	{
-		here_doc_process(token->word);
+		if (heredoc_process(token->word, cmd) == FALSE)
+			return ;
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
 		if (cmd->readfd < 0)
 			cmd->err_msg = set_file_err(FILE_NAME, strerror(errno));

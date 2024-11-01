@@ -14,7 +14,7 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	}
 }
 
-static char	*check_access(char *command, char **path, char *pwd)
+static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 {
 	char	*str;
 	int	i;
@@ -44,7 +44,7 @@ static char **make_command_array(t_token *token)
 
 	ptr = token;
 	count = 0;
-	while (ptr->kind == COMMAND || ptr->kind == ARGUMENT)
+	while (ptr->kind == COMMAND || ptr->kind == OPTION)
 	{
 		count++;
 		if (ptr->next)
@@ -61,19 +61,14 @@ static char **make_command_array(t_token *token)
 		cmd[i] = ft_strdup(token->word);
 		token = token->next;
 		if (!cmd[i])
-			return (ft_free_split(cmd), NULL);
+			return (free_split(cmd), NULL);
 	}
 	cmd[i] = NULL;
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **path)
+static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
 {
-	// char	**path;
-	char	*pwd;
-
-	// path = ft_split(getenv_str(env, "PATH"), ':');
-	pwd = getenv_str(env, "PWD");
 	cmd->cmd = make_command_array(token);
 	if (!cmd)
 		exit (1); //TODO error_exit
@@ -84,57 +79,47 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, t_env *env, char **pat
 		else if (cmd->cmd[0][0] == '.')
 			cmd->pathname = make_pwd_path(cmd->cmd[0], pwd);
 		else
-			cmd->pathname = check_access(cmd->cmd[0], path, pwd);
+			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0], path, pwd);
 		if (cmd->pathname)
 			return ;
 	}
 	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 }
 
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
-	char	**path;
-	t_token	*ptr;
-
-	path = NULL;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
-    path = NULL;
-	path = ft_split(getenv_str(env, "PATH"), ':');
-	ptr = token;
-	while (ptr)
+	while (token)
 	{
-		if (ptr->kind == PIPE)
+		if (token->kind == PIPE)
 		{
 			safe_pipe(cmd);
-			ptr = ptr->next;
+			token = token->next;
 			break;
 		}
-		else if (ptr->kind == RDFILE || ptr->kind == LIMITTER)
-			open_read_file(cmd, ptr);
-		else if (ptr->kind == WRFILE || ptr->kind == WRFILE_APP)
-			open_write_file(cmd, ptr);
-		else if (ptr->kind == COMMAND)
+		else if (token->kind == RDFILE || token->kind == LIMITTER)
+			open_read_file(cmd, token);
+		else if (token->kind == WRFILE || token->kind == WRFILE_APP)
+			open_write_file(cmd, token);
+		else if (token->kind == COMMAND)
 		{
-			make_path_and_cmd(ptr, cmd, env, path);
-			while (ptr->next)
+			make_path_and_cmd(token, cmd, path, pwd);
+			while (token->next)
 			{
-				if (ptr->next->kind == ARGUMENT)
-					ptr = ptr->next;
+				if (token->next->kind == OPTION)
+					token = token->next;
 				else
 					break;
 			}
 		}
-		// if (token->kind == END)
-		// 	break;
-		if (ptr->next)
-			ptr = ptr->next;
+		if (token->next)
+			token = token->next;
 		else
 			break;
 	}
-	ft_free_split(path);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	return (cmd);
