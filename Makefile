@@ -15,7 +15,7 @@ SRCS	= src/main.c \
 
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
-FLAGS	= -Wall -Wextra -Werror
+FLAGS	= -g -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
 HEADDIR	= /.

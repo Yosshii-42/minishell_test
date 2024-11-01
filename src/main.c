@@ -71,9 +71,9 @@ int	main(int argc, char **argv, char **envp)
 			if (!ft_memcmp(line, "clear", 6))
 				clear_history();
 			else
-				run_process(line, path, pwd);//env);
+				run_process(line, path, pwd, &original_stdin_fd);//env);
 		}
-		close_duped_stdin(&original_stdin_fd);
+		// close_duped_stdin(&original_stdin_fd);
 	}
 	free_split(path);
 	// free_env(env);

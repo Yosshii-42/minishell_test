@@ -38,6 +38,7 @@ static void	child_process(t_cmd *cmd, int i, int count, char **path)
 	else if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
 		print_error_and_exit(strerror(errno));
 	close_fds(cmd);
+	close(3);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
@@ -45,7 +46,7 @@ static void	child_process(t_cmd *cmd, int i, int count, char **path)
 	}
 }
 
-int	run_process(char *line, char **path, char *pwd)
+int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
@@ -71,5 +72,7 @@ int	run_process(char *line, char **path, char *pwd)
 			parent_process(cmd, i, cmd_count(ptr));
 	}
 	token_lstclear(ptr);
+	dup2(*original_stdin_fd, STDIN_FILENO);
+	close(*original_stdin_fd);
 	return (wait_process(i));
 }
