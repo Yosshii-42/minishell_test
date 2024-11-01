@@ -76,7 +76,8 @@ int	main(int argc, char **argv, char **envp)
 		//tokenizer();
 		 close_duped_stdin(&original_stdin_fd);
 	}
-	free_split(path);
+	if (!path)
+		free_split(path);
 	// free_env(env);
 	clear_history();
 	exit(0);
