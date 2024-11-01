@@ -28,8 +28,8 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	return (result);
 }
 
-void	print_error_and_exit(char *err_message)
-{
-	ft_printf(2, "%s\n", err_message);
-	exit(EXIT_FAILURE);
-}
+// void	print_error_and_exit(char *err_message)
+// {
+// 	ft_printf(2, "%s\n", err_message);
+// 	exit(EXIT_FAILURE);
+// }

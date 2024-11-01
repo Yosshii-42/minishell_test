@@ -18,11 +18,13 @@ int	cmd_count(t_token *token)
 	}
 	return (count + 1);
 }
-void	make_fork(pid_t *pid)
+
+int	make_fork(pid_t *pid)
 {
 	*pid = fork();
 	if (*pid == -1)
-		print_error_and_exit(strerror(errno));
+		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+	return (TRUE);
 }
 
 void	close_fds(t_cmd *cmd)

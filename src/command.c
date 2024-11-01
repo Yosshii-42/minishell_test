@@ -96,7 +96,8 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	{
 		if (token->kind == PIPE)
 		{
-			safe_pipe(cmd);
+			if (!make_pipe(cmd))
+				return (free_cmd(cmd), NULL);
 			token = token->next;
 			break;
 		}
