@@ -2,12 +2,6 @@
 
 volatile sig_atomic_t g_sig_status = READLINE;
 
-static void	init_main(int argc, char **argv)
-{
-	if (argc == 0 || !argv[0])
-		exit(EXIT_FAILURE);
-}
-
 static int	dup_stdin(int *fd)
 {
 	*fd = dup(STDIN_FILENO);
@@ -50,8 +44,11 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 
 	init_signal();
-	init_main(argc, argv);
+	if (argc == 0 || !argv[0])
+		exit(EXIT_FAILURE);
 	env = set_env(envp);
+	if (!env)
+		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
 	while (1)
 	{

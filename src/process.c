@@ -1,15 +1,13 @@
 
 #include "../minishell.h"
 
-static int	wait_process(int count)
+static int	wait_process(void)//int count)
 {
 	int	status;
-	int	i;
 	int	exit_status;
 
 	status = 0;
-	i = -1;
-	while (++i < count)
+	while (1)
 	{
 		if (waitpid(-1, &status, 0) == -1)
 		{
@@ -21,7 +19,7 @@ static int	wait_process(int count)
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 		// if (WIFSIGNALED(status))
-		// 	return (WTERMSIG(status) + 128);
+		// 	exit_status = WTERMSIG(status) + 128;
 	}
 	return (exit_status);
 }
@@ -57,14 +55,16 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
-	int		i;
+	// int		i;
 	t_token	*token;
 	t_token	*ptr;
+	int		count;
 
 	token = make_token_lst(line);
+	count = cmd_count(token);
 	ptr = token;
-	i = -1;
-	while (++i < cmd_count(ptr))
+	// i = -1;
+	while (count--)//++i < cmd_count(ptr))
 	{
 		cmd = NULL;
 		cmd = make_cmd(token, cmd, path, pwd);
@@ -82,5 +82,5 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 	token_lstclear(ptr);
 	dup2(*original_stdin_fd, STDIN_FILENO);
 	close(*original_stdin_fd);
-	return (wait_process(i));
+	return (wait_process());
 }

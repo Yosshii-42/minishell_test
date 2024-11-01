@@ -20,25 +20,6 @@ void	free_env(t_env *env)
 	}
 }
 
-void	free_env_and_exit(t_env *env)
-{
-	free_env(env);
-	exit(EXIT_FAILURE);
-}
-
-// void	ft_free(char **str, int i)
-// {
-// 	char	**tmp;
-
-// 	tmp = str;
-// 	if (!str)
-// 		return ;
-// 	while (tmp[i])
-// 		free(tmp[i++]);
-// 	if (str)
-// 		free(str);
-// }
-
 void	free_split(char **split)
 {
 	int	i;
