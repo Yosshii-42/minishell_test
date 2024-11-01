@@ -32,7 +32,27 @@ t_token	*tokenizer(char	*prompt, int *error_status)
 		token = make_token(&prompt, token, error_status);
 		if (*error_status == 1)
 			return (root_token.next);
+		//if (*error_status == 1)
+		//{
+		//	free_tokens(roor_token.next);
+		//	return (NULL);
+		//}
 	}
 	token->next = make_eof_token();
 	return (root_token.next);
 }
+
+// トークンリストのクリーンアップ関数(エラー時に使用)
+
+//void	free_tokens(t_token *token)
+//{
+//	t_token	*tmp;
+
+//	while (token)
+//	{
+//		tmp = token;
+//		token = token->next;
+//		free(tmp->word);
+//		free(tmp);
+//	}
+//}
