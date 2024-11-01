@@ -12,26 +12,28 @@ SRCS	= src/main.c \
 		  src/free.c \
 		  src/signal.c \
 		  src/signal_handler.c
-
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
-FLAGS	= -g -Wall -Wextra -Werror
+FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
 # FLAGS   += -fsanitize=address -g
-HEADDIR	= /.
+HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
+INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+LIBDIRS  = -L$(RLDIR)/lib
 RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
+	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) -L$(RLDIR)/Lib -I$(RLDIR)/include $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) $(LIBDIRS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+	
 
 clean:
 	make fclean -C ./libft
