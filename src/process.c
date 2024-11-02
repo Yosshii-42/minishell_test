@@ -44,6 +44,8 @@ static void	child_process(t_cmd *cmd, char **path)
 		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
 	close(3);
+	if (!(cmd->cmd))
+		exit(1);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
@@ -74,10 +76,12 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 	while (count--)//++i < cmd_count(ptr))
 	{
 		cmd = NULL;
-		if (!(cmd = make_cmd(token, cmd, path, pwd)))
-			return (end_process(token, original_stdin), 139);
-		if (!(token = cmd->token))
-			break;
+		cmd = make_cmd(token, cmd, path, pwd);
+		if (!(cmd))
+			return (end_process(ptr, original_stdin), 139);
+		if (!(cmd->cmd))
+			return (end_process(ptr, original_stdin), 0);
+		token = cmd->token;
 		if (!make_fork(&pid))
 			return (token_lstclear(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)

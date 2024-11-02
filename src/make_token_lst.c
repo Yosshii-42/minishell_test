@@ -47,6 +47,8 @@ t_token	*make_token_lst(char *line)
 	int		i;
 	t_token	*token;
 
+	if (!line)
+		return (NULL);
 	split = ft_split(line, ' ');
 	if (!split)
 		return (NULL);
