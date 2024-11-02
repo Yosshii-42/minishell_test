@@ -34,6 +34,7 @@ static void	parent_process(t_cmd *cmd)
 
 static void	child_process(t_cmd *cmd, char **path)
 {
+	printf("child");
 	if (cmd->err_msg)
 		exit_child_process(cmd);
 	if (cmd->readfd > 0)
@@ -67,11 +68,18 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 	while (count--)//++i < cmd_count(ptr))
 	{
 		cmd = NULL;
+		// cmd = make_cmd(token, cmd, path, pwd);
 		cmd = make_cmd(token, cmd, path, pwd);
-		while (!(token->end == END || token->kind == PIPE) && token->next)
-			token = token->next;
-		if (token->kind == PIPE && token->next)
-			token = token->next;
+		token = cmd->token;
+		if (!token)
+			break;
+	printf("run_process token = %s, pathname = %s\n", token->word, cmd->pathname);
+		if (!token)
+			break;
+		// while (!(token->status == END || token->kind == PIPE) && token->next)
+		// 	token = token->next;
+		// if (token->kind == PIPE && token->next)
+		// 	token = token->next;
 		if (!make_fork(&pid))
 			return (token_lstclear(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)

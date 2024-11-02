@@ -36,7 +36,7 @@ static void lstnew(t_token **start, char *token)
 	if (!(new->word))
 		return ;
 	new->kind = -1;
-	new->end = -1;
+	new->status = -1;
 	new->next = NULL;
 	lstadd_back(start, new);
 }

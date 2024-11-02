@@ -10,6 +10,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->pathname = NULL;
 	cmd->cmd = NULL;
 	cmd->err_msg = NULL;
+    cmd->token = NULL;
 }
 
 int    make_pipe(t_cmd *cmd)

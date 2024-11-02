@@ -71,7 +71,7 @@ void	open_read_file(t_cmd *cmd, t_token *token)
 
 void	open_write_file(t_cmd *cmd, t_token *token)
 {
-	if (token->kind == WRFILE_APP)
+	if (token->kind == WRF_APP)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_APPEND, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)

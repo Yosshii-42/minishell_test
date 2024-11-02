@@ -35,9 +35,10 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	return (strjoin_with_free("x", command, NO_FREE));
 }
 
-static char **make_command_array(t_token *token)
+// static char **make_command_array(t_token *token)
+static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 {
-	char	**cmd;
+	// char	**cmd;
 	t_token	*ptr;
 	int		count;
 	int		i;
@@ -47,29 +48,31 @@ static char **make_command_array(t_token *token)
 	while (ptr->kind == COMMAND || ptr->kind == OPTION)
 	{
 		count++;
-		if (ptr->next)
+		if (ptr->status != END && ptr->kind == OPTION)
 			ptr = ptr->next;
 		else
 			break;
 	}
-	cmd = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!cmd)
+	cmd->cmd = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!(cmd->cmd))
 		return (NULL);
 	i = -1;
 	while (++i < count)
 	{
-		cmd[i] = ft_strdup(token->word);
+		cmd->cmd[i] = ft_strdup(token->word);
 		token = token->next;
-		if (!cmd[i])
-			return (free_split(cmd), NULL);
+		if (!(cmd->cmd[i]))
+			return (free_split(cmd->cmd), NULL);
 	}
-	cmd[i] = NULL;
+	cmd->cmd[i] = NULL;
+	cmd->token = ptr;
 	return (cmd);
 }
 
 static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
 {
-	cmd->cmd = make_command_array(token);
+	// cmd->cmd = make_command_array(token);
+	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		exit (1); //TODO error_exit
 	if ((cmd->cmd[0]))
@@ -88,40 +91,48 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
+	printf("make_cmd\n");
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
 	while (token)
 	{
+		if (token->kind == SYNTAX)
+			return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
+			
 			token = token->next;
 			break;
 		}
 		else if (token->kind == RDFILE || token->kind == LIMITTER)
 			open_read_file(cmd, token);
-		else if (token->kind == WRFILE || token->kind == WRFILE_APP)
+		else if (token->kind == WRFILE || token->kind == WRF_APP)
 			open_write_file(cmd, token);
 		else if (token->kind == COMMAND)
 		{
 			make_path_and_cmd(token, cmd, path, pwd);
-			while (token->next)
-			{
-				if (token->next->kind == OPTION)
-					token = token->next;
-				else
-					break;
-			}
+			token = cmd->token;
+			printf("pathnname = %s, cmd[0] = %s, cmd[1] = %s\n", cmd->pathname, cmd->cmd[0], cmd->cmd[1]);
+			// while (token->next)
+			// {
+			// 	if (token->next->kind == OPTION)
+			// 		token = token->next;
+			// 	else
+			// 		break;
+			// }
 		}
-		if (token->next)
+		if (token->status != END)
 			token = token->next;
 		else
 			break;
 	}
+	printf("make_cmd token = %s\n", token->word);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
+	cmd->token = token;
 	return (cmd);
 }

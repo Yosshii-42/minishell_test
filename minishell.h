@@ -38,11 +38,16 @@ typedef enum e_kind
 	PIPE,
 	COMMAND,
 	OPTION,
+	LESSTHAN,
+	HERE_DOC,
+	MORETHAN,
+	APPEND,
 	SKIP,
 	RDFILE,
 	WRFILE,
-	WRFILE_APP,
+	WRF_APP,
 	LIMITTER,
+	SYNTAX,
 	END
 } t_kind;
 
@@ -57,7 +62,7 @@ typedef struct s_token
 {
 	char			*word;
 	t_kind			kind;
-	t_kind			end;
+	t_kind			status;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -71,6 +76,7 @@ typedef struct s_cmd
 	char	*pathname;
 	char	**cmd;
 	char	*err_msg;
+	struct s_token *token;
 }		t_cmd;
 
 // env
@@ -78,7 +84,7 @@ t_env	*set_env(char **envp);
 
 //token
 t_token	*make_token_lst(char *line);
-void add_token_kind(t_token *token);
+void 	add_token_kind(t_token *token);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
@@ -109,7 +115,7 @@ void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
-void	print_error_and_exit(char *err_message);
+// void	print_error_and_exit(char *err_message);
 
 // signal
 void	reset_signal(int signum);
