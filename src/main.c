@@ -14,10 +14,10 @@ static int	do_minishell(t_env *env, char *line)
 {
 	char	**path;
 	char	*pwd;
-	int		original_stdin_fd;
+	int		original_stdin;
 	int		status;
 
-	original_stdin_fd = 0;
+	original_stdin = 0;
 	status = 0;
 	path = NULL;
 	if (getenv_str(env, "PATH"))
@@ -27,11 +27,11 @@ static int	do_minishell(t_env *env, char *line)
 	if (*line)
 	{
 		add_history(line);
-		dup_stdin(&original_stdin_fd);
+		dup_stdin(&original_stdin);
 		if (!ft_memcmp(line, "clear", 6))
 			clear_history();
 		else
-			status = run_process(line, path, pwd, &original_stdin_fd);
+			status = run_process(line, path, pwd, &original_stdin);
 	}
 	if (path)
 		free_split(path);

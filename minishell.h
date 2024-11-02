@@ -98,7 +98,7 @@ void	open_write_file(t_cmd *cmd, t_token *token);
 void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(char *line, char **path, char *pwd, int *original_stdin_fd);
+int		run_process(char *line, char **path, char *pwd, int *original_stdin);
 
 // process utils
 int		cmd_count(t_token *token);

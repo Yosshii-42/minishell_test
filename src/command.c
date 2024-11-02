@@ -35,10 +35,8 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	return (strjoin_with_free("x", command, NO_FREE));
 }
 
-// static char **make_command_array(t_token *token)
 static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 {
-	// char	**cmd;
 	t_token	*ptr;
 	int		count;
 	int		i;
@@ -48,7 +46,7 @@ static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 	while (ptr->kind == COMMAND || ptr->kind == OPTION)
 	{
 		count++;
-		if (ptr->status != END && ptr->kind == OPTION)
+		if (ptr->status != END && ptr->next->kind == OPTION)
 			ptr = ptr->next;
 		else
 			break;
@@ -71,7 +69,6 @@ static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 
 static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
 {
-	// cmd->cmd = make_command_array(token);
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		exit (1); //TODO error_exit
@@ -91,15 +88,17 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
-	printf("make_cmd\n");
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
 	while (token)
 	{
+			printf("token = %s, token->kind = %d\n", token->word, token->kind);
 		if (token->kind == SYNTAX)
+		{
 			return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
+		}
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))
@@ -116,21 +115,12 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		{
 			make_path_and_cmd(token, cmd, path, pwd);
 			token = cmd->token;
-			printf("pathnname = %s, cmd[0] = %s, cmd[1] = %s\n", cmd->pathname, cmd->cmd[0], cmd->cmd[1]);
-			// while (token->next)
-			// {
-			// 	if (token->next->kind == OPTION)
-			// 		token = token->next;
-			// 	else
-			// 		break;
-			// }
 		}
 		if (token->status != END)
 			token = token->next;
 		else
 			break;
 	}
-	printf("make_cmd token = %s\n", token->word);
 	if (access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	cmd->token = token;

@@ -34,7 +34,6 @@ static void	parent_process(t_cmd *cmd)
 
 static void	child_process(t_cmd *cmd, char **path)
 {
-	printf("child");
 	if (cmd->err_msg)
 		exit_child_process(cmd);
 	if (cmd->readfd > 0)
@@ -52,7 +51,14 @@ static void	child_process(t_cmd *cmd, char **path)
 	}
 }
 
-int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
+void	end_process(t_token *token, int *original_stdin)
+{
+	token_lstclear(token);
+	dup2(*original_stdin, STDIN_FILENO);
+	close(*original_stdin);
+}
+
+int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
@@ -68,18 +74,10 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 	while (count--)//++i < cmd_count(ptr))
 	{
 		cmd = NULL;
-		// cmd = make_cmd(token, cmd, path, pwd);
-		cmd = make_cmd(token, cmd, path, pwd);
-		token = cmd->token;
-		if (!token)
+		if (!(cmd = make_cmd(token, cmd, path, pwd)))
+			return (end_process(token, original_stdin), 139);
+		if (!(token = cmd->token))
 			break;
-	printf("run_process token = %s, pathname = %s\n", token->word, cmd->pathname);
-		if (!token)
-			break;
-		// while (!(token->status == END || token->kind == PIPE) && token->next)
-		// 	token = token->next;
-		// if (token->kind == PIPE && token->next)
-		// 	token = token->next;
 		if (!make_fork(&pid))
 			return (token_lstclear(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)
@@ -87,8 +85,6 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
 		else if (pid > 0)
 			parent_process(cmd);
 	}
-	token_lstclear(ptr);
-	dup2(*original_stdin_fd, STDIN_FILENO);
-	close(*original_stdin_fd);
+	end_process(token, original_stdin);
 	return (wait_process());
 }
