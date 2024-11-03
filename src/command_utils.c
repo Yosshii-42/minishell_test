@@ -11,6 +11,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->cmd = NULL;
 	cmd->err_msg = NULL;
     cmd->token = NULL;
+    cmd->status = -1;
 }
 
 int    make_pipe(t_cmd *cmd)

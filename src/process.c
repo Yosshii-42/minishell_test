@@ -26,10 +26,11 @@ static int	wait_process(void)//int count)
 
 static void	parent_process(t_cmd *cmd)
 {
-	if (cmd->pp[0] > 0)
+	if (cmd->status == SYNTAX)
+		ft_printf(2, "bash: syntax error\n");
+	else if (cmd->pp[0] > 0)
 		dup2(cmd->pp[0], STDIN_FILENO);
 	close_fds(cmd);
-	free_cmd(cmd);
 }
 
 static void	child_process(t_cmd *cmd, char **path)
@@ -53,8 +54,10 @@ static void	child_process(t_cmd *cmd, char **path)
 	}
 }
 
-void	end_process(t_token *token, int *original_stdin)
+void	end_process(t_cmd *cmd, t_token *token, int *original_stdin)
 {
+	if (cmd)
+		free_cmd(cmd);
 	token_lstclear(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
@@ -77,7 +80,7 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 	{
 		cmd = NULL;
 		if (!(cmd = make_cmd(token, cmd, path, pwd)))
-			return (end_process(token, original_stdin), 2);
+			return (end_process(cmd, token, original_stdin), -1);
 		if (!(token = cmd->token))
 			break;
 		if (!make_fork(&pid))
@@ -86,7 +89,9 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 			child_process(cmd, path);
 		else if (pid > 0)
 			parent_process(cmd);
+		if (cmd->status == SYNTAX)
+			return (end_process(cmd, token, original_stdin), 2);
 	}
-	end_process(token, original_stdin);
+	end_process(cmd, token, original_stdin);
 	return (wait_process());
 }

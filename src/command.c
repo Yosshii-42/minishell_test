@@ -95,7 +95,11 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	while (token)
 	{
 		if (token->kind == SYNTAX)
-			return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
+		{
+			cmd->status = SYNTAX;
+			break;
+		}
+			// return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))

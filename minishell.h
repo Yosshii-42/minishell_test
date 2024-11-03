@@ -77,6 +77,7 @@ typedef struct s_cmd
 	char	**cmd;
 	char	*err_msg;
 	struct s_token *token;
+	t_kind	status;
 }		t_cmd;
 
 // env
