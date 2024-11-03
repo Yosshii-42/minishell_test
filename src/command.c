@@ -94,16 +94,12 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	init_cmd(cmd);
 	while (token)
 	{
-			printf("token = %s, token->kind = %d\n", token->word, token->kind);
 		if (token->kind == SYNTAX)
-		{
 			return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
-		}
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
-			
 			token = token->next;
 			break;
 		}

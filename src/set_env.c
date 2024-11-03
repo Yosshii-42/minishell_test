@@ -17,10 +17,12 @@ static void	lstadd_back(t_env **start, t_env *new)
 	if (!*start)
 	{
 		*start = new;
+		new->pre = NULL;
 		return ;
 	}	
 	ptr = lstlast(*start);
 	ptr->next = new;
+	new->pre = ptr;
 }
 
 static size_t	strchr_len(const char *s, int c)

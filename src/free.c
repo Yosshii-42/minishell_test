@@ -14,9 +14,16 @@ void	free_env(t_env *env)
 			free(env->value);
 			env->value = NULL;
 		}
-		free(env);
 		if (env->next)
+		{
 			env = env->next;
+			free(env->pre);
+		}
+		else
+		{
+			free(env);
+			break;
+		}
 	}
 }
 

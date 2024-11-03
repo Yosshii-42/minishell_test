@@ -75,7 +75,7 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 	{
 		cmd = NULL;
 		if (!(cmd = make_cmd(token, cmd, path, pwd)))
-			return (end_process(token, original_stdin), 139);
+			return (end_process(token, original_stdin), 2);
 		if (!(token = cmd->token))
 			break;
 		if (!make_fork(&pid))

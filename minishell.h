@@ -56,6 +56,7 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	struct s_env	*next;
+	struct s_env	*pre;
 }t_env;
 
 typedef struct s_token

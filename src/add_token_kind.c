@@ -24,7 +24,7 @@ static t_token	*add_kind_pipe(t_token *token)
 		return (token->kind = SYNTAX, token);
 	if (!token->pre || ft_strlen(token->word) > 1)				// 前のtokenが無いor |が２つ以上続く
 		return (token->kind = SYNTAX, token);
-	else if (token->pre && (*(token->pre->word) == '|' || *(token->pre->word) == '<'))
+	else if (token->pre && ft_strchr(SPECIAL_TOKEN, *(token->pre->word)))
 		token->kind = SYNTAX;
 	else
 	{
@@ -58,7 +58,7 @@ static t_token	*add_kind_lessthan(t_token *token)
 
 static t_token	*add_kind_morethan(t_token *token)
 {
-	if (!token->pre && !token->next)
+	if (!token->next)
 		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
