@@ -42,7 +42,6 @@ typedef enum e_kind
 	HERE_DOC,
 	MORETHAN,
 	APPEND,
-	SKIP,
 	RDFILE,
 	WRFILE,
 	WRF_APP,
