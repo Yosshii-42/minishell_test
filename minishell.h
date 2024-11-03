@@ -99,7 +99,7 @@ void	open_write_file(t_cmd *cmd, t_token *token);
 void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(char *line, char **path, char *pwd, int *original_stdin);
+int		run_process(t_token *token, char **path, char *pwd, int *original_stdin);
 
 // process utils
 // int		wait_process(void)

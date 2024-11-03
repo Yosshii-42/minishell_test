@@ -54,6 +54,8 @@ static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 	close(*original_stdin);
 	if (!(cmd->cmd))
 		exit(EXIT_SUCCESS);
+	if (cmd->status == SYNTAX)
+		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
@@ -61,25 +63,22 @@ static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 	}
 }
 
-void	syntax_end(t_cmd *cmd, t_token *token, int *original_stdin)
+void	syntax_end(t_cmd *cmd, t_token *token, int *stdin)
 {
 	if (cmd)
 		free_cmd(cmd);
 	free_token(token);
-	dup2(*original_stdin, STDIN_FILENO);
-	close(*original_stdin);
+	dup2(*stdin, STDIN_FILENO);
+	close(*stdin);
 }
 
-
-int	run_process(char *line, char **path, char *pwd, int *original_stdin)
+int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
-	t_token	*token;
 	t_token	*ptr;
 	int		count;
 
-	token = make_token_lst(line);
 	count = cmd_count(token);
 	ptr = token;
 	while (count--)
