@@ -117,7 +117,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		else
 			break;
 	}
-	if (access(cmd->pathname, X_OK) != 0)
+	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	cmd->token = token;
 	return (cmd);

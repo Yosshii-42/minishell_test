@@ -52,8 +52,11 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
-		if (!(line = readline("minishell$ ")) && ft_printf(1, "exit\n"))
+		if (!(line = readline("minishell$ ")))
+		{
+			ft_printf(1, "exit\n");
 			break ;
+		}
 		ft_printf(1, "status = %d\n", do_minishell(env, line));
 	}
 	free_env(env);

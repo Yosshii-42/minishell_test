@@ -44,6 +44,8 @@ static void	child_process(t_cmd *cmd, char **path)
 		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
 	close(3);
+	if (!(cmd->cmd))
+		exit(1);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
