@@ -53,11 +53,17 @@ static void	child_process(t_cmd *cmd, char **path)
 		exit(1);
 	}
 }
-
-void	end_process(t_cmd *cmd, t_token *token, int *original_stdin)
+void	syntax_end(t_cmd *cmd, t_token *token, int *original_stdin)
 {
 	if (cmd)
 		free_cmd(cmd);
+	token_lstclear(token);
+	dup2(*original_stdin, STDIN_FILENO);
+	close(*original_stdin);
+}
+
+void	end_process(t_token *token, int *original_stdin)
+{
 	token_lstclear(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
@@ -67,7 +73,6 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
-	// int		i;
 	t_token	*token;
 	t_token	*ptr;
 	int		count;
@@ -75,12 +80,11 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 	token = make_token_lst(line);
 	count = cmd_count(token);
 	ptr = token;
-	// i = -1;
-	while (count--)//++i < cmd_count(ptr))
+	while (count--)
 	{
 		cmd = NULL;
 		if (!(cmd = make_cmd(token, cmd, path, pwd)))
-			return (end_process(cmd, token, original_stdin), -1);
+			return (end_process(ptr, original_stdin), -1);
 		if (!(token = cmd->token))
 			break;
 		if (!make_fork(&pid))
@@ -90,8 +94,9 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 		else if (pid > 0)
 			parent_process(cmd);
 		if (cmd->status == SYNTAX)
-			return (end_process(cmd, token, original_stdin), 2);
+			return (syntax_end(cmd, ptr, original_stdin), 2);
+		free_cmd(cmd);
 	}
-	end_process(cmd, token, original_stdin);
+	end_process(ptr, original_stdin);
 	return (wait_process());
 }

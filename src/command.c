@@ -57,21 +57,20 @@ static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 	i = -1;
 	while (++i < count)
 	{
-		cmd->cmd[i] = ft_strdup(token->word);
-		token = token->next;
-		if (!(cmd->cmd[i]))
+		if (!(cmd->cmd[i] = ft_strdup(token->word)))
 			return (free_split(cmd->cmd), NULL);
+		token = token->next;
 	}
 	cmd->cmd[i] = NULL;
 	cmd->token = ptr;
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
+static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
-		exit (1); //TODO error_exit
+		return;//exit (1); //TODO error_exit
 	if ((cmd->cmd[0]))
 	{
 		if (cmd->cmd[0][0] == '/')
@@ -99,7 +98,6 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 			cmd->status = SYNTAX;
 			break;
 		}
-			// return (ft_printf(2, "bash: syntax error\n"), free_cmd(cmd), NULL);
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))

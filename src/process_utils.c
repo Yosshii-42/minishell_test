@@ -61,6 +61,9 @@ void	token_lstclear(t_token *token)
 			free(token->pre);
 		}
 		else
+		{
+			free(token);
 			break;
+		}
 	}
 }

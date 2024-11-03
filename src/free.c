@@ -41,11 +41,14 @@ void	free_split(char **split)
 
 void	free_cmd(t_cmd *cmd)
 {
-	if (cmd->pathname)
-		free(cmd->pathname);
-	if (cmd->cmd)
-		free_split(cmd->cmd);
-	if (cmd->err_msg)
-		free(cmd->err_msg);
-	free(cmd);
+	if (cmd)
+	{
+		if (cmd->pathname)
+			free(cmd->pathname);
+		if (cmd->cmd)
+			free_split(cmd->cmd);
+		if (cmd->err_msg)
+			free(cmd->err_msg);
+		free(cmd);
+	}
 }
