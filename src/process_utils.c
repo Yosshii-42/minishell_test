@@ -1,4 +1,3 @@
-
 #include "../minishell.h"
 
 int	cmd_count(t_token *token)
@@ -45,25 +44,4 @@ void	exit_child_process(t_cmd *cmd)
 		ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
 	exit(127);
-}
-
-void	token_lstclear(t_token *token)
-{
-	while (token)
-	{
-		if (token->kind == LIMITTER)
-			unlink(FILE_NAME);
-		if (token->word)
-			free(token->word);
-		if (token->next)
-		{
-			token = token->next;
-			free(token->pre);
-		}
-		else
-		{
-			free(token);
-			break;
-		}
-	}
 }

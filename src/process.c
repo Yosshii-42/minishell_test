@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-static int	wait_process(void)//int count)
+static int	wait_process(void)
 {
 	int	status;
 	int	exit_status;
@@ -24,6 +24,13 @@ static int	wait_process(void)//int count)
 	return (exit_status);
 }
 
+void	end_process(t_token *token, int *original_stdin)
+{
+	free_token(token);
+	dup2(*original_stdin, STDIN_FILENO);
+	close(*original_stdin);
+}
+
 static void	parent_process(t_cmd *cmd)
 {
 	if (cmd->status == SYNTAX)
@@ -33,7 +40,7 @@ static void	parent_process(t_cmd *cmd)
 	close_fds(cmd);
 }
 
-static void	child_process(t_cmd *cmd, char **path)
+static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 {
 	if (cmd->err_msg)
 		exit_child_process(cmd);
@@ -44,30 +51,25 @@ static void	child_process(t_cmd *cmd, char **path)
 	else if (cmd->pp[1] > 0)
 		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
-	close(3);
+	close(*original_stdin);
 	if (!(cmd->cmd))
-		exit(1);
+		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
 		exit(1);
 	}
 }
+
 void	syntax_end(t_cmd *cmd, t_token *token, int *original_stdin)
 {
 	if (cmd)
 		free_cmd(cmd);
-	token_lstclear(token);
+	free_token(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
 }
 
-void	end_process(t_token *token, int *original_stdin)
-{
-	token_lstclear(token);
-	dup2(*original_stdin, STDIN_FILENO);
-	close(*original_stdin);
-}
 
 int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 {
@@ -88,9 +90,9 @@ int	run_process(char *line, char **path, char *pwd, int *original_stdin)
 		if (!(token = cmd->token))
 			break;
 		if (!make_fork(&pid))
-			return (token_lstclear(ptr), free_cmd(cmd), EXIT_FAILURE);
+			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)
-			child_process(cmd, path);
+			child_process(cmd, path, original_stdin);
 		else if (pid > 0)
 			parent_process(cmd);
 		if (cmd->status == SYNTAX)

@@ -52,8 +52,7 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
-		printf("sizeof token = %ld, sizeor cmd = %ld, sizeof env = %ld\n", sizeof(t_token), sizeof(t_cmd), sizeof(t_env));
-		if (!(line = readline("minishell$ ")))
+			if (!(line = readline("minishell$ ")))
 		{
 			ft_printf(1, "exit\n");
 			break ;

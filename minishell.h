@@ -102,15 +102,15 @@ void	open_read_file(t_cmd *cmd, t_token *token);
 int		run_process(char *line, char **path, char *pwd, int *original_stdin);
 
 // process utils
+// int		wait_process(void)
 int		cmd_count(t_token *token);
 int		make_fork(pid_t *pid);
 void	exit_child_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
-void	token_lstclear(t_token *token);
 
 // free functions
 void	free_env(t_env *env);
-// void	ft_free(char **str, int i);
+void	free_token(t_token *token);
 void	free_split(char **split);
 void	free_cmd(t_cmd *cmd);
 

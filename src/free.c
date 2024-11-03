@@ -27,6 +27,27 @@ void	free_env(t_env *env)
 	}
 }
 
+void	free_token(t_token *token)
+{
+	while (token)
+	{
+		if (token->kind == LIMITTER)
+			unlink(FILE_NAME);
+		if (token->word)
+			free(token->word);
+		if (token->next)
+		{
+			token = token->next;
+			free(token->pre);
+		}
+		else
+		{
+			free(token);
+			break;
+		}
+	}
+}
+
 void	free_split(char **split)
 {
 	int	i;
