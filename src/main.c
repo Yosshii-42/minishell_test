@@ -37,12 +37,46 @@ static int	do_minishell(t_env *env, char *line, char *pwd)
 	return (status);
 }
 
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf(1, "%s=%s\n", env->key, env->value);
+		if (env->next)
+			env = env->next;
+		else
+			break;
+	}	
+}
+
+void	print_dolquestion(char *str, int status)
+{
+	ft_printf(2, "bash: ");
+	ft_putnbr_fd(status, 2);
+	if (*str)
+		ft_printf(2, "%s", str);
+		ft_printf(2, ": command not found\n", str);
+}
+
+bool	builtin(char *line, t_env *env, int *status)
+{
+	if (ft_memcmp(line, "env", 4) == 0)
+		return (print_env(env), false);
+	else if (!ft_strncmp(line, "$?", 2))
+	{
+		print_dolquestion(ft_strchr(line, '?') + 1, *status);
+		return (*status = 127, false);
+	}
+	else
+		return (true);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
 	char	*line;
 	char	*pwd;
-	t_env	*ptr;
+	int		status;
 
 	init_signal();
 	if (argc == 0 || !argv[0])
@@ -50,51 +84,16 @@ int	main(int argc, char **argv, char **envp)
 	if (!(env = set_env(envp)))
 		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
+	status = 0;
 	while (1)
 	{
-		ptr = env;
 		pwd = getenv("PWD");
-		if (!(line = readline("mçnishell$ ")) && ft_printf(1, "exit\n"))
+		if (!(line = readline("mnishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
-		else if (!ft_memcmp(line, "exit", 5))
+		else if (ft_memcmp(line, "exit", 5) == 0)
 			break;
-		else if (!ft_memcmp(line, "env", 4))
-		{
-			while (ptr)
-			{
-				ft_printf(1, "%s=%s\n", ptr->key, ptr->value);
-				if (ptr->next)
-					ptr = ptr->next;
-				else
-					break;
-			}
-		}
-		// else if (ft_memcmp(line, "unset", 6) == 32)
-		// {
-			// "unset"の次までpointerを進める
-			// char **split;
-			// split = (line, ' ');
-			// while (ptr)
-			// {
-			// 	int i = -1;
-			// 	while (split[++i])
-			// 	{
-			// 		if (!ft_memcmp(ptr->key, split[i], ft_strlen(split[i]) + 1))
-			// 			ptr
-			// 			if (ptr->next)
-			// 				ptr->pre->next = ptr->next
-			// 			else
-			// 				ptr->pre->next = NULL
-			// 			if (ptr->pre)
-			// 				ptr->next->pre = ptr->pre
-			// 			new_ptr = ptr->next
-			// 			free(ptr)
-			// 	}
-				
-			// }
-		// }
-		else
-			ft_printf(1, "status = %d\n", do_minishell(env, line, pwd));
+		else if (builtin(line, env, &status) == true)
+			status = do_minishell(env, line, pwd);
 		free(line);
 	}
 	free_env(env);

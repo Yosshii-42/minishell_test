@@ -3,13 +3,13 @@
 
 # include <signal.h>
 # include <stdlib.h>
+# include <stdio.h>
+# include <stdbool.h>
 # include <unistd.h>
 # include <errno.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
-
-# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "./libft/includes/libft.h"
