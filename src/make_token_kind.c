@@ -112,7 +112,7 @@ void	add_token_kind(t_token *token, int status_num)
 			token = add_kind_lessthan(token);
 		else if (*(token->word) == '>')
 			token = add_kind_morethan(token);
-		else if (!ft_memcmp(token->word, "$?", 3))
+		else if (!ft_memcmp(token->word, "$?", 3))// TODO '' ""実装後に再実装する
 		{
 			token->kind = OPTION;
 			if (!token->next)
