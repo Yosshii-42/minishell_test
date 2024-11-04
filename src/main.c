@@ -10,7 +10,7 @@ static int	dup_stdin(int *fd)
 	return (TRUE);
 }
 
-static int	do_minishell(t_env *env, char *line, char *pwd)
+static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 {
 	char	**path;
 	int		origi_stdin;
@@ -22,16 +22,16 @@ static int	do_minishell(t_env *env, char *line, char *pwd)
 	path = NULL;
 	if (getenv_str(env, "PATH"))
 		path = ft_split(getenv_str(env, "PATH"), ':');
-	if (*line)
-	{
+	// if (*line)
+	// {
 		add_history(line);
 		dup_stdin(&origi_stdin);
-		token = make_token_lst(line);//TODO !token時の処理
+		token = make_token_lst(line, status_num);//TODO !token時の処理
 		if (!ft_memcmp(line, "clear", 6))
 			clear_history();
 		else
 			status = run_process(token, path, pwd, &origi_stdin);
-	}
+	// }
 	if (path)
 		free_split(path);
 	return (status);
@@ -62,7 +62,7 @@ bool	builtin(char *line, t_env *env, int *status)
 {
 	if (ft_memcmp(line, "env", 4) == 0)
 		return (print_env(env), false);
-	else if (!ft_strncmp(line, "$?", 2))
+	else if (!ft_strncmp(line, "$\?", 2))
 	{
 		print_dolquestion(ft_strchr(line, '?') + 1, *status);
 		return (*status = 127, false);
@@ -93,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 		else if (ft_memcmp(line, "exit", 5) == 0)
 			break;
 		else if (builtin(line, env, &status) == true)
-			status = do_minishell(env, line, pwd);
+			status = do_minishell(env, line, pwd, status);
 		free(line);
 	}
 	free_env(env);

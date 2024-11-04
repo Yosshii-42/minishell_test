@@ -84,8 +84,8 @@ typedef struct s_cmd
 t_env	*set_env(char **envp);
 
 //token
-t_token	*make_token_lst(char *line);
-void 	add_token_kind(t_token *token);
+t_token	*make_token_lst(char *line, int status_num);
+void 	add_token_kind(t_token *token, int status_num);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);

@@ -102,16 +102,23 @@ static t_token	*add_command_kind(t_token *token)
 	return (token);
 }
 
-void	add_token_kind(t_token *token)
+void	add_token_kind(t_token *token, int status_num)
 {
 	while (token)
 	{
 		if (*(token->word) == '|')
-			token = add_kind_pipe(token);	// 
+			token = add_kind_pipe(token);
 		else if (*(token->word) == '<')
 			token = add_kind_lessthan(token);
 		else if (*(token->word) == '>')
 			token = add_kind_morethan(token);
+		else if (!ft_memcmp(token->word, "$?", 3))
+		{
+			token->kind = OPTION;
+			if (!token->next)
+				token->status = END;
+			token->word = ft_itoa(status_num);
+		}
 		else
 			token = add_command_kind(token);
 		if (token->next)

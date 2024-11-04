@@ -41,7 +41,7 @@ static void lstnew(t_token **start, char *token)
 	lstadd_back(start, new);
 }
 
-t_token	*make_token_lst(char *line)
+t_token	*make_token_lst(char *line, int status_num)
 {
 	char	**split;
 	int		i;
@@ -56,7 +56,7 @@ t_token	*make_token_lst(char *line)
 	i = -1;
 	while (split[++i])
 		lstnew(&token, split[i]);//nullが帰った時の処理
-	add_token_kind(token);
+	add_token_kind(token, status_num);
 	free_split(split);
 	return (token);
 }
