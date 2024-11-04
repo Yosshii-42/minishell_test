@@ -42,6 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char	*line;
 	char	*pwd;
+	t_env	*ptr;
 
 	init_signal();
 	if (argc == 0 || !argv[0])
@@ -51,9 +52,47 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
+		ptr = env;
 		pwd = getenv("PWD");
 		if (!(line = readline("minishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
+		else if (!ft_memcmp(line, "exit", 5))
+			break;
+		else if (!ft_memcmp(line, "env", 4))
+		{
+			while (ptr)
+			{
+				ft_printf(1, "%s=%s\n", ptr->key, ptr->value);
+				if (ptr->next)
+					ptr = ptr->next;
+				else
+					break;
+			}
+		}
+		// else if (ft_memcmp(line, "unset", 6) == 32)
+		// {
+			// "unset"の次までpointerを進める
+			// char **split;
+			// split = (line, ' ');
+			// while (ptr)
+			// {
+			// 	int i = -1;
+			// 	while (split[++i])
+			// 	{
+			// 		if (!ft_memcmp(ptr->key, split[i], ft_strlen(split[i]) + 1))
+			// 			ptr
+			// 			if (ptr->next)
+			// 				ptr->pre->next = ptr->next
+			// 			else
+			// 				ptr->pre->next = NULL
+			// 			if (ptr->pre)
+			// 				ptr->next->pre = ptr->pre
+			// 			new_ptr = ptr->next
+			// 			free(ptr)
+			// 	}
+				
+			// }
+		// }
 		ft_printf(1, "status = %d\n", do_minishell(env, line, pwd));
 		free(line);
 	}
