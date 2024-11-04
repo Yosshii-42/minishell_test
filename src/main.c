@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ptr = env;
 		pwd = getenv("PWD");
-		if (!(line = readline("minishell$ ")) && ft_printf(1, "exit\n"))
+		if (!(line = readline("mçnishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
 		else if (!ft_memcmp(line, "exit", 5))
 			break;

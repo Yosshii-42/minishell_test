@@ -18,8 +18,8 @@ static int	wait_process(void)
 		}
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
-		// if (WIFSIGNALED(status))
-		// 	exit_status = WTERMSIG(status) + 128;
+		else if (WIFSIGNALED(status))
+			exit_status = WTERMSIG(status) + 128;
 	}
 	return (exit_status);
 }

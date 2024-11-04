@@ -43,5 +43,8 @@ void	exit_child_process(t_cmd *cmd)
 	if (cmd->status != SYNTAX && cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
-	exit(127);
+	if (!ft_strnstr(cmd->err_msg, "Permission denied", 17))
+		exit(126);
+	else
+		exit(127);
 }
