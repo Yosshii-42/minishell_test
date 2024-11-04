@@ -93,7 +93,8 @@ int	main(int argc, char **argv, char **envp)
 				
 			// }
 		// }
-		ft_printf(1, "status = %d\n", do_minishell(env, line, pwd));
+		else
+			ft_printf(1, "status = %d\n", do_minishell(env, line, pwd));
 		free(line);
 	}
 	free_env(env);
