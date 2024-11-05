@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_token_kind.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 16:43:28 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:06 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 22:00:48 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ static t_token	*add_command_kind(t_token *token)
 	}
 	else
 		token->kind = COMMAND;
+	if (token->kind == COMMAND && !ft_memcmp(token->word, "cat", 4))
+		token->status = CAT;
 	if (!token->next)
 		token->status = END;
 	return (token);
