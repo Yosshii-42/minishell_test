@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 21:55:43 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/05 22:59:05 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_cmd
 	char			*err_msg;
 	struct s_token	*token;
 	t_kind			status;
+	int				flag;
 }t_cmd;
 
 // env

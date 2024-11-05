@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 15:45:13 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 22:59:42 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	init_cmd(t_cmd *cmd)
 	cmd->err_msg = NULL;
 	cmd->token = NULL;
 	cmd->status = -1;
+	cmd->flag = 0;
 }
 
 int	make_pipe(t_cmd *cmd)

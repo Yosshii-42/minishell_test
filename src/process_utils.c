@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:47 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:28:47 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:47 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 23:09:21 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	exit_child_process(t_cmd *cmd)
 	if (cmd->status != SYNTAX && cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
-	if (!ft_strnstr(cmd->err_msg, "Permission denied", 17))
+	if (!ft_strnstr(cmd->err_msg, "Permission", 10))
 		exit(126);
 	else
 		exit(127);
