@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_token_kind.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:28:06 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 16:43:28 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	token_count(t_token *token)
@@ -13,7 +25,7 @@ int	token_count(t_token *token)
 		if (token->next)
 			token = token->next;
 		else
-			break;
+			break ;
 	}
 	return (count);
 }
@@ -29,8 +41,8 @@ static t_token	*add_kind_pipe(t_token *token)
 	else
 	{
 		token->kind = PIPE;
-		if (!token->next)											// 次のtokenに進める
-			token->status = END;								//　次のtokenがない時はstatusをENDにする
+		if (!token->next)						// 次のtokenに進める
+			token->status = END;					//　次のtokenがない時はstatusをENDにする
 	}
 	return (token);
 }
@@ -41,8 +53,8 @@ static t_token	*add_kind_lessthan(t_token *token)
 		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
-	else if (token->pre &&
-		(*(token->pre->word) == '<' || *(token->pre->word) == '>'))
+	else if (token->pre && (*(token->pre->word) == '<'
+			|| *(token->pre->word) == '>'))
 		token->kind = SYNTAX;
 	else
 	{
@@ -62,8 +74,8 @@ static t_token	*add_kind_morethan(t_token *token)
 		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
-	if (token->pre &&
-		(*(token->pre->word) == '<' || *(token->pre->word) == '>'))
+	if (token->pre && (*(token->pre->word) == '<'
+			|| *(token->pre->word) == '>'))
 		token->kind = SYNTAX;
 	{
 		if (ft_strlen(token->word) == 1)
@@ -124,6 +136,6 @@ void	add_token_kind(t_token *token, int status_num)
 		if (token->next)
 			token = token->next;
 		else
-			break;
+			break ;
 	}
 }

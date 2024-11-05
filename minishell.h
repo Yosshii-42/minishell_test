@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:29:52 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-11-05 06:29:52 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -47,13 +59,13 @@ typedef enum e_kind
 	WRF_APP,
 	LIMITTER,
 	SYNTAX,
-} t_kind;
+}t_kind;
 
 typedef enum e_status
 {
 	BUILTIN,
 	END
-} t_status;
+}t_status;
 
 typedef struct s_env
 {
@@ -74,37 +86,39 @@ typedef struct s_token
 
 typedef struct s_cmd
 {
-	int		readfd;
-	int		writefd;
-	int		count;
-	int		pp[2];
-	char	*pathname;
-	char	**cmd;
-	char	*err_msg;
-	struct s_token *token;
-	t_kind	status;
-}		t_cmd;
+	int				readfd;
+	int				writefd;
+	int				count;
+	int				pp[2];
+	char			*pathname;
+	char			**cmd;
+	char			*err_msg;
+	struct s_token	*token;
+	t_kind			status;
+}t_cmd;
 
 // env
-t_env	*set_env(char **envp);
+t_env	*set_env(int argc, char **argv, char **envp);
 
 //token
 t_token	*make_token_lst(char *line, int status_num);
-void 	add_token_kind(t_token *token, int status_num);
+void	add_token_kind(t_token *token, int status_num);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
+int		array_count(t_token *token);
 void	init_cmd(t_cmd *cmd);
-int    	make_pipe(t_cmd *cmd);
+int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
-char    *getenv_str(t_env *env, char *str);
+char	*getenv_str(t_env *env, char *str);
 
 // file open
 void	open_write_file(t_cmd *cmd, t_token *token);
 void	open_read_file(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, char **path, char *pwd, int *original_stdin);
+int		run_process(t_token *token, char **path, char *pwd,
+			int *original_stdin);
 
 // process utils
 // int		wait_process(void)
@@ -121,7 +135,7 @@ void	free_cmd(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
-// void	print_error_and_exit(char *err_message);
+size_t	strchr_len(const char *s, int c);
 
 // signal
 void	reset_signal(int signum);

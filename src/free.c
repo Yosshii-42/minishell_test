@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:27:41 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 15:58:26 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_env(t_env *env)
@@ -22,7 +34,7 @@ void	free_env(t_env *env)
 		else
 		{
 			free(env);
-			break;
+			break ;
 		}
 	}
 }
@@ -43,7 +55,7 @@ void	free_token(t_token *token)
 		else
 		{
 			free(token);
-			break;
+			break ;
 		}
 	}
 }

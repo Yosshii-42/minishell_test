@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_token_lst.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:28:22 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 16:44:39 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_token	*lstlast(t_token *lst)
@@ -25,9 +37,9 @@ static void	lstadd_back(t_token **start, t_token *new)
 	new->pre = ptr;
 }
 
-static void lstnew(t_token **start, char *token)
+static void	lstnew(t_token **start, char *token)
 {
-	t_token *new;
+	t_token	*new;
 
 	new = (t_token *)malloc(sizeof(t_token));
 	if (!new)

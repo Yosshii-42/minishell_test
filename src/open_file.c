@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   open_file.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:28:33 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 16:46:17 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static char	*set_file_err(char *filename, char *err_msg)
@@ -8,9 +20,9 @@ static char	*set_file_err(char *filename, char *err_msg)
 	message = strjoin_with_free("bash: ", filename, NO_FREE);
 	if (message)
 		message = strjoin_with_free(message, ": ", FREE_S1);
-    if (message)
+	if (message)
 		message = strjoin_with_free(message, err_msg, FREE_S1);
-    if (message)
+	if (message)
 		message = strjoin_with_free(message, "\n", FREE_S1);
 	if (!message)
 		return (ft_printf(2, "%s\n", strerror(errno)), NULL);
@@ -36,7 +48,7 @@ static int	heredoc_process(char *eof, t_cmd *cmd)
 	while (1)
 	{
 		ft_printf(1, "> ");
-		if (!(str = get_next_line(0)))
+		if (!(str = get_next_line(0))) //norm error
 		{
 			print_limitter_warning(cmd->count + 1, eof);
 			break ;

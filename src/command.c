@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:27:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 15:57:30 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	set_err_message(t_cmd *cmd, char *str)
@@ -10,14 +22,15 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		cmd->err_msg = strjoin_with_free(cmd->err_msg, ": command not found\n", FREE_S1);
+		cmd->err_msg = strjoin_with_free(cmd->err_msg,
+				": command not found\n", FREE_S1);
 	}
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 {
 	char	*str;
-	int	i;
+	int		i;
 
 	str = NULL;
 	if (!path)
@@ -35,29 +48,22 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	return (strjoin_with_free("x", command, NO_FREE));
 }
 
-static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
+static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 {
 	t_token	*ptr;
 	int		count;
 	int		i;
 
 	ptr = token;
-	count = 0;
-	while (ptr->kind == COMMAND || ptr->kind == OPTION)
-	{
-		count++;
-		if (ptr->status != END && ptr->next->kind == OPTION)
-			ptr = ptr->next;
-		else
-			break;
-	}
+	count = array_count(token);
 	cmd->cmd = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!(cmd->cmd))
 		return (NULL);
 	i = -1;
 	while (++i < count)
 	{
-		if (!(cmd->cmd[i] = ft_strdup(token->word)))
+		cmd->cmd[i] = ft_strdup(token->word);
+		if (!cmd->cmd[i])
 			return (free_split(cmd->cmd), NULL);
 		token = token->next;
 	}
@@ -66,11 +72,12 @@ static t_cmd *make_command_array(t_token *token, t_cmd *cmd)
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
+static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path,
+		char *pwd)
 {
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
-		return;//exit (1); //TODO error_exit
+		return ;//exit (1); //TODO error_exit
 	if ((cmd->cmd[0]))
 	{
 		if (cmd->cmd[0][0] == '/')
@@ -96,14 +103,14 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		if (token->kind == SYNTAX)
 		{
 			cmd->status = SYNTAX;
-			break;
+			break ;
 		}
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
 			token = token->next;
-			break;
+			break ;
 		}
 		else if (token->kind == RDFILE || token->kind == LIMITTER)
 			open_read_file(cmd, token);
@@ -117,7 +124,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		if (token->status != END)
 			token = token->next;
 		else
-			break;
+			break ;
 	}
 	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);

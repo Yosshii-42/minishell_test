@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:27:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 16:01:15 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-volatile sig_atomic_t g_sig_status = READLINE;
+volatile sig_atomic_t	g_sig_status = READLINE;
 
 static int	dup_stdin(int *fd)
 {
@@ -22,16 +34,15 @@ static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 	path = NULL;
 	if (getenv_str(env, "PATH"))
 		path = ft_split(getenv_str(env, "PATH"), ':');
-	// if (*line)
-	// {
-		add_history(line);
-		dup_stdin(&origi_stdin);
-		token = make_token_lst(line, status_num);//TODO !token時の処理
-		if (!ft_memcmp(line, "clear", 6))
-			clear_history();
-		else
-			status = run_process(token, path, pwd, &origi_stdin);
-	// }
+	add_history(line);
+	dup_stdin(&origi_stdin);
+	token = make_token_lst(line, status_num);
+	if (!token)
+		return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
+	if (!ft_memcmp(line, "clear", 6))
+		clear_history();
+	else
+		status = run_process(token, path, pwd, &origi_stdin);
 	if (path)
 		free_split(path);
 	return (status);
@@ -45,7 +56,7 @@ void	print_env(t_env *env)
 		if (env->next)
 			env = env->next;
 		else
-			break;
+			break ;
 	}	
 }
 
@@ -78,19 +89,17 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 
 	init_signal();
-	if (argc == 0 || !argv[0])
-		exit(EXIT_FAILURE);
-	if (!(env = set_env(envp)))
+	env = set_env(argc, argv, envp);
+	if (!env)
 		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
-	status = 0;
 	while (1)
 	{
 		pwd = getenv("PWD");
 		if (!(line = readline("mnishell$ ")) && ft_printf(1, "exit\n"))
 			break ;
 		else if (ft_memcmp(line, "exit", 5) == 0)
-			break;
+			break ;
 		else if (builtin(line, env, &status) == true)
 			status = do_minishell(env, line, pwd, status);
 		free(line);

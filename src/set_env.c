@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_env.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:29:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-11-05 06:29:09 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_env	*lstlast(t_env *lst)
@@ -25,25 +37,7 @@ static void	lstadd_back(t_env **start, t_env *new)
 	new->pre = ptr;
 }
 
-static size_t	strchr_len(const char *s, int c)
-{
-	size_t			i;
-	size_t			len;
-	unsigned char	cc;
-
-	i = 0;
-	len = 0;
-	cc = (unsigned char)c;
-	len = ft_strlen(s);
-	while (s[i] != cc && i < len)
-		i++;
-	if (s[i] == cc && i <= len)
-		return (i);
-	else
-		return (0);
-}
-
-static int	lstnew(t_env **start, char *env)//25行制限
+static int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
@@ -65,11 +59,13 @@ static int	lstnew(t_env **start, char *env)//25行制限
 	return (TRUE);
 }
 
-t_env	*set_env(char **envp)
+t_env	*set_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
 	int	i;
 
+	if (argc == 0 || !argv[0])
+		exit(EXIT_FAILURE);
 	i = -1;
 	start = NULL;
 	while (envp[++i])
