@@ -96,7 +96,8 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		pwd = getenv("PWD");
-		if (!(line = readline("mnishell$ ")) && ft_printf(1, "exit\n"))
+		line = readline("mnishell$ ");
+		if (!line && ft_printf(1, "exit\n"))
 			break ;
 		else if (ft_memcmp(line, "exit", 5) == 0)
 			break ;

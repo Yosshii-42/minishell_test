@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024-11-05 06:28:54 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:28:54 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:48:16 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	wait_process(void)
 		if (waitpid(-1, &status, 0) == -1)
 		{
 			if (errno == ECHILD)
-				break;
+				break ;
 			else
 				return (ft_printf(2, "%s\n", strerror(errno)), EXIT_FAILURE);
 		}
@@ -100,7 +100,7 @@ int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 		if (!(cmd = make_cmd(token, cmd, path, pwd)))
 			return (end_process(ptr, original_stdin), -1);
 		if (!(token = cmd->token))
-			break;
+			break ;
 		if (!make_fork(&pid))
 			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)

@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024-11-05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:29:40 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:50:45 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	if (!(*s1))
 		result = (char *)malloc(sizeof(char) * (ft_strlen(s2) + 1));
 	else
-		result = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)
-			+ 1));
+		result = (char *)malloc(sizeof(char) * (ft_strlen(s1)
+					+ ft_strlen(s2) + 1));
 	if (!result)
 		return (NULL);
 	while (s1[++i])

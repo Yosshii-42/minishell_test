@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024-11-05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:29:09 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:48:54 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	lstnew(t_env **start, char *env)
 t_env	*set_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
-	int	i;
+	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
