@@ -47,8 +47,13 @@ typedef enum e_kind
 	WRF_APP,
 	LIMITTER,
 	SYNTAX,
-	END
 } t_kind;
+
+typedef enum e_status
+{
+	BUILTIN,
+	END
+} t_status;
 
 typedef struct s_env
 {
@@ -62,7 +67,7 @@ typedef struct s_token
 {
 	char			*word;
 	t_kind			kind;
-	t_kind			status;
+	t_status		status;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;

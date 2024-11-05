@@ -53,9 +53,8 @@ void	print_dolquestion(char *str, int status)
 {
 	ft_printf(2, "bash: ");
 	ft_putnbr_fd(status, 2);
-	if (*str)
-		ft_printf(2, "%s", str);
-		ft_printf(2, ": command not found\n", str);
+	ft_printf(2, "%s", str);
+	ft_printf(2, ": command not found\n", str);
 }
 
 bool	builtin(char *line, t_env *env, int *status)

@@ -18,9 +18,11 @@ static int	wait_process(void)
 		}
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
+		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			exit_status = WTERMSIG(status) + 128;
 	}
+	if (exit_status > 255)
+		return (EXIT_FAILURE);
 	return (exit_status);
 }
 
