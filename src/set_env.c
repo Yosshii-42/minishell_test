@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 17:48:54 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:30:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ static int	lstnew(t_env **start, char *env)
 	return (TRUE);
 }
 
-t_env	*set_env(int argc, char **argv, char **envp)
+t_env	*set_env(int argc, char **argv, char **envp, int *status)
 {
 	t_env	*start;
 	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
+	*status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])

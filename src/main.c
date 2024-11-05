@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 16:01:15 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:46:03 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,14 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 
 	init_signal();
-	env = set_env(argc, argv, envp);
+	env = set_env(argc, argv, envp, &status);
 	if (!env)
 		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
 	while (1)
 	{
 		pwd = getenv("PWD");
-		line = readline("mnishell$ ");
+		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
 		else if (ft_memcmp(line, "exit", 5) == 0)

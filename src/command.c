@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 15:57:30 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:49:37 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,12 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	init_cmd(cmd);
 	while (token)
 	{
-		if (token->kind == SYNTAX)
-		{
-			cmd->status = SYNTAX;
+		if (token->kind == SYNTAX && (cmd->status = SYNTAX))
 			break ;
-		}
-		if (token->kind == PIPE)
-		{
-			if (!make_pipe(cmd))
+		if (token->kind == PIPE && !(make_pipe(cmd)))
 				return (free_cmd(cmd), NULL);
-			token = token->next;
+		else if (token->kind == PIPE && token->next && (token = token->next))
 			break ;
-		}
 		else if (token->kind == RDFILE || token->kind == LIMITTER)
 			open_read_file(cmd, token);
 		else if (token->kind == WRFILE || token->kind == WRF_APP)

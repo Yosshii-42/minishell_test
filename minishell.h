@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:29:52 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:30:11 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ typedef struct s_cmd
 }t_cmd;
 
 // env
-t_env	*set_env(int argc, char **argv, char **envp);
+t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
 
 //token
 t_token	*make_token_lst(char *line, int status_num);

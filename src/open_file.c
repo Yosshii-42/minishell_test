@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 16:46:17 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:33 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:53:48 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static int	heredoc_process(char *eof, t_cmd *cmd)
 	while (1)
 	{
 		ft_printf(1, "> ");
-		if (!(str = get_next_line(0))) //norm error
+		str = get_next_line(0);
+		if (!str)
 		{
 			print_limitter_warning(cmd->count + 1, eof);
 			break ;
