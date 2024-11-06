@@ -34,15 +34,15 @@ static t_token	*add_kind_pipe(t_token *token)
 {
 	if (!token->pre && !token->next)
 		return (token->kind = SYNTAX, token);
-	if (!token->pre || ft_strlen(token->word) > 1)				// 前のtokenが無いor |が２つ以上続く
+	if (!token->pre || ft_strlen(token->word) > 1)
 		return (token->kind = SYNTAX, token);
 	else if (token->pre && ft_strchr(SPECIAL_TOKEN, *(token->pre->word)))
 		token->kind = SYNTAX;
 	else
 	{
 		token->kind = PIPE;
-		if (!token->next)						// 次のtokenに進める
-			token->status = END;					//　次のtokenがない時はstatusをENDにする
+		if (!token->next)
+			token->status = END;
 	}
 	return (token);
 }

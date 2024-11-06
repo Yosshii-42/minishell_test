@@ -55,9 +55,9 @@ typedef enum e_kind
 	MORETHAN,
 	APPEND,
 	RDFILE,
+	LIMITTER,
 	WRFILE,
 	WRF_APP,
-	LIMITTER,
 	SYNTAX,
 }t_kind;
 
@@ -114,16 +114,14 @@ int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(t_env *env, char *str);
 
-// file open
-void	open_write_file(t_cmd *cmd, t_token *token);
-void	open_read_file(t_cmd *cmd, t_token *token);
+// open
+bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(t_token *token, char **path, char *pwd,
 			int *original_stdin);
 
 // process utils
-// int		wait_process(void)
 int		cmd_count(t_token *token);
 int		make_fork(pid_t *pid);
 void	exit_child_process(t_cmd *cmd);
