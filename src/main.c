@@ -74,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 				run_process(line, path, pwd, &original_stdin_fd);//env);
 		}
 		//tokenizer();
-		 close_duped_stdin(&original_stdin_fd);
+		close_duped_stdin(&original_stdin_fd);
 	}
 	if (!path)
 		free_split(path);

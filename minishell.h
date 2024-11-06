@@ -8,6 +8,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+// add
+# include <stdbool.h>
 
 # include <stdio.h>
 # include <readline/readline.h>
@@ -19,8 +21,10 @@
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
-# define SPECIAL_CHAR "~`#&*()[]{};!?"
-# define SPECIAL_TOKEN "<>|$"
+// 若干変更、init_operatorsにまとめて定義
+//# define SPECIAL_CHAR "~`#&*()[]{};!?"
+//# define SPECIAL_TOKEN "<>|$"
+# define SPECIAL_TOKEN "|&;()<> \t\n"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 // シグナル状態の定義
 # define READLINE 1

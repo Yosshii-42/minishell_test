@@ -11,7 +11,7 @@ SRCS	= src/main.c \
 		  src/utils.c \
 		  src/free.c \
 		  src/signal.c \
-		  src/signal_handler.c
+		  src/signal_handler.c 
 
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
