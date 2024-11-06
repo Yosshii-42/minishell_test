@@ -1,36 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:28:54 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/06 19:54:28 by hurabe           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	wait_process(int count)
+static int	wait_process(void)
 {
 	int	status;
-	int	i;
 	int	exit_status;
 
 	status = 0;
-	i = -1;
 	// 追加(SIGPIPE問題)
 	exit_status = 0;
-	while (++i < count)
+	while (1)
 	{
 		if (waitpid(-1, &status, 0) == -1)
-			print_error_and_exit(strerror(errno));
-		//if (WIFEXITED(status))
-		//	exit_status = WEXITSTATUS(status);
-		exit_status = get_exit_status(status);
+		{
+			if (errno == ECHILD)
+				break ;
+			else
+				return (ft_printf(2, "%s\n", strerror(errno)), EXIT_FAILURE);
+		}
+		if (WIFEXITED(status))
+			exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
+			exit_status = WTERMSIG(status) + 128;
 	}
+	if (exit_status > 255)
+		return (EXIT_FAILURE);
 	return (exit_status);
 }
 
-static void	parent_process(t_cmd *cmd, int i, int count)
+void	end_process(t_token *token, int *original_stdin)
 {
-	if (i != count - 1)
-		dup2(cmd->pp[0], STDIN_FILENO);
-	close_fds(cmd);
-	free_cmd(cmd);
+	free_token(token);
+	dup2(*original_stdin, STDIN_FILENO);
+	close(*original_stdin);
 }
 
-static void	child_process(t_cmd *cmd, int i, int count, char **path)
+static void	parent_process(t_cmd *cmd)
+{
+	if (cmd->status == SYNTAX)
+		ft_printf(2, "bash: syntax error\n");
+	else if (cmd->pp[0] > 0)
+		dup2(cmd->pp[0], STDIN_FILENO);
+	close_fds(cmd);
+}
+
+static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 {
 	if (cmd->err_msg)
 		exit_child_process(cmd);
@@ -38,10 +63,12 @@ static void	child_process(t_cmd *cmd, int i, int count, char **path)
 		dup2(cmd->readfd, 0);
 	if (cmd->writefd > 0)
 		dup2(cmd->writefd, 1);
-	else if (i != count - 1 && dup2(cmd->pp[1], STDOUT_FILENO) == -1)
-		print_error_and_exit(strerror(errno));
+	else if (cmd->pp[1] > 0)
+		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
-	close(3);
+	close(*original_stdin);
+	if (!(cmd->cmd) || cmd->status == SYNTAX)
+		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
@@ -49,33 +76,41 @@ static void	child_process(t_cmd *cmd, int i, int count, char **path)
 	}
 }
 
-int	run_process(char *line, char **path, char *pwd, int *original_stdin_fd)
+void	syntax_end(t_cmd *cmd, t_token *token, int *stdin)
+{
+	if (cmd)
+		free_cmd(cmd);
+	free_token(token);
+	dup2(*stdin, STDIN_FILENO);
+	close(*stdin);
+}
+
+int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
-	int		i;
-	t_token	*token;
 	t_token	*ptr;
+	int		count;
 
-	token = make_token_lst(line);
+	count = cmd_count(token);
 	ptr = token;
-	i = -1;
-	while (++i < cmd_count(ptr))
+	while (count--)
 	{
 		cmd = NULL;
-		cmd = make_cmd(token, cmd, path, pwd);
-		while (!(token->end == END || token->kind == PIPE) && token->next)
-			token = token->next;
-		if (token->kind == PIPE && token->next)
-			token = token->next;
-		make_fork(&pid);
+		if ((cmd = make_cmd(token, cmd, path, pwd)) && !cmd)
+			return (end_process(ptr, original_stdin), -1);
+		if ((token = cmd->token) && !token)
+			break ;
+		if (!make_fork(&pid))
+			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (pid == 0)
-			child_process(cmd, i, cmd_count(ptr), path);
+			child_process(cmd, path, original_stdin);
 		else if (pid > 0)
-			parent_process(cmd, i, cmd_count(ptr));
+			parent_process(cmd);
+		if (cmd->status == SYNTAX)
+			return (syntax_end(cmd, ptr, original_stdin), 2);
+		free_cmd(cmd);
 	}
-	token_lstclear(ptr);
-	dup2(*original_stdin_fd, STDIN_FILENO);
-	close(*original_stdin_fd);
-	return (wait_process(i));
+	end_process(ptr, original_stdin);
+	return (wait_process());
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:27:41 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 15:58:26 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_env(t_env *env)
@@ -14,30 +26,39 @@ void	free_env(t_env *env)
 			free(env->value);
 			env->value = NULL;
 		}
-		free(env);
 		if (env->next)
+		{
 			env = env->next;
+			free(env->pre);
+		}
+		else
+		{
+			free(env);
+			break ;
+		}
 	}
 }
 
-void	free_env_and_exit(t_env *env)
+void	free_token(t_token *token)
 {
-	free_env(env);
-	exit(EXIT_FAILURE);
+	while (token)
+	{
+		if (token->kind == LIMITTER)
+			unlink(FILE_NAME);
+		if (token->word)
+			free(token->word);
+		if (token->next)
+		{
+			token = token->next;
+			free(token->pre);
+		}
+		else
+		{
+			free(token);
+			break ;
+		}
+	}
 }
-
-// void	ft_free(char **str, int i)
-// {
-// 	char	**tmp;
-
-// 	tmp = str;
-// 	if (!str)
-// 		return ;
-// 	while (tmp[i])
-// 		free(tmp[i++]);
-// 	if (str)
-// 		free(str);
-// }
 
 void	free_split(char **split)
 {
@@ -53,11 +74,14 @@ void	free_split(char **split)
 
 void	free_cmd(t_cmd *cmd)
 {
-	if (cmd->pathname)
-		free(cmd->pathname);
-	if (cmd->cmd)
-		free_split(cmd->cmd);
-	if (cmd->err_msg)
-		free(cmd->err_msg);
-	free(cmd);
+	if (cmd)
+	{
+		if (cmd->pathname)
+			free(cmd->pathname);
+		if (cmd->cmd)
+			free_split(cmd->cmd);
+		if (cmd->err_msg)
+			free(cmd->err_msg);
+		free(cmd);
+	}
 }

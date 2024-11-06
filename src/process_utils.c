@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:28:47 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 23:09:21 by tsururukako      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -18,11 +29,13 @@ int	cmd_count(t_token *token)
 	}
 	return (count + 1);
 }
-void	make_fork(pid_t *pid)
+
+int	make_fork(pid_t *pid)
 {
 	*pid = fork();
 	if (*pid == -1)
-		print_error_and_exit(strerror(errno));
+		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+	return (TRUE);
 }
 
 void	close_fds(t_cmd *cmd)
@@ -39,26 +52,11 @@ void	close_fds(t_cmd *cmd)
 
 void	exit_child_process(t_cmd *cmd)
 {
-	if (cmd->err_msg)
+	if (cmd->status != SYNTAX && cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
-	exit(127);
-}
-
-void	token_lstclear(t_token *token)
-{
-	while (token)
-	{
-		if (token->kind == LIMITTER)
-			unlink(FILE_NAME);
-		if (token->word)
-			free(token->word);
-		if (token->next)
-		{
-			token = token->next;
-			free(token->pre);
-		}
-		else
-			break;
-	}
+	if (!ft_strnstr(cmd->err_msg, "Permission", 10))
+		exit(126);
+	else
+		exit(127);
 }

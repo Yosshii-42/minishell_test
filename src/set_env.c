@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_env.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:30:43 by tsururukako      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_env	*lstlast(t_env *lst)
@@ -17,59 +29,50 @@ static void	lstadd_back(t_env **start, t_env *new)
 	if (!*start)
 	{
 		*start = new;
+		new->pre = NULL;
 		return ;
 	}	
 	ptr = lstlast(*start);
 	ptr->next = new;
+	new->pre = ptr;
 }
 
-static size_t	strchr_len(const char *s, int c)
-{
-	size_t			i;
-	size_t			len;
-	unsigned char	cc;
-
-	i = 0;
-	len = 0;
-	cc = (unsigned char)c;
-	len = ft_strlen(s);
-	while (s[i] != cc && i < len)
-		i++;
-	if (s[i] == cc && i <= len)
-		return (i);
-	else
-		return (0);
-}
-
-static void	lstnew(t_env **start, char *env)
+static int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
 
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
-		free_env_and_exit(*start);
+		return (FALSE);
 	len = 0;
 	len = strchr_len(env, '=');
 	new->key = (char *)malloc((len + 1) * sizeof(char));
 	if (!new->key)
-		free_env_and_exit(*start);
+		return (free(new), FALSE);
 	ft_strlcpy(new->key, env, len + 1);
 	new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	if (!new->value)
-		free_env_and_exit(*start);
+		return (free(new->key), free(new), FALSE);
 	new->next = NULL;
 	lstadd_back(start, new);
+	return (TRUE);
 }
 
-t_env	*set_env(char **envp)
+t_env	*set_env(int argc, char **argv, char **envp, int *status)
 {
 	t_env	*start;
-	int	i;
+	int		i;
 
+	if (argc == 0 || !argv[0])
+		exit(EXIT_FAILURE);
+	*status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])
-		lstnew(&start, envp[i]);
+	{
+		if (!lstnew(&start, envp[i]))
+			return (free_env(start), NULL);
+	}
 	return (start);
 }

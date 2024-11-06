@@ -9,4 +9,4 @@ sigtest.c
 a.out
 infile
 outfile
-src/main.c
+text

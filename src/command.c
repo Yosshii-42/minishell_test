@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 20:49:37 by tsururukako      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	set_err_message(t_cmd *cmd, char *str)
@@ -10,14 +22,16 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		cmd->err_msg = strjoin_with_free(cmd->err_msg, ": command not found\n", FREE_S1);
+		cmd->err_msg = strjoin_with_free(cmd->err_msg,
+				": command not found\n", FREE_S1);
 	}
+	// !cmd->err_msgの時の処理
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 {
 	char	*str;
-	int	i;
+	int		i;
 
 	str = NULL;
 	if (!path)
@@ -27,6 +41,8 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	{
 		str = strjoin_with_free(path[i], "/", NO_FREE);
 		str = strjoin_with_free(str, command, FREE_S1);
+		if (!str)
+			return (NULL);//後で検討
 		if (!access(str, X_OK))
 			return (str);
 		free(str);
@@ -35,43 +51,35 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	return (strjoin_with_free("x", command, NO_FREE));
 }
 
-static char **make_command_array(t_token *token)
+static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 {
-	char	**cmd;
 	t_token	*ptr;
 	int		count;
 	int		i;
 
 	ptr = token;
-	count = 0;
-	while (ptr->kind == COMMAND || ptr->kind == OPTION)
-	{
-		count++;
-		if (ptr->next)
-			ptr = ptr->next;
-		else
-			break;
-	}
-	cmd = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!cmd)
+	count = array_count(token);
+	cmd->cmd = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!(cmd->cmd))
 		return (NULL);
 	i = -1;
 	while (++i < count)
 	{
-		cmd[i] = ft_strdup(token->word);
+		cmd->cmd[i] = ft_strdup(token->word);
+		if (!cmd->cmd[i])
+			return (free_split(cmd->cmd), NULL);
 		token = token->next;
-		if (!cmd[i])
-			return (free_split(cmd), NULL);
 	}
-	cmd[i] = NULL;
+	cmd->cmd[i] = NULL;
+	cmd->token = ptr;
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)//t_env *env, char **path)
+static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
-	cmd->cmd = make_command_array(token);
+	cmd = make_command_array(token, cmd);
 	if (!cmd)
-		exit (1); //TODO error_exit
+		return (false);
 	if ((cmd->cmd[0]))
 	{
 		if (cmd->cmd[0][0] == '/')
@@ -81,9 +89,12 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd
 		else
 			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0], path, pwd);
 		if (cmd->pathname)
-			return ;
+			return (true);
 	}
 	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
+	if (!cmd->pathname)
+		return (false);
+	return (true);
 }
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
@@ -94,33 +105,24 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	init_cmd(cmd);
 	while (token)
 	{
-		if (token->kind == PIPE)
-		{
-			safe_pipe(cmd);
-			token = token->next;
-			break;
-		}
-		else if (token->kind == RDFILE || token->kind == LIMITTER)
-			open_read_file(cmd, token);
-		else if (token->kind == WRFILE || token->kind == WRFILE_APP)
-			open_write_file(cmd, token);
-		else if (token->kind == COMMAND)
-		{
-			make_path_and_cmd(token, cmd, path, pwd);
-			while (token->next)
-			{
-				if (token->next->kind == OPTION)
-					token = token->next;
-				else
-					break;
-			}
-		}
-		if (token->next)
+		if (token->kind == SYNTAX && (cmd->status = SYNTAX))
+			break ;
+		if (token->kind == PIPE && !(make_pipe(cmd)))
+				return (free_cmd(cmd), NULL);
+		else if (token->kind == PIPE && token->next && (token = token->next))
+			break ;
+		else if (token->kind >= RDFILE && token->kind <= WRF_APP)
+			open_files(cmd, token);
+		else if (token->kind == COMMAND && (!make_path_cmd(token, cmd, path
+			, pwd) || !(token = cmd->token)))
+				return (free_cmd(cmd), NULL);
+		if (token->status != END)
 			token = token->next;
 		else
-			break;
+			break ;
 	}
-	if (access(cmd->pathname, X_OK) != 0)
+	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
+	cmd->token = token;
 	return (cmd);
 }

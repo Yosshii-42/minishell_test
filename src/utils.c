@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-11-05 06:29:40 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/05 17:50:45 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*strjoin_with_free(char *s1, char *s2, int select)
@@ -13,7 +25,8 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	if (!(*s1))
 		result = (char *)malloc(sizeof(char) * (ft_strlen(s2) + 1));
 	else
-		result = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+		result = (char *)malloc(sizeof(char) * (ft_strlen(s1)
+					+ ft_strlen(s2) + 1));
 	if (!result)
 		return (NULL);
 	while (s1[++i])
@@ -28,8 +41,20 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	return (result);
 }
 
-void	print_error_and_exit(char *err_message)
+size_t	strchr_len(const char *s, int c)
 {
-	ft_printf(2, "%s\n", err_message);
-	exit(EXIT_FAILURE);
+	size_t			i;
+	size_t			len;
+	unsigned char	cc;
+
+	i = 0;
+	len = 0;
+	cc = (unsigned char)c;
+	len = ft_strlen(s);
+	while (s[i] != cc && i < len)
+		i++;
+	if (s[i] == cc && i <= len)
+		return (i);
+	else
+		return (0);
 }

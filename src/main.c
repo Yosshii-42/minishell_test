@@ -1,84 +1,111 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/06 19:52:08 by hurabe           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-volatile sig_atomic_t g_sig_status = READLINE;
+volatile sig_atomic_t	g_sig_status = READLINE;
 
-static void	init(int argc, char **argv)
-{
-	int	fd;
-
-	if (argc == 0 || !argv[0])
-		exit(EXIT_FAILURE);
-	fd = 3;
-	while (fd < 1024)
-		close(fd++);
-	
-}
-
-//static void	handle_sigint(int sig)
-//{
-//	(void)sig;
-
-//	rl_on_new_line();
-//    rl_replace_line("", 0);
-//	rl_redisplay();
-//}
-
-void	dup_stdin(int *fd)
+static int	dup_stdin(int *fd)
 {
 	*fd = dup(STDIN_FILENO);
 	if (*fd == -1)
-		print_error_and_exit(strerror(errno));
+		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+	return (TRUE);
 }
 
-void	close_duped_stdin(int *fd)
+static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 {
-	if (dup2(*fd, STDIN_FILENO) == -1)
-		print_error_and_exit(strerror(errno));
-	close(*fd);
+	char	**path;
+	int		origi_stdin;
+	int		status;
+	t_token	*token;
+
+	origi_stdin = 0;
+	status = 0;
+	path = NULL;
+	if (getenv_str(env, "PATH"))
+		path = ft_split(getenv_str(env, "PATH"), ':');
+	add_history(line);
+	dup_stdin(&origi_stdin);
+	token = make_token_lst(line, status_num);
+	if (!token)
+		return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
+	if (!ft_memcmp(line, "clear", 6))
+		clear_history();
+	else
+		status = run_process(token, path, pwd, &origi_stdin);
+	if (path)
+		free_split(path);
+	return (status);
+}
+
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf(1, "%s=%s\n", env->key, env->value);
+		if (env->next)
+			env = env->next;
+		else
+			break ;
+	}	
+}
+
+void	print_dolquestion(char *str, int status)
+{
+	ft_printf(2, "bash: ");
+	ft_putnbr_fd(status, 2);
+	ft_printf(2, "%s", str);
+	ft_printf(2, ": command not found\n", str);
+}
+
+bool	builtin(char *line, t_env *env, int *status)
+{
+	if (ft_memcmp(line, "env", 4) == 0)
+		return (print_env(env), false);
+	else if (!ft_strncmp(line, "$\?", 2))
+	{
+		print_dolquestion(ft_strchr(line, '?') + 1, *status);
+		return (*status = 127, false);
+	}
+	else
+		return (true);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
 	t_env	*env;
-	int original_stdin_fd;
-	char	**path;
+	char	*line;
 	char	*pwd;
+	int		status;
 
-	original_stdin_fd = 0;
 	init_signal();
-	init(argc, argv);
-	env = set_env(envp);
+	env = set_env(argc, argv, envp, &status);
+	if (!env)
+		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
 	while (1)
 	{
-		dup_stdin(&original_stdin_fd);
-		//if (!(line = readline("minishell$ ")))
-		//	break ;
+		pwd = getenv("PWD");
 		line = readline("minishell$ ");
-		if (!line)
-		{
-			printf("exit\n");
+		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		}
-		path = NULL;
-		path = ft_split(getenv_str(env, "PATH"), ':');
-		pwd = NULL;
-		pwd = getenv_str(env, "PWD");
-		if (*line)
-		{
-			add_history(line);
-			if (!ft_memcmp(line, "clear", 6))
-				clear_history();
-			else
-				run_process(line, path, pwd, &original_stdin_fd);//env);
-		}
-		//tokenizer();
-		close_duped_stdin(&original_stdin_fd);
+		else if (builtin_exit(line) == true)
+			break ;
+		else if (builtin(line, env, &status) == true)
+			status = do_minishell(env, line, pwd, status);
+		free(line);
 	}
-	if (!path)
-		free_split(path);
-	// free_env(env);
+	free_env(env);
 	clear_history();
 	exit(0);
 }
