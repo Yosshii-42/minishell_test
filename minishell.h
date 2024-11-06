@@ -152,4 +152,7 @@ void	perror_prestr(void);
 void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
+// builtin
+bool    builtin_exit(char *line);
+
 #endif
