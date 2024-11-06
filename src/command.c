@@ -22,10 +22,12 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		cmd->err_msg = strjoin_with_free(cmd->err_msg,
+		if (cmd->msg)
+			cmd->err_msg = strjoin_with_free(cmd->err_msg,
 				": command not found\n", FREE_S1);
 	}
-	// !cmd->err_msgの時の処理
+	// if (!cmd->msg)
+	// malloc error時の処理
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
@@ -105,7 +107,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	init_cmd(cmd);
 	while (token)
 	{
-		if (token->kind == SYNTAX && (cmd->status = SYNTAX))
+		if(token->kind == SYNTAX && (cmd->status = SYNTAX))
 			break ;
 		if (token->kind == PIPE && !(make_pipe(cmd)))
 				return (free_cmd(cmd), NULL);

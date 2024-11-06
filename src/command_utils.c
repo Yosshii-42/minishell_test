@@ -58,7 +58,10 @@ char	*make_pwd_path(char *command, char *pwd)
 		return (strjoin_with_free("", command, NO_FREE));//不要?
 	str = NULL;
 	str = strjoin_with_free(pwd, "/", NO_FREE);
-	str = strjoin_with_free(str, command, FREE_S1);
+	if (str)
+		str = strjoin_with_free(str, command, FREE_S1);
+	if (!str)
+		ft_printf("malloc: %s\n", strerror(errno));
 	return (str);
 }
 
