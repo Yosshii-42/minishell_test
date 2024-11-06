@@ -41,6 +41,8 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	{
 		str = strjoin_with_free(path[i], "/", NO_FREE);
 		str = strjoin_with_free(str, command, FREE_S1);
+		if (!str)
+			return (NULL);//後で検討
 		if (!access(str, X_OK))
 			return (str);
 		free(str);
