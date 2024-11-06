@@ -25,6 +25,7 @@ static void	set_err_message(t_cmd *cmd, char *str)
 		cmd->err_msg = strjoin_with_free(cmd->err_msg,
 				": command not found\n", FREE_S1);
 	}
+	// !cmd->err_msgの時の処理
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
@@ -72,12 +73,11 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	return (cmd);
 }
 
-static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path,
-		char *pwd)
+static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
-		return ;//exit (1); //TODO error_exit
+		return (false);
 	if ((cmd->cmd[0]))
 	{
 		if (cmd->cmd[0][0] == '/')
@@ -87,9 +87,12 @@ static void	make_path_and_cmd(t_token *token, t_cmd *cmd, char **path,
 		else
 			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0], path, pwd);
 		if (cmd->pathname)
-			return ;
+			return (true);
 	}
 	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
+	if (!cmd->pathname)
+		return (false);
+	return (true);
 }
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
@@ -106,15 +109,11 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 				return (free_cmd(cmd), NULL);
 		else if (token->kind == PIPE && token->next && (token = token->next))
 			break ;
-		else if (token->kind == RDFILE || token->kind == LIMITTER)
-			open_read_file(cmd, token);
-		else if (token->kind == WRFILE || token->kind == WRF_APP)
-			open_write_file(cmd, token);
-		else if (token->kind == COMMAND)
-		{
-			make_path_and_cmd(token, cmd, path, pwd);
-			token = cmd->token;
-		}
+		else if (token->kind >= RDFILE && token->kind <= WRF_APP)
+			open_files(cmd, token);
+		else if (token->kind == COMMAND && (!make_path_cmd(token, cmd, path
+			, pwd) || !(token = cmd->token)))
+				return (free_cmd(cmd), NULL);
 		if (token->status != END)
 			token = token->next;
 		else

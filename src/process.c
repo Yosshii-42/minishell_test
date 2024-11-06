@@ -97,9 +97,9 @@ int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 	while (count--)
 	{
 		cmd = NULL;
-		if (!(cmd = make_cmd(token, cmd, path, pwd)))
+		if ((cmd = make_cmd(token, cmd, path, pwd)) && !cmd)
 			return (end_process(ptr, original_stdin), -1);
-		if (!(token = cmd->token))
+		if ((token = cmd->token) && !token)
 			break ;
 		if (!make_fork(&pid))
 			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);

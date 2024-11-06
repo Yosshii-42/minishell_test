@@ -64,36 +64,77 @@ static int	heredoc_process(char *eof, t_cmd *cmd)
 	return (close(fd), TRUE);
 }
 
-void	open_read_file(t_cmd *cmd, t_token *token)
+static bool	open_read_file(t_cmd *cmd, t_token *token)
 {
+	if (cmd->readfd > 0)
+		close(cmd->readfd);
 	if (token->kind == LIMITTER)
 	{
 		if (heredoc_process(token->word, cmd) == FALSE)
-			return ;
+			return (false);
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
 		if (cmd->readfd < 0)
+		{
 			cmd->err_msg = set_file_err(FILE_NAME, strerror(errno));
+			if (!cmd->err_msg)
+				return (false);
+		}
 	}
 	else if (token->kind == RDFILE)
 	{
 		cmd->readfd = open(token->word, O_RDONLY);
 		if (cmd->readfd < 0)
+		{
 			cmd->err_msg = set_file_err(token->word, strerror(errno));
+			if (!cmd->err_msg)
+				return (false);
+		}
 	}
+	return (true);
 }
 
-void	open_write_file(t_cmd *cmd, t_token *token)
+static bool	open_write_file(t_cmd *cmd, t_token *token)
 {
+	if (cmd->writefd > 0)
+		close(cmd->writefd);
 	if (token->kind == WRF_APP)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_APPEND, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)
+		{
 			cmd->err_msg = set_file_err(token->word, strerror(errno));
+			if (!cmd->err_msg)
+				return (false);
+		}
 	}
 	else if (token->kind == WRFILE)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (cmd->writefd < 0 && cmd->readfd < 0)
+		{
 			cmd->err_msg = set_file_err(token->word, strerror(errno));
+			if (!cmd->err_msg)
+				return (true);
+		}
 	}
+	return (true);
+}
+
+bool	open_files(t_cmd *cmd, t_token *token)
+{
+	if (token->kind == RDFILE || token->kind == LIMITTER)
+	{
+		if (!open_read_file(cmd, token))
+			return (false);
+		else
+			return (true);
+	}
+	if (token->kind == WRF_APP || token->kind == WRFILE)
+	{
+		if (!open_write_file(cmd, token))
+			return (false);
+		else
+			return (true);
+	}
+	return (false);
 }
