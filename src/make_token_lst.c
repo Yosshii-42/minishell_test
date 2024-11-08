@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:28:22 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 00:41:59 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:27:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,5 @@ t_token	*make_token_lst(char *line, int status_num)
 		lstnew(&token, split[i]);//nullが帰った時の処理
 	add_token_kind(token, status_num);
 	free_split(split);
-	t_token *ptr;
-	ptr = token;
-	while (ptr)
-	{
-		printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
-		ptr = ptr->next;
-	}
 	return (token);
 }

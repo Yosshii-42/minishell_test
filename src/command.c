@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:22:29 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:28:22 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,14 @@ int	count_token(t_token *token)
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 {
-	// t_token	*ptr;
 	int		array_count;
 	int		token_count;
 	int		i;
 	int		j;
 
-	// ptr = token;
 	array_count = count_array(token);
 	token_count = count_token(token);
 
-	printf("token_count = %d, array_count = %d, token = %s\n", token_count, array_count, token->word);
 	cmd->cmd = (char **)malloc(sizeof(char *) * (array_count + 1));
 	if (!(cmd->cmd))
 		return (NULL);
@@ -176,7 +173,6 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		else
 			break;
 	}
-	write(1, "out\n", 4);
 	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);
 	cmd->token = token;
