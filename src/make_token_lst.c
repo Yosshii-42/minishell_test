@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_token_lst.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:22 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 16:44:39 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:22 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/09 00:41:59 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,8 @@ t_token	*make_token_lst(char *line, int status_num)
 	ptr = token;
 	while (ptr)
 	{
-		// printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
-		if (ptr->next)
-			ptr = ptr->next;
-		else
-			break;
+		printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
+		ptr = ptr->next;
 	}
 	return (token);
 }
