@@ -6,29 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:28:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 00:40:49 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:58:09 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	token_count(t_token *token)
-{
-	int	count;
-
-	count = 0;
-	if (!token)
-		return (0);
-	while (token)
-	{
-		count++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
-	}
-	return (count);
-}
 
 static t_token	*add_kind_pipe(t_token *token)
 {
@@ -102,10 +84,6 @@ static t_token	*add_command_kind(t_token *token, int command_flag)
 			token->kind = WRF_APP;
 		else if (command_flag > 0)
 			token->kind = OPTION;
-		// else if (token->pre->kind == COMMAND)
-		// 	token->kind = OPTION;
-		// else if (token->pre->kind == OPTION)
-		// 	token->kind = OPTION;
 		else
 		{
 			token->kind = COMMAND;

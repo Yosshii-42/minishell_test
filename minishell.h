@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 22:59:05 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 02:00:12 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,9 @@ void	add_token_kind(t_token *token, int status_num);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
-// int		array_count(t_token *token);
 void	init_cmd(t_cmd *cmd);
+int		count_array(t_token *token);
+int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(t_env *env, char *str);
@@ -152,5 +153,8 @@ void	signal_handler(int signum);
 
 // builtin
 bool    builtin_exit(char *line);
+void	print_env(t_env *env);
+void	print_dolquestion(char *str, int status);
+bool	builtin(char *line, t_env *env, int *status);
 
 #endif

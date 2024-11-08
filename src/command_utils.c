@@ -6,13 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 22:59:42 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:55:10 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
 
 void	init_cmd(t_cmd *cmd)
 {
@@ -27,6 +25,42 @@ void	init_cmd(t_cmd *cmd)
 	cmd->token = NULL;
 	cmd->status = -1;
 	cmd->flag = 0;
+}
+
+int	count_array(t_token *token)
+{
+	int	count;
+	count = 0;
+	while (token)
+	{
+		if (token->kind == COMMAND || token->kind == OPTION)
+			count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
+}
+
+int	count_token(t_token *token)
+{
+	int	count;
+
+	count = 0;
+	while (token)
+	{
+		count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
 }
 
 int	make_pipe(t_cmd *cmd)

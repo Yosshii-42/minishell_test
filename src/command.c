@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:28:22 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:46:40 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,41 +51,6 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 		str = NULL;
 	}
 	return (strjoin_with_free("x", command, NO_FREE));
-}
-int	count_array(t_token *token)
-{
-	int	count;
-	count = 0;
-	while (token)
-	{
-		if (token->kind == COMMAND || token->kind == OPTION)
-			count++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
-		if (token->kind == PIPE)
-			break;
-	}
-	return (count);
-}
-
-int	count_token(t_token *token)
-{
-	int	count;
-
-	count = 0;
-	while (token)
-	{
-		count++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
-		if (token->kind == PIPE)
-			break;
-	}
-	return (count);
 }
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
