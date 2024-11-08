@@ -22,7 +22,7 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		if (cmd->msg)
+		if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg,
 				": command not found\n", FREE_S1);
 	}
@@ -52,28 +52,74 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	}
 	return (strjoin_with_free("x", command, NO_FREE));
 }
+int	count_array(t_token *token)
+{
+	int	count;
+	count = 0;
+	while (token)
+	{
+		if (token->kind == COMMAND || token->kind == OPTION)
+			count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
+}
+
+int	count_token(t_token *token)
+{
+	int	count;
+
+	count = 0;
+	while (token)
+	{
+		printf("token = %s\n", token->word);
+		count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
+}
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 {
-	t_token	*ptr;
-	int		count;
+	// t_token	*ptr;
+	int		array_count;
+	int		token_count;
 	int		i;
+	int		j;
 
-	ptr = token;
-	count = array_count(token);
-	cmd->cmd = (char **)malloc(sizeof(char *) * (count + 1));
+	// ptr = token;
+	array_count = count_array(token);
+	token_count = count_token(token);
+
+	printf("token_count = %d, array_count = %d\n", token_count, array_count);
+	cmd->cmd = (char **)malloc(sizeof(char *) * (array_count + 1));
 	if (!(cmd->cmd))
 		return (NULL);
 	i = -1;
-	while (++i < count)
+	j = -1;
+	while (++i < token_count)
 	{
-		cmd->cmd[i] = ft_strdup(token->word);
-		if (!cmd->cmd[i])
-			return (free_split(cmd->cmd), NULL);
+		if (token->kind == COMMAND || token->kind == OPTION)
+		{
+			cmd->cmd[++j] = ft_strdup(token->word);
+			if (!cmd->cmd[j])
+				return (free_split(cmd->cmd), NULL);
+			printf("cmd = %s\n", cmd->cmd[j]);	
+		}
 		token = token->next;
 	}
-	cmd->cmd[i] = NULL;
-	cmd->token = ptr;
+	cmd->cmd[array_count] = NULL;
+	// cmd->token = ptr;
 	return (cmd);
 }
 
@@ -101,6 +147,10 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
+	printf("make_cmd token = %s\n", token->word);
+	int	flag;
+
+	flag = 0;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
@@ -109,15 +159,32 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	{
 		if(token->kind == SYNTAX && (cmd->status = SYNTAX))
 			break ;
-		if (token->kind == PIPE && !(make_pipe(cmd)))
+		if (token->kind == PIPE)
+		{
+			write(1, "pipe\n", 5);
+			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
-		else if (token->kind == PIPE && token->next && (token = token->next))
+		 	if (token->next)
+				token = token->next;
+			printf("after pipe token = %s\n", token->word);
 			break ;
+		}
+		if (flag == 0)
+		{
+			// write(1, "here\n", 5);
+			flag++;
+			if (!make_path_cmd(token, cmd, path, pwd))
+				return (free_cmd(cmd), NULL);
+		}
 		else if (token->kind >= RDFILE && token->kind <= WRF_APP)
 			open_files(cmd, token);
-		else if (token->kind == COMMAND && (!make_path_cmd(token, cmd, path
-			, pwd) || !(token = cmd->token)))
-				return (free_cmd(cmd), NULL);
+		else if (token->kind == OPTION || token->kind == COMMAND || (token->kind >= RDFILE && token->kind <= WRF_APP))
+		{
+			if (token->next)
+				token = token->next;
+			else
+				break ;
+		}
 		if (token->status != END)
 			token = token->next;
 		else

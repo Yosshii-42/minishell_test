@@ -88,7 +88,7 @@ static t_token	*add_kind_morethan(t_token *token)
 	return (token);
 }
 
-static t_token	*add_command_kind(t_token *token)
+static t_token	*add_command_kind(t_token *token, int command_flag)
 {
 	if (token->pre)
 	{
@@ -100,17 +100,23 @@ static t_token	*add_command_kind(t_token *token)
 			token->kind = WRFILE;
 		else if (token->pre->kind == APPEND)
 			token->kind = WRF_APP;
-		else if (token->pre->kind == COMMAND)
+		else if (command_flag > 0)
 			token->kind = OPTION;
-		else if (token->pre->kind == OPTION)
-			token->kind = OPTION;
+		// else if (token->pre->kind == COMMAND)
+		// 	token->kind = OPTION;
+		// else if (token->pre->kind == OPTION)
+		// 	token->kind = OPTION;
 		else
+		{
 			token->kind = COMMAND;
+			command_flag++;
+		}
 	}
 	else
+	{
 		token->kind = COMMAND;
-	if (token->kind == COMMAND && !ft_memcmp(token->word, "cat", 4))
-		token->status = CAT;
+		command_flag++;
+	}
 	if (!token->next)
 		token->status = END;
 	return (token);
@@ -118,10 +124,16 @@ static t_token	*add_command_kind(t_token *token)
 
 void	add_token_kind(t_token *token, int status_num)
 {
+	int	commnad_flag;
+
+	commnad_flag = 0;
 	while (token)
 	{
 		if (*(token->word) == '|')
+		{
 			token = add_kind_pipe(token);
+			commnad_flag = 0;
+		}
 		else if (*(token->word) == '<')
 			token = add_kind_lessthan(token);
 		else if (*(token->word) == '>')
@@ -134,7 +146,9 @@ void	add_token_kind(t_token *token, int status_num)
 			token->word = ft_itoa(status_num);
 		}
 		else
-			token = add_command_kind(token);
+			token = add_command_kind(token, commnad_flag);
+		if (token->kind == COMMAND)
+			commnad_flag++;
 		if (token->next)
 			token = token->next;
 		else

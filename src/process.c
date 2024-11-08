@@ -39,6 +39,7 @@ static int	wait_process(void)
 
 void	end_process(t_token *token, int *original_stdin)
 {
+	printf("here end process token = %s\n", token->word);
 	free_token(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
@@ -107,6 +108,8 @@ int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 			parent_process(cmd);
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, original_stdin), 2);
+		printf("run_process token\n");
+		token = cmd->token;
 		free_cmd(cmd);
 	}
 	end_process(ptr, original_stdin);

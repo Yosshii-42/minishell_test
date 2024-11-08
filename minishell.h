@@ -108,7 +108,7 @@ void	add_token_kind(t_token *token, int status_num);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
-int		array_count(t_token *token);
+// int		array_count(t_token *token);
 void	init_cmd(t_cmd *cmd);
 int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);

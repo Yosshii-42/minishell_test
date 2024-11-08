@@ -70,5 +70,15 @@ t_token	*make_token_lst(char *line, int status_num)
 		lstnew(&token, split[i]);//nullが帰った時の処理
 	add_token_kind(token, status_num);
 	free_split(split);
+	t_token *ptr;
+	ptr = token;
+	while (ptr)
+	{
+		// printf("token = %s, kind = %d\n", ptr->word, ptr->kind);
+		if (ptr->next)
+			ptr = ptr->next;
+		else
+			break;
+	}
 	return (token);
 }

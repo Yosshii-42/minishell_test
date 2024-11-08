@@ -12,21 +12,7 @@
 
 #include "../minishell.h"
 
-int	array_count(t_token *token)
-{
-	int	count;
 
-	count = 0;
-	while (token->kind == COMMAND || token->kind == OPTION)
-	{
-		count++;
-		if (token->status != END && token->next->kind == OPTION)
-			token = token->next;
-		else
-			break ;
-	}
-	return (count);
-}
 
 void	init_cmd(t_cmd *cmd)
 {
@@ -61,7 +47,7 @@ char	*make_pwd_path(char *command, char *pwd)
 	if (str)
 		str = strjoin_with_free(str, command, FREE_S1);
 	if (!str)
-		ft_printf("malloc: %s\n", strerror(errno));
+		ft_printf(2, "malloc: %s\n", strerror(errno));
 	return (str);
 }
 
@@ -72,7 +58,7 @@ char	*getenv_str(t_env *env, char *str)
 	if (!env)
 		return (NULL);
 	tmp = env;
-	while (tmp->key)
+	while (tmp)
 	{
 		if (!ft_memcmp(tmp->key, str, ft_strlen(str) + 1))
 			return (tmp->value);
