@@ -37,8 +37,8 @@ static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 	add_history(line);
 	dup_stdin(&origi_stdin);
 	token = make_token_lst(line, status_num);
-	if (!token)
-		return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
+	// if (!token)
+	// 	return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_history();
 	else
