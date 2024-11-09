@@ -68,6 +68,8 @@ static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 	close(*original_stdin);
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
+	if (!ft_memcmp(cmd->cmd[0], "exit", ))
+		builtin_exit(cmd);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
 	{
 		ft_printf(2, "here\n");
