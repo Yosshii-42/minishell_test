@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_token_lst.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:22 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 16:44:39 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:22 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/09 01:27:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

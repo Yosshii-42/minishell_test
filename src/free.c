@@ -65,7 +65,7 @@ void	free_split(char **split)
 	int	i;
 
 	i = 0;
-	if (!split[0] || !split)
+	if (!split || !split[0])
 		return ;
 	while (split[i])
 		free(split[i++]);

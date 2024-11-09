@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:28:54 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 17:48:16 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:28:54 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/09 01:23:05 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static int	wait_process(void)
 
 void	end_process(t_token *token, int *original_stdin)
 {
+	// printf("here end process token = %s\n", token->word);
 	free_token(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
@@ -107,6 +108,7 @@ int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 			parent_process(cmd);
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, original_stdin), 2);
+		token = cmd->token;
 		free_cmd(cmd);
 	}
 	end_process(ptr, original_stdin);

@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 20:49:37 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:46:40 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ static void	set_err_message(t_cmd *cmd, char *str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		cmd->err_msg = strjoin_with_free(cmd->err_msg,
+		if (cmd->err_msg)
+			cmd->err_msg = strjoin_with_free(cmd->err_msg,
 				": command not found\n", FREE_S1);
 	}
-	// !cmd->err_msgの時の処理
+	// if (!cmd->msg)
+	// malloc error時の処理
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
@@ -53,25 +55,30 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 {
-	t_token	*ptr;
-	int		count;
+	int		array_count;
+	int		token_count;
 	int		i;
+	int		j;
 
-	ptr = token;
-	count = array_count(token);
-	cmd->cmd = (char **)malloc(sizeof(char *) * (count + 1));
+	array_count = count_array(token);
+	token_count = count_token(token);
+
+	cmd->cmd = (char **)malloc(sizeof(char *) * (array_count + 1));
 	if (!(cmd->cmd))
 		return (NULL);
 	i = -1;
-	while (++i < count)
+	j = -1;
+	while (++i < token_count)
 	{
-		cmd->cmd[i] = ft_strdup(token->word);
-		if (!cmd->cmd[i])
-			return (free_split(cmd->cmd), NULL);
+		if (token->kind == COMMAND || token->kind == OPTION)
+		{
+			cmd->cmd[++j] = ft_strdup(token->word);
+			if (!cmd->cmd[j])
+				return (free_split(cmd->cmd), NULL);
+		}
 		token = token->next;
 	}
-	cmd->cmd[i] = NULL;
-	cmd->token = ptr;
+	cmd->cmd[array_count] = NULL;
 	return (cmd);
 }
 
@@ -99,27 +106,37 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 {
+	int	flag;
+
+	flag = 0;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
 	init_cmd(cmd);
 	while (token)
 	{
-		if (token->kind == SYNTAX && (cmd->status = SYNTAX))
+		if(token->kind == SYNTAX && (cmd->status = SYNTAX))
 			break ;
-		if (token->kind == PIPE && !(make_pipe(cmd)))
+		if (token->kind == PIPE)
+		{
+			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
-		else if (token->kind == PIPE && token->next && (token = token->next))
+		 	if (token->next)
+				token = token->next;
 			break ;
-		else if (token->kind >= RDFILE && token->kind <= WRF_APP)
+		}
+		if (count_array(token) && flag == 0)
+		{
+			flag++;
+			if (!make_path_cmd(token, cmd, path, pwd))
+				return (free_cmd(cmd), NULL);
+		}
+		if (token->kind >= RDFILE && token->kind <= WRF_APP)
 			open_files(cmd, token);
-		else if (token->kind == COMMAND && (!make_path_cmd(token, cmd, path
-			, pwd) || !(token = cmd->token)))
-				return (free_cmd(cmd), NULL);
-		if (token->status != END)
+		if ((token->kind >= COMMAND && token->kind <= WRF_APP) && token->next)
 			token = token->next;
 		else
-			break ;
+			break;
 	}
 	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);

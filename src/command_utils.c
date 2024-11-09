@@ -6,27 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 22:59:42 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 01:55:10 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	array_count(t_token *token)
-{
-	int	count;
-
-	count = 0;
-	while (token->kind == COMMAND || token->kind == OPTION)
-	{
-		count++;
-		if (token->status != END && token->next->kind == OPTION)
-			token = token->next;
-		else
-			break ;
-	}
-	return (count);
-}
 
 void	init_cmd(t_cmd *cmd)
 {
@@ -41,6 +25,42 @@ void	init_cmd(t_cmd *cmd)
 	cmd->token = NULL;
 	cmd->status = -1;
 	cmd->flag = 0;
+}
+
+int	count_array(t_token *token)
+{
+	int	count;
+	count = 0;
+	while (token)
+	{
+		if (token->kind == COMMAND || token->kind == OPTION)
+			count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
+}
+
+int	count_token(t_token *token)
+{
+	int	count;
+
+	count = 0;
+	while (token)
+	{
+		count++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+		if (token->kind == PIPE)
+			break;
+	}
+	return (count);
 }
 
 int	make_pipe(t_cmd *cmd)
@@ -58,7 +78,10 @@ char	*make_pwd_path(char *command, char *pwd)
 		return (strjoin_with_free("", command, NO_FREE));//不要?
 	str = NULL;
 	str = strjoin_with_free(pwd, "/", NO_FREE);
-	str = strjoin_with_free(str, command, FREE_S1);
+	if (str)
+		str = strjoin_with_free(str, command, FREE_S1);
+	if (!str)
+		ft_printf(2, "malloc: %s\n", strerror(errno));
 	return (str);
 }
 
@@ -69,7 +92,7 @@ char	*getenv_str(t_env *env, char *str)
 	if (!env)
 		return (NULL);
 	tmp = env;
-	while (tmp->key)
+	while (tmp)
 	{
 		if (!ft_memcmp(tmp->key, str, ft_strlen(str) + 1))
 			return (tmp->value);
