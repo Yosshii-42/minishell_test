@@ -18,5 +18,8 @@
         }
       ],
       "version": 4,
-      "C_Cpp.errorSquiggles": "disabled"
+      "C_Cpp.errorSquiggles": "disabled",
+      "files.associations": {
+        "random": "c"
+      }
 }

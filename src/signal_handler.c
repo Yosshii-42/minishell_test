@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:29:17 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:29:17 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:29:17 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/10 17:05:39 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void	signal_handler(int signum)
 	else if (g_sig_status == IN_CMD)
 	{
 		g_sig_status = SIG_INT;
-		write(STDERR_FILENO, "\n", 1);
+		write(STDERR_FILENO, "^C\n", 3);
 	}
 	else
 	{
 		g_sig_status = SIG_INT;
-		write(STDOUT_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "^C\n", 3);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

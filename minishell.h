@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 02:00:12 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/10 16:16:16 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ typedef struct s_token
 	char			*word;
 	t_kind			kind;
 	t_status		status;
+	//bool            is_quoted;  // クォートの有無を表すフラグ
+    //bool            is_double_quoted; // ダブルクォート内の情報かどうかを示すフラグ
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -103,8 +105,19 @@ typedef struct s_cmd
 t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
 
 //token
-t_token	*make_token_lst(char *line, int status_num);
+//t_token	*make_token_lst(char *line, int status_num);
+t_token	*make_token_lst(char *line, t_env *env, int status_num);
 void	add_token_kind(t_token *token, int status_num);
+char	*space_skip(char *input);
+t_token	*create_special_token(char **input, t_kind kind, int length);
+//t_token	*create_command_token(char *start, char *end);
+t_token *create_command_token(char *start);
+t_token *tokenizer(char *input, int *error_status);
+
+// tokenizer_utils
+char	*ft_strjoin_one(char *str, char c);
+int		ft_isspace(char c);
+char	*ft_strcpy(char *dest, const char *src);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);

@@ -12,7 +12,9 @@ SRCS	= src/main.c \
 		  src/free.c \
 		  src/signal.c \
 		  src/signal_handler.c \
-		  src/builtin1.c 
+		  src/builtin1.c  \
+		  src/tokenizer.c \
+		  src/tokenizer_utils.c
 OBJS	= $(SRCS:.c=.o)
 CC		= gcc
 FLAGS	= -Wall -Wextra -Werror

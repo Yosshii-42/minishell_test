@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:59:12 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/09 17:58:26 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 		path = ft_split(getenv_str(env, "PATH"), ':');
 	add_history(line);
 	dup_stdin(&origi_stdin);
-	token = make_token_lst(line, status_num);
+	token = make_token_lst(line, env, status_num);
+	//token = make_token_lst(line, env, status_num);
 	// if (!token)
 	// 	return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
 	if (!ft_memcmp(line, "clear", 6))
@@ -72,6 +73,7 @@ int	main(int argc, char **argv, char **envp)
 			status = do_minishell(env, line, pwd, status);
 		free(line);
 	}
+
 	free_env(env);
 	clear_history();
 	exit(0);
