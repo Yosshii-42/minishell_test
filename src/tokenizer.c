@@ -30,7 +30,8 @@ t_token	*create_special_token(char **input, t_kind kind, int length)
 }
 
 // 通常の文字列をトークンとして作成する関数
-t_token	*create_command_token(char *start)
+//t_token	*create_command_token(char *start)
+t_token	*create_command_token(char *start, bool is_quoted)
 {
 	t_token	*new_token;
 
@@ -39,6 +40,7 @@ t_token	*create_command_token(char *start)
 		return (NULL);
 	new_token->word = start;
 	new_token->kind = COMMAND;
+	new_token->is_quoted = is_quoted;
 	new_token->next = NULL;
 	new_token->pre = NULL;
 	return (new_token);
@@ -52,13 +54,24 @@ t_token	*tokenizer(char *input, int *error_status)
     *error_status = 0;
 
     input = space_skip(input);
+	//new_token = NULL;
+	//char *result = NULL;
     while (*input)
 	{
         new_token = NULL;
 
         // 特殊トークン処理
         // ここにシングルクォートを分断する関数を作成
-        if (*input == '<' || *input == '>' || *input == '|')
+        if (*input == '\'') // シングルクォートが見つかった場合
+        {
+            new_token = process_single_quote(&input, error_status);
+            if (*error_status)
+            {
+                free_token(head);
+                return (NULL);
+            }
+        }
+        else if (*input == '<' || *input == '>' || *input == '|')
 		{
             char c = *input;
             int count = 0;
@@ -85,16 +98,22 @@ t_token	*tokenizer(char *input, int *error_status)
                 free_token(head);
                 return (NULL);
             }
-        } else {
+        }
+		else
+		{
             // コマンドやオプションの処理
             char *result = NULL;
 
-			while (*input && !ft_strchr(SPECIAL_TOKEN, *input) && !ft_isspace(*input))
+			//while (*input && !ft_strchr(SPECIAL_TOKEN, *input) && !ft_isspace(*input))
+			while (*input && *input != '\'' && !ft_strchr(SPECIAL_TOKEN, *input) && !ft_isspace(*input))
 			{
 				result = ft_strjoin_one(result, *input);
 				input++;
 			}
-            new_token = create_command_token(result);
+			if (result)
+				new_token = create_command_token(result, false);
+            //new_token = create_command_token(result);
+			//new_token = create_command_token(result, false);
 			if (!new_token)
 			{
 				*error_status = 1;

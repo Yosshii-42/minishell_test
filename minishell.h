@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/10 16:16:16 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/10 19:37:21 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ typedef struct s_token
 	char			*word;
 	t_kind			kind;
 	t_status		status;
-	//bool            is_quoted;  // クォートの有無を表すフラグ
+	bool            is_quoted;  // クォートの有無を表すフラグ
     //bool            is_double_quoted; // ダブルクォート内の情報かどうかを示すフラグ
 	struct s_token	*next;
 	struct s_token	*pre;
@@ -111,13 +111,15 @@ void	add_token_kind(t_token *token, int status_num);
 char	*space_skip(char *input);
 t_token	*create_special_token(char **input, t_kind kind, int length);
 //t_token	*create_command_token(char *start, char *end);
-t_token *create_command_token(char *start);
+//t_token *create_command_token(char *start);
+t_token *create_command_token(char *start, bool is_quoted);
 t_token *tokenizer(char *input, int *error_status);
 
 // tokenizer_utils
 char	*ft_strjoin_one(char *str, char c);
 int		ft_isspace(char c);
 char	*ft_strcpy(char *dest, const char *src);
+t_token	*process_single_quote(char **input, int *error_status);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
