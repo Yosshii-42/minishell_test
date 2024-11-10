@@ -66,8 +66,8 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		else if (builtin_exit(line) == true)
-			break ;
+		// else if (main_exit(line, &status) == true)
+		//  	break ;
 		else if (builtin(line, env, &status) == true)
 			status = do_minishell(env, line, pwd, status);
 		free(line);

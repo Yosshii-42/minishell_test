@@ -152,8 +152,8 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-// bool    builtin_exit(char *line);
-bool    builtin_exit(t_cmd *cmd);
+bool    main_exit(char *line, int *status);
+int		builtin_exit(char **split);
 void	print_env(t_env *env);
 void	print_dolquestion(char *str, int status);
 bool	builtin(char *line, t_env *env, int *status);
