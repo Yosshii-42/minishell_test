@@ -56,6 +56,8 @@ static void	parent_process(t_cmd *cmd)
 
 static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 {
+	if (!ft_memcmp(cmd->cmd[0], "exit", 5))
+		exit(builtin_exit(cmd->cmd));
 	if (cmd->err_msg)
 		exit_child_process(cmd);
 	if (cmd->readfd > 0)

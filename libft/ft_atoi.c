@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	ft_isover(long sign, long num, long next_num)
+static int	ft_isover(long sign, long num, long next_num)
 {
 	if (num < LONG_MAX / 10)
 		return (FALSE);
