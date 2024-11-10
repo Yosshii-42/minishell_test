@@ -12,30 +12,6 @@
 
 #include "../minishell.h"
 
-// bool    main_exit(char *line)
-// // bool    builtin_exit(t_cmd *cmd)
-// {
-//     int result;
-
-//     result = ft_memcmp(line, "exit", 5);
-//     if (result == 0 || result == 9 || result == 10 || result == 32)
-//         return (true);
-//     else
-//         return (false);
-// 	if (cmd->cmd[1])
-		
-// }
-
-// {
-//     int result;
-
-//     result = ft_memcmp(line, "exit", 5);
-//     if (result == 0 || result == 9 || result == 10 || result == 32)
-//         return (true);
-//     else
-//         return (false);
-// }
-
 void	print_env(t_env *env)
 {
 	while (env)
