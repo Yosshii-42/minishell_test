@@ -1,5 +1,6 @@
 NAME 	= libft.a
-SRCS	= ft_strlen.c \
+SRCS	= ft_isdigit.c \
+		  ft_strlen.c \
 		  ft_split.c \
 		  ft_memset.c \
 		  ft_memcmp.c \
