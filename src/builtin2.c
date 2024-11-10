@@ -86,14 +86,19 @@ bool main_exit(char *line, int *status)
     char    **split;
 
     split = NULL;
-    if (ft_strchr(line, '|'))
-        return (false);
-    else
+    if (ft_memcmp(line, "exit", 5) == 32 || ft_memcmp(line, "exit", 5) == 0)
     {
-        split = ft_split(line, ' ');
-        if (!split)
-            return (*status = 2, true);
-        *status = builtin_exit(split);
-            return (free_split(split), true);
+        if (ft_strchr(line, '|'))
+            return (false);
+        else
+        {
+            split = ft_split(line, ' ');
+            if (!split)
+                return (*status = 2, true);
+            *status = builtin_exit(split);
+                return (free_split(split), true);
+        }
     }
+    else
+        return (false);
 }
