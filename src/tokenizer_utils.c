@@ -38,31 +38,86 @@ int	ft_isspace(char c)
 	c == '\n' || c == '\r' || c == '\f' || c == '\v');
 }
 
-// シングルクォート処理
-t_token	*process_single_quote(char **input, int *error_status)
-{
-	t_token	*new_token;
-	char	*quoted_content;
+// ダブルクォート処理
+//t_token *process_double_quote(char **input, int *error_status)
+//{
+//    t_token *new_token;
+//    char *quoted_content = NULL;
 
-	(*input)++; //最初のシングルクォートスキップ
-	quoted_content = NULL;
-	while (**input && **input != '\'') //シングルクォートの終了を探す
-	{
-		quoted_content = ft_strjoin_one(quoted_content, **input);
-		(*input)++;
-	}
-	if (**input == '\0') // シングルクォートの終了が見つからない場合
-	{
-		fprintf(stderr, "error: could not find \"'\"\n"); //後で修正
-		free(quoted_content);
-		*error_status = 1;
-		return (NULL);
-	}
-	(*input)++; // 終了シングルクォートをスキップ
-	new_token = create_command_token(quoted_content, true);
-	//free(quoted_content);
-	return (new_token);
-}
+//    (*input)++; // ダブルクォートをスキップ
+
+//    while (**input && **input != '\"')
+//    {
+//        quoted_content = ft_strjoin_one(quoted_content, **input);
+//        (*input)++;
+//    }
+
+//    if (**input != '\"')
+//    {
+//        fprintf(stderr, "error: could not find matching \"\n");
+//        free(quoted_content);
+//        *error_status = 1;
+//        return NULL;
+//    }
+//    (*input)++; // 終了ダブルクォートをスキップ
+
+//    new_token = create_command_token(quoted_content, true);
+//    return new_token;
+//}
+
+
+// シングルクォート処理
+//t_token *process_single_quote(char **input, int *error_status)
+//{
+//    t_token *new_token;
+//    char *quoted_content = NULL;
+
+//    (*input)++; // 最初のシングルクォートをスキップ
+
+//    while (**input && **input != '\'')
+//    {
+//        quoted_content = ft_strjoin_one(quoted_content, **input);
+//        (*input)++;
+//    }
+
+//    if (**input != '\'')
+//    {
+//        fprintf(stderr, "error: could not find matching \"'\"\n");
+//        free(quoted_content);
+//        *error_status = 1;
+//        return NULL;
+//    }
+//    (*input)++; // 終了シングルクォートをスキップ
+
+//    new_token = create_command_token(quoted_content, true);
+//    return new_token;
+//}
+
+
+//t_token	*process_single_quote(char **input, int *error_status)
+//{
+//	t_token	*new_token;
+//	char	*quoted_content;
+
+//	(*input)++; //最初のシングルクォートスキップ
+//	quoted_content = NULL;
+//	while (**input && **input != '\'') //シングルクォートの終了を探す
+//	{
+//		quoted_content = ft_strjoin_one(quoted_content, **input);
+//		(*input)++;
+//	}
+//	if (**input == '\0') // シングルクォートの終了が見つからない場合
+//	{
+//		fprintf(stderr, "error: could not find \"'\"\n"); //後で修正
+//		free(quoted_content);
+//		*error_status = 1;
+//		return (NULL);
+//	}
+//	(*input)++; // 終了シングルクォートをスキップ
+//	new_token = create_command_token(quoted_content, true);
+//	//free(quoted_content);
+//	return (new_token);
+//}
 
 //char *handle_quotes(char *input, t_token *token, int *error_status) {
 //    char quote = *input;
