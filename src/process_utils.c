@@ -50,7 +50,7 @@ void	close_fds(t_cmd *cmd)
 		close(cmd->pp[1]);
 }
 
-void	exit_child_process(t_cmd *cmd)
+void	exit_process(t_cmd *cmd)
 {
 	if (cmd->status != SYNTAX && cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);

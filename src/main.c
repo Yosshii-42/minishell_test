@@ -22,28 +22,30 @@ static int	dup_stdin(int *fd)
 	return (TRUE);
 }
 
-static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
+// static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
+static int	do_minishell(t_env *env, char *line, int status_num)
 {
 	char	**path;
-	int		origi_stdin;
+	int		original_stdin;
 	int		status;
 	t_token	*token;
 
-	origi_stdin = 0;
+	original_stdin = 0;
 	status = 0;
 	path = NULL;
 	if (getenv_str(env, "PATH"))
 		path = ft_split(getenv_str(env, "PATH"), ':');
 	add_history(line);
-	dup_stdin(&origi_stdin);
-	token = make_token_lst(line, env, status_num);
+	dup_stdin(&original_stdin);
+	token = make_token_lst(line, status_num);
 	//token = make_token_lst(line, env, status_num);
 	// if (!token)
 	// 	return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_history();
 	else
-		status = run_process(token, path, pwd, &origi_stdin);
+		// status = run_process(token, path, pwd, &original_stdin, cmd_count(token));
+		status = run_process(token, env, path, &original_stdin, cmd_count(token));
 	if (path)
 		free_split(path);
 	return (status);
@@ -53,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
 	char	*line;
-	char	*pwd;
+	// char	*pwd;
 	int		status;
 
 	init_signal();
@@ -63,14 +65,14 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
-		pwd = getenv("PWD");
+		// pwd = getenv("PWD");
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		else if (main_exit(line, &status) == true)
-		 	break ;
-		else if (builtin(line, env, &status) == true)
-			status = do_minishell(env, line, pwd, status);
+		// else if (main_exit(line, &status) == true)
+		//  	break ;
+		else if (print_dolquestion(line, &status) == true)
+			status = do_minishell(env, line, status);
 		free(line);
 	}
 

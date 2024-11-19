@@ -36,6 +36,14 @@
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|$"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
+// # define ECHO "echo"
+// # define CD "cd"
+// # define PWD "pwd"
+// # define EXPORT "export"
+// # define UNSET "unset"
+// # define ENV "env"
+// # define EXIT "exit"
+// # define 
 // シグナル状態の定義
 # define READLINE 1
 # define HEREDOC 2
@@ -49,6 +57,7 @@ typedef enum e_kind
 {
 	PIPE,
 	COMMAND,
+	BUILTIN,
 	OPTION,
 	LESSTHAN,
 	HERE_DOC,
@@ -63,10 +72,20 @@ typedef enum e_kind
 
 typedef enum e_status
 {
-	BUILTIN,
 	CAT,
 	END
 }t_status;
+
+typedef enum e_built
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}s_built;
 
 typedef struct s_env
 {
@@ -106,7 +125,7 @@ t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
 
 //token
 //t_token	*make_token_lst(char *line, int status_num);
-t_token	*make_token_lst(char *line, t_env *env, int status_num);
+t_token	*make_token_lst(char *line, int status_num);
 void	add_token_kind(t_token *token, int status_num);
 char	*space_skip(char *input);
 t_token	*create_special_token(char **input, t_kind kind, int length);
@@ -118,9 +137,10 @@ t_token *tokenizer(char *input, int *error_status);
 char	*ft_strjoin_one(char *str, char c);
 int		ft_isspace(char c);
 char	*ft_strcpy(char *dest, const char *src);
+int	check_builtin(char *str);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path);
 void	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
@@ -132,13 +152,13 @@ char	*getenv_str(t_env *env, char *str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, char **path, char *pwd,
-			int *original_stdin);
+int		run_process(t_token *token, t_env *env, char **path, 
+			int *original_stdin, int count);
 
 // process utils
 int		cmd_count(t_token *token);
 int		make_fork(pid_t *pid);
-void	exit_child_process(t_cmd *cmd);
+void	exit_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
 
 // free functions
@@ -165,10 +185,13 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-bool    main_exit(char *line, int *status);
-int		builtin_exit(char **split);
-void	print_env(t_env *env);
-void	print_dolquestion(char *str, int status);
-bool	builtin(char *line, t_env *env, int *status);
+int		do_builtin(t_cmd *cmd, t_env *env);
+int		builtin_unset(void);//t_env *env)
+int		builtin_env(t_env *env);
+int		builtin_exit(t_cmd *cmd);
+
+// 仮のもの
+bool	print_dolquestion(char *line, int *status);
+
 
 #endif

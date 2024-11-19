@@ -1,5 +1,21 @@
 #include "../minishell.h"
-// atoi_pointer LONG_MIN~LONG_MAXの数値か、NULL を返す
+
+
+int	builtin_unset(void)//t_env *env)
+{
+	// TODO
+	return (EXIT_SUCCESS);
+}
+
+int	builtin_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf(0, "%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+	return (EXIT_SUCCESS);
+}
 
 static bool	ft_isover(long long sign, long long num, long long next_num)
 {
@@ -15,6 +31,7 @@ static bool	ft_isover(long long sign, long long num, long long next_num)
 		return (false);
 }
 
+// atoi_pointer LONG_MIN~LONG_MAXの数値か、NULL を返す
 static long	*atol_pointer(const char *nptr)
 {
 	long long	num;
@@ -43,62 +60,40 @@ static long	*atol_pointer(const char *nptr)
         return (ptr);
 }
 
-static int split_count(char **split)
+int    builtin_exit(t_cmd *cmd)
 {
-    int i;
+    int     count;
+    long    *result;
 
-    i = 0;
-    if (!split)
-        return (0);
-    else
-    {
-        while (split[i])
-            i++;
-    }
-    return (i);
-}
-
-int    builtin_exit(char **split)
-{
-    long *result;
-
+    count = 0;
+    while (cmd->cmd[count])
+        count++;
     result = NULL;
-    if (split_count(split) == 1)
-        return (0);
-    else if (split_count(split) == 3)
-        return (ft_printf(2, "exit\nbash: exit: too many arguments\n"), 1);
+    if (count == 1)
+    {
+        free_cmd(cmd);
+        exit (0);
+    }
+    else if (count >= 3)
+    {
+        ft_printf(2, "exit\nbash: exit: too many arguments\n");
+        free_cmd(cmd);
+        exit (EXIT_FAILURE);
+    }
     else
     {
-        result = atol_pointer(split[1]);
+        result = atol_pointer(cmd->cmd[1]);
         if (result == NULL)
         {
-            ft_printf(2, "bash: exit: %s", split[1]);
+            ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
             ft_printf(2, ": numeric argument rewuired\n");
-            return (2);
+            free_cmd(cmd);
+            exit (2);
         }
-        else
-            return ((*result) % 256);
-    }
-}
-
-bool main_exit(char *line, int *status)
-{
-    char    **split;
-
-    split = NULL;
-    if (ft_memcmp(line, "exit", 5) == 32 || ft_memcmp(line, "exit", 5) == 0)
-    {
-        if (ft_strchr(line, '|'))
-            return (false);
         else
         {
-            split = ft_split(line, ' ');
-            if (!split)
-                return (*status = 2, true);
-            *status = builtin_exit(split);
-                return (free_split(split), true);
+            free_cmd(cmd);
+            exit ((*result) % 256);
         }
     }
-    else
-        return (false);
 }

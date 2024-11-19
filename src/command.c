@@ -41,6 +41,7 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	i = -1;
 	while (path[++i])
 	{
+	printf("here\n");
 		str = strjoin_with_free(path[i], "/", NO_FREE);
 		str = strjoin_with_free(str, command, FREE_S1);
 		if (!str)
@@ -70,9 +71,10 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	j = -1;
 	while (++i < token_count)
 	{
-		if (token->kind == COMMAND || token->kind == OPTION)
+		if (token->kind == BUILTIN || token->kind == COMMAND || token->kind == OPTION)
 		{
 			cmd->cmd[++j] = ft_strdup(token->word);
+			printf("token_count = %d, cmd = %s\n", token_count, cmd->cmd[j]);
 			if (!cmd->cmd[j])
 				return (free_split(cmd->cmd), NULL);
 		}
@@ -82,19 +84,20 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	return (cmd);
 }
 
-static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
+static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 {
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		return (false);
-	if ((cmd->cmd[0]))
+	if (check_builtin(cmd->cmd[0]) < 0 && (cmd->cmd[0]))
 	{
 		if (cmd->cmd[0][0] == '/')
 			cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 		else if (cmd->cmd[0][0] == '.')
-			cmd->pathname = make_pwd_path(cmd->cmd[0], pwd);
+			cmd->pathname = make_pwd_path(cmd->cmd[0], getenv("PWD"));
 		else
-			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0], path, pwd);
+			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0],
+				path, getenv("PWD"));
 		if (cmd->pathname)
 			return (true);
 	}
@@ -104,7 +107,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 	return (true);
 }
 
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 {
 	int	flag;
 
@@ -128,15 +131,19 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd)
 		if (count_array(token) && flag == 0)
 		{
 			flag++;
-			if (!make_path_cmd(token, cmd, path, pwd))
+			if (!make_path_cmd(token, cmd, path))
 				return (free_cmd(cmd), NULL);
 		}
 		if (token->kind >= RDFILE && token->kind <= WRF_APP)
 			open_files(cmd, token);
-		if ((token->kind >= COMMAND && token->kind <= WRF_APP) && token->next)
+		if (token->kind == BUILTIN && cmd->status != SYNTAX)
+			cmd->status = BUILTIN;
+		if (token->kind >= COMMAND && token->kind <= WRF_APP)
 			token = token->next;
 		else
 			break;
+		// if ((token->kind >= COMMAND && token->kind <= WRF_APP) && token->next)
+		// 	token = token->next;
 	}
 	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0]);

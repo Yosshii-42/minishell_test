@@ -53,18 +53,17 @@
 //	lstadd_back(start, new);
 //}
 
-t_token	*make_token_lst(char *line, t_env *env, int status_num)
+t_token	*make_token_lst(char *line, int status_num)
 {
 	t_token	*token;
 	int		error_status;
 
 	error_status = 0;
-	(void)*env;
 	if (!(*line))
 		return (NULL);
 	token = NULL;
 	token = tokenizer(line, &error_status); // トークナイズ
-	printf("token = %s\n", token->word);
+	// printf("token = %s\n", token->word);
 	add_token_kind(token, status_num);
 	return (token);
 }

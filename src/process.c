@@ -39,14 +39,29 @@ static int	wait_process(void)
 
 void	end_process(t_token *token, int *original_stdin)
 {
-	// printf("here end process token = %s\n", token->word);
 	free_token(token);
 	dup2(*original_stdin, STDIN_FILENO);
 	close(*original_stdin);
 }
 
-static void	parent_process(t_cmd *cmd)
+static void	parent_process(t_cmd *cmd, int count, t_env *env)
 {
+	if (count == 1 && cmd->status == BUILTIN)
+	{
+		if (cmd->status == SYNTAX)
+			ft_printf(2, "bash: syntax error\n");
+		// if (check_builtin(cmd->cmd[0]) >= 0)
+		do_builtin(cmd, env);
+		if (cmd->err_msg) /////// 何故かerr_msgができている
+		{
+			printf("parent count = 1\n");
+			exit_process(cmd);
+		}
+		if (cmd->writefd > 0)
+			dup2(cmd->writefd, STDOUT_FILENO);
+		close_fds(cmd);
+	}
+	printf("parent after count = 1\n");
 	if (cmd->status == SYNTAX)
 		ft_printf(2, "bash: syntax error\n");
 	else if (cmd->pp[0] > 0)
@@ -54,12 +69,14 @@ static void	parent_process(t_cmd *cmd)
 	close_fds(cmd);
 }
 
-static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
+static void	child_process(t_cmd *cmd, char **path, int *ori_stdin, t_env *env)
 {
-	if (!ft_memcmp(cmd->cmd[0], "exit", 5))
-		exit(builtin_exit(cmd->cmd));
+	if (check_builtin(cmd->cmd[0]) >= 0)
+		do_builtin(cmd, env);
+	// if (!ft_memcmp(cmd->cmd[0], "exit", 5))
+	// 	exit(builtin_exit(cmd->cmd));
 	if (cmd->err_msg)
-		exit_child_process(cmd);
+		exit_process(cmd);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, 0);
 	if (cmd->writefd > 0)
@@ -67,7 +84,7 @@ static void	child_process(t_cmd *cmd, char **path, int *original_stdin)
 	else if (cmd->pp[1] > 0)
 		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
-	close(*original_stdin);
+	close(*ori_stdin);
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
@@ -86,33 +103,43 @@ void	syntax_end(t_cmd *cmd, t_token *token, int *stdin)
 	close(*stdin);
 }
 
-int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
+// int	run_process(t_token *token, char **path, char *pwd, int *original_stdin,
+// 	int count)
+int	run_process(t_token *token, t_env *env, char **path, int *original_stdin,
+	int count)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
 	t_token	*ptr;
-	int		count;
+	int		i;
 
-	count = cmd_count(token);
 	ptr = token;
-	while (count--)
+	i = -1;
+	while (++i < count)
 	{
-		cmd = NULL;
-		if ((cmd = make_cmd(token, cmd, path, pwd)) && !cmd)
-			return (end_process(ptr, original_stdin), -1);
-		if ((token = cmd->token) && !token)
+		if (!token)
 			break ;
-		if (!make_fork(&pid))
-			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
-		if (pid == 0)
-			child_process(cmd, path, original_stdin);
-		else if (pid > 0)
-			parent_process(cmd);
+		cmd = NULL;
+		cmd = make_cmd(token, cmd, path);
+		if (!cmd)
+			return (end_process(ptr, original_stdin), -1);
+		if (count == 1 && cmd->status == BUILTIN)
+			parent_process(cmd, count, env);
+		else
+		{
+			if (!make_fork(&pid))
+				return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
+			if (pid == 0)
+				child_process(cmd, path, original_stdin, env);
+			else if (pid > 0)
+				parent_process(cmd, count, env);
+		}
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, original_stdin), 2);
 		token = cmd->token;
 		free_cmd(cmd);
 	}
-	end_process(ptr, original_stdin);
+	if (count > 1)
+		end_process(ptr, original_stdin);
 	return (wait_process());
 }
