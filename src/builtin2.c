@@ -3,6 +3,7 @@
 
 int	builtin_unset(void)//t_env *env)
 {
+    
 	// TODO
 	return (EXIT_SUCCESS);
 }
@@ -11,7 +12,7 @@ int	builtin_env(t_env *env)
 {
 	while (env)
 	{
-		ft_printf(0, "%s=%s\n", env->key, env->value);
+		ft_printf(1, "%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
 	return (EXIT_SUCCESS);
@@ -31,7 +32,7 @@ static bool	ft_isover(long long sign, long long num, long long next_num)
 		return (false);
 }
 
-// atoi_pointer LONG_MIN~LONG_MAXの数値か、NULL を返す
+// atoi_pointer return long num or NULL
 static long	*atol_pointer(const char *nptr)
 {
 	long long	num;

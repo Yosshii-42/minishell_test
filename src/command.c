@@ -41,7 +41,6 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 	i = -1;
 	while (path[++i])
 	{
-	printf("here\n");
 		str = strjoin_with_free(path[i], "/", NO_FREE);
 		str = strjoin_with_free(str, command, FREE_S1);
 		if (!str)
@@ -74,7 +73,6 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 		if (token->kind == BUILTIN || token->kind == COMMAND || token->kind == OPTION)
 		{
 			cmd->cmd[++j] = ft_strdup(token->word);
-			printf("token_count = %d, cmd = %s\n", token_count, cmd->cmd[j]);
 			if (!cmd->cmd[j])
 				return (free_split(cmd->cmd), NULL);
 		}
@@ -89,7 +87,9 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		return (false);
-	if (check_builtin(cmd->cmd[0]) < 0 && (cmd->cmd[0]))
+	if (check_builtin(cmd->cmd[0]) >= 0)
+		return (true); 
+	if (cmd->cmd[0])
 	{
 		if (cmd->cmd[0][0] == '/')
 			cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
@@ -112,6 +112,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 	int	flag;
 
 	flag = 0;
+	cmd = NULL;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);

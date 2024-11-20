@@ -36,14 +36,8 @@
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|$"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
-// # define ECHO "echo"
-// # define CD "cd"
-// # define PWD "pwd"
-// # define EXPORT "export"
-// # define UNSET "unset"
-// # define ENV "env"
-// # define EXIT "exit"
-// # define 
+# define PIPE_EXIST	1
+# define NO_PIPE 0
 // シグナル状態の定義
 # define READLINE 1
 # define HEREDOC 2
@@ -124,12 +118,10 @@ typedef struct s_cmd
 t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
 
 //token
-//t_token	*make_token_lst(char *line, int status_num);
 t_token	*make_token_lst(char *line, int status_num);
 void	add_token_kind(t_token *token, int status_num);
 char	*space_skip(char *input);
 t_token	*create_special_token(char **input, t_kind kind, int length);
-//t_token	*create_command_token(char *start, char *end);
 t_token *create_command_token(char *start);
 t_token *tokenizer(char *input, int *error_status);
 
@@ -152,13 +144,18 @@ char	*getenv_str(t_env *env, char *str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, t_env *env, char **path, 
-			int *original_stdin, int count);
+int		run_process(t_token *token, t_env *env, char **path, int *stdio);
+
+// end process
+void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
+void	end_process(t_token *token, int stdio[2]);
+void	child_exit_process(t_cmd *cmd);
+int		builtin_end_process(t_cmd *cmd);
 
 // process utils
 int		cmd_count(t_token *token);
+int		pipe_count(t_token *token);
 int		make_fork(pid_t *pid);
-void	exit_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
 
 // free functions

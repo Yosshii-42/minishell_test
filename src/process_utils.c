@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:28:47 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 23:09:21 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/20 15:27:25 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,23 @@ int	cmd_count(t_token *token)
 	return (count + 1);
 }
 
+int	pipe_count(t_token *token)
+{
+	int	count;
+
+	count = 0;
+	while (token)
+	{
+		if (*(token->word) == '|' )
+		{
+			count++;
+			break ;
+		}
+		token = token->next;
+	}
+	return (count);
+}
+
 int	make_fork(pid_t *pid)
 {
 	*pid = fork();
@@ -48,15 +65,4 @@ void	close_fds(t_cmd *cmd)
 		close(cmd->pp[0]);
 	if (cmd->pp[1] > 0)
 		close(cmd->pp[1]);
-}
-
-void	exit_process(t_cmd *cmd)
-{
-	if (cmd->status != SYNTAX && cmd->err_msg)
-		ft_printf(2, "%s", cmd->err_msg);
-	close_fds(cmd);
-	if (!ft_strnstr(cmd->err_msg, "Permission", 10))
-		exit(126);
-	else
-		exit(127);
 }

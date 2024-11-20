@@ -7,6 +7,7 @@ SRCS	= src/main.c \
 		  src/command_utils.c \
 		  src/open_file.c \
 		  src/process.c \
+		  src/process_ends.c \
 		  src/process_utils.c \
 		  src/utils.c \
 		  src/free.c \

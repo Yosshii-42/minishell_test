@@ -28,22 +28,16 @@ bool	print_dolquestion(char *line, int *status)
 static int	builtin_echo(t_cmd *cmd)
 {
 	int	i;
-
 	if (!cmd->cmd[1])
 		return (EXIT_SUCCESS);
 	i = 0;
-	if (cmd->writefd > 0)
-		dup2(cmd->writefd, STDOUT_FILENO);
-	else
+	while (cmd->cmd[++i])
 	{
-		while (cmd->cmd[++i])
-		{
-			ft_printf(1, "%s", cmd->cmd[i]);
-			if (cmd->cmd[i + 1])
-				ft_printf(1, " ");
-			else
-				ft_printf(1, "\n");
-		}
+		ft_printf(1, "%s", cmd->cmd[i]);
+		if (cmd->cmd[i + 1])
+			ft_printf(1, " ");
+		else
+			ft_printf(1, "\n");
 	}
 	return (EXIT_SUCCESS);
 }
@@ -69,8 +63,8 @@ static int	builtin_export(void)//t_env *env)
 int	do_builtin(t_cmd *cmd, t_env *env)
 {
 	int	type;
+
 	type = check_builtin(cmd->cmd[0]);
-printf("type = %d\n", type);
 	if (type == ECHO)
 		return (builtin_echo(cmd));
 	else if (type == CD)
@@ -78,9 +72,9 @@ printf("type = %d\n", type);
 	else if (type == PWD)
 		return (builtin_pwd());
 	else if (type == EXPORT)
-		return (builtin_export());//env));
+		return (builtin_export());//cmd, env));
 	else if (type == UNSET)
-		return (builtin_unset());//env));
+		return (builtin_unset());//cmd, env));
 	else if (type == ENV)
 		return (builtin_env(env));
 	else if (type == EXIT)
