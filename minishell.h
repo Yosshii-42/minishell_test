@@ -27,7 +27,6 @@
 # include "./libft/includes/libft.h"
 # include "./libft/includes/ft_printf.h"
 # include "./libft/includes/get_next_line.h"
-// 追加
 # include <signal.h>
 
 # define FREE_S1 1
@@ -79,7 +78,7 @@ typedef enum e_built
 	UNSET,
 	ENV,
 	EXIT
-}s_built;
+}t_built;
 
 typedef struct s_env
 {
@@ -122,14 +121,14 @@ t_token	*make_token_lst(char *line, int status_num);
 void	add_token_kind(t_token *token, int status_num);
 char	*space_skip(char *input);
 t_token	*create_special_token(char **input, t_kind kind, int length);
-t_token *create_command_token(char *start);
-t_token *tokenizer(char *input, int *error_status);
+t_token	*create_command_token(char *start);
+t_token	*tokenizer(char *input, int *error_status);
 
 // tokenizer_utils
 char	*ft_strjoin_one(char *str, char c);
 int		ft_isspace(char c);
 char	*ft_strcpy(char *dest, const char *src);
-int	check_builtin(char *str);
+int		check_builtin(char *str);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path);
@@ -149,7 +148,7 @@ int		run_process(t_token *token, t_env *env, char **path, int *stdio);
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
 void	end_process(t_token *token, int stdio[2]);
-void	child_exit_process(t_cmd *cmd);
+void	child_exit_process(t_cmd *cmd, int stdio[2]);
 int		builtin_end_process(t_cmd *cmd);
 
 // process utils
@@ -189,6 +188,5 @@ int		builtin_exit(t_cmd *cmd);
 
 // 仮のもの
 bool	print_dolquestion(char *line, int *status);
-
 
 #endif

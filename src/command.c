@@ -6,16 +6,16 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:46:40 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/20 18:39:37 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	set_err_message(t_cmd *cmd, char *str)
+static bool	set_err_message(t_cmd *cmd, char *str)
 {
 	if (cmd->err_msg)
-		return ;
+		return (true);
 	cmd->err_msg = NULL;
 	if (!str || !*str)
 		cmd->err_msg = strjoin_with_free("", "Command ' ' not found\n", NO_FREE);
@@ -24,10 +24,11 @@ static void	set_err_message(t_cmd *cmd, char *str)
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
 		if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg,
-				": command not found\n", FREE_S1);
+					": command not found\n", FREE_S1);
 	}
-	// if (!cmd->msg)
-	// malloc error時の処理
+	if (!cmd->err_msg)
+		return (false);
+	return (true);
 }
 
 static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
@@ -88,7 +89,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 	if (!cmd)
 		return (false);
 	if (check_builtin(cmd->cmd[0]) >= 0)
-		return (true); 
+		return (true);
 	if (cmd->cmd[0])
 	{
 		if (cmd->cmd[0][0] == '/')
@@ -97,7 +98,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 			cmd->pathname = make_pwd_path(cmd->cmd[0], getenv("PWD"));
 		else
 			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0],
-				path, getenv("PWD"));
+					path, getenv("PWD"));
 		if (cmd->pathname)
 			return (true);
 	}
@@ -119,13 +120,16 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 	init_cmd(cmd);
 	while (token)
 	{
-		if(token->kind == SYNTAX && (cmd->status = SYNTAX))
+		if (token->kind == SYNTAX)
+		{
+			cmd->status = SYNTAX;
 			break ;
+		}
 		if (token->kind == PIPE)
 		{
 			if (!make_pipe(cmd))
 				return (free_cmd(cmd), NULL);
-		 	if (token->next)
+			if (token->next)
 				token = token->next;
 			break ;
 		}
@@ -142,12 +146,12 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 		if (token->kind >= COMMAND && token->kind <= WRF_APP)
 			token = token->next;
 		else
-			break;
+			break ;
 		// if ((token->kind >= COMMAND && token->kind <= WRF_APP) && token->next)
 		// 	token = token->next;
 	}
-	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0)
-		set_err_message(cmd, cmd->cmd[0]);
+	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0 && !set_err_message(cmd, cmd->cmd[0]))
+		return (NULL);
 	cmd->token = token;
 	return (cmd);
 }

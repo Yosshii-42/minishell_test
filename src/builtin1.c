@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 05:45:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:59:26 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/20 16:04:08 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // 仮のもの
 bool	print_dolquestion(char *line, int *status)
 {
-	 if (!ft_strncmp(line, "$\?", 2))
+	if (!ft_strncmp(line, "$\?", 2))
 	{
 		ft_putnbr_fd(*status, 2);
 		ft_printf(2, ": command not found\n");
@@ -23,11 +23,12 @@ bool	print_dolquestion(char *line, int *status)
 	}
 	else
 		return (true);
-}
+} 
 
-static int	builtin_echo(t_cmd *cmd)
+int	builtin_echo(t_cmd *cmd)
 {
 	int	i;
+
 	if (!cmd->cmd[1])
 		return (EXIT_SUCCESS);
 	i = 0;
@@ -42,21 +43,19 @@ static int	builtin_echo(t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-static int	builtin_cd(void)
+int	builtin_cd(void)
 {
-	// TODO
 	return (EXIT_SUCCESS);
 }
 
-static int	builtin_pwd(void)
+int	builtin_pwd(void)
 {
 	ft_printf(1, "%s\n", getenv("PWD"));
 	return (EXIT_SUCCESS);
 }
 
-static int	builtin_export(void)//t_env *env)
+int	builtin_export(void)//t_env *env)
 {
-	// TODO
 	return (EXIT_SUCCESS);
 }
 

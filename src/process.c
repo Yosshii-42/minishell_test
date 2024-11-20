@@ -41,14 +41,14 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 {
 	if (count == NO_PIPE && cmd->status == BUILTIN)
 	{
-		if (cmd->status == SYNTAX)
-			ft_printf(2, "bash: syntax error\n");
-		if (cmd->err_msg)
-			return (builtin_end_process(cmd));
 		if (cmd->writefd > 0)
 			dup2(cmd->writefd, STDOUT_FILENO);
-		do_builtin(cmd, env);
 		close_fds(cmd);
+		if (cmd->status == SYNTAX)
+			return (ft_printf(2, "bash: syntax error\n"), 2);
+		if (cmd->err_msg)
+			return (builtin_end_process(cmd));
+		do_builtin(cmd, env);
 		return (EXIT_SUCCESS);
 	}
 	if (cmd->status == SYNTAX)
@@ -62,7 +62,7 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 static void	child_process(t_cmd *cmd, t_env *env, char **path, int stdio[2])
 {
 	if (cmd->err_msg)
-		child_exit_process(cmd);
+		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
@@ -112,7 +112,7 @@ int	run_process(t_token *token, t_env *env, char **path, int *stdio)
 			return (end_process(ptr, stdio), -1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 			return (parent_process(cmd, env, NO_PIPE), free_cmd(cmd)
-				, end_process(ptr, stdio), 0);
+				, end_process(ptr, stdio), 126);
 		else if (minishell_engine(cmd, env, path, stdio) == false)
 			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (cmd->status == SYNTAX)
