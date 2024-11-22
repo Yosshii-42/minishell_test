@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static bool	set_err_message(t_cmd *cmd, char *str)
+static bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 {
 	if (cmd->err_msg)
 		return (true);
@@ -24,7 +24,11 @@ static bool	set_err_message(t_cmd *cmd, char *str)
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
 		if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg,
-					": command not found\n", FREE_S1);
+					": ", FREE_S1);
+		if (cmd->err_msg)
+			cmd->err_msg = strjoin_with_free(cmd->err_msg, err_str, FREE_S1);
+		if (cmd->err_msg)
+			cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
 	}
 	if (!cmd->err_msg)
 		return (false);
@@ -150,7 +154,8 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 		// if ((token->kind >= COMMAND && token->kind <= WRF_APP) && token->next)
 		// 	token = token->next;
 	}
-	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0 && !set_err_message(cmd, cmd->cmd[0]))
+	if (cmd-> pathname && access(cmd->pathname, X_OK) != 0
+			&& !set_err_message(cmd, cmd->cmd[0], strerror(errno)))
 		return (NULL);
 	cmd->token = token;
 	return (cmd);
