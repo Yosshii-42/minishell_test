@@ -33,14 +33,16 @@ int	count_array(t_token *token)
 	count = 0;
 	while (token)
 	{
-		if (token->kind == COMMAND || token->kind == OPTION)
+		if (token->kind == COMMAND || token->kind == BUILTIN
+			|| token->kind == OPTION)
 			count++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
+		// if (token->next)
+		// 	token = token->next;
+		// else
+		// 	break ;
 		if (token->kind == PIPE)
 			break;
+		token = token->next;
 	}
 	return (count);
 }
@@ -53,12 +55,13 @@ int	count_token(t_token *token)
 	while (token)
 	{
 		count++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
+		// if (token->next)
+		// 	token = token->next;
+		// else
+		// 	break ;
 		if (token->kind == PIPE)
 			break;
+		token = token->next;
 	}
 	return (count);
 }
@@ -66,7 +69,7 @@ int	count_token(t_token *token)
 int	make_pipe(t_cmd *cmd)
 {
 	if (pipe(cmd->pp) == -1)
-		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+		return (ft_printf(2, "pipe: %s\n", strerror(errno)), FALSE);
 	return (TRUE);
 }
 

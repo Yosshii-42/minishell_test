@@ -6,65 +6,77 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 05:45:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:59:26 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/20 16:04:08 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// bool    main_exit(char *line)
-// // bool    builtin_exit(t_cmd *cmd)
-// {
-//     int result;
-
-//     result = ft_memcmp(line, "exit", 5);
-//     if (result == 0 || result == 9 || result == 10 || result == 32)
-//         return (true);
-//     else
-//         return (false);
-// 	if (cmd->cmd[1])
-		
-// }
-
-// {
-//     int result;
-
-//     result = ft_memcmp(line, "exit", 5);
-//     if (result == 0 || result == 9 || result == 10 || result == 32)
-//         return (true);
-//     else
-//         return (false);
-// }
-
-void	print_env(t_env *env)
+// 仮のもの
+bool	print_dolquestion(char *line, int *status)
 {
-	while (env)
+	if (!ft_strncmp(line, "$\?", 2))
 	{
-		ft_printf(1, "%s=%s\n", env->key, env->value);
-		if (env->next)
-			env = env->next;
-		else
-			break ;
-	}	
-}
-
-void	print_dolquestion(char *str, int status)
-{
-	ft_printf(2, "bash: ");
-	ft_putnbr_fd(status, 2);
-	ft_printf(2, "%s", str);
-	ft_printf(2, ": command not found\n", str);
-}
-
-bool	builtin(char *line, t_env *env, int *status)
-{
-	if (ft_memcmp(line, "env", 4) == 0)
-		return (print_env(env), false);
-	else if (!ft_strncmp(line, "$\?", 2))
-	{
-		print_dolquestion(ft_strchr(line, '?') + 1, *status);
+		ft_putnbr_fd(*status, 2);
+		ft_printf(2, ": command not found\n");
 		return (*status = 127, false);
 	}
 	else
 		return (true);
+} 
+
+int	builtin_echo(t_cmd *cmd)
+{
+	int	i;
+
+	if (!cmd->cmd[1])
+		return (EXIT_SUCCESS);
+	i = 0;
+	while (cmd->cmd[++i])
+	{
+		ft_printf(1, "%s", cmd->cmd[i]);
+		if (cmd->cmd[i + 1])
+			ft_printf(1, " ");
+		else
+			ft_printf(1, "\n");
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	builtin_cd(void)
+{
+	return (EXIT_SUCCESS);
+}
+
+int	builtin_pwd(void)
+{
+	ft_printf(1, "%s\n", getenv("PWD"));
+	return (EXIT_SUCCESS);
+}
+
+int	builtin_export(void)//t_env *env)
+{
+	return (EXIT_SUCCESS);
+}
+
+int	do_builtin(t_cmd *cmd, t_env *env)
+{
+	int	type;
+
+	type = check_builtin(cmd->cmd[0]);
+	if (type == ECHO)
+		return (builtin_echo(cmd));
+	else if (type == CD)
+		return (builtin_cd());
+	else if (type == PWD)
+		return (builtin_pwd());
+	else if (type == EXPORT)
+		return (builtin_export());//cmd, env));
+	else if (type == UNSET)
+		return (builtin_unset(cmd, &env));
+	else if (type == ENV)
+		return (builtin_env(env));
+	else if (type == EXIT)
+		return (builtin_exit(cmd));
+	return (EXIT_FAILURE);
 }

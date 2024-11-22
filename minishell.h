@@ -34,6 +34,8 @@
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|$"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
+# define PIPE_EXIST	1
+# define NO_PIPE 0
 // シグナル状態の定義
 # define READLINE 1
 # define HEREDOC 2
@@ -48,6 +50,7 @@ typedef enum e_kind
 {
 	PIPE,
 	COMMAND,
+	BUILTIN,
 	OPTION,
 	LESSTHAN,
 	HERE_DOC,
@@ -62,10 +65,20 @@ typedef enum e_kind
 
 typedef enum e_status
 {
-	BUILTIN,
 	CAT,
 	END
 }t_status;
+
+typedef enum e_built
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}t_built;
 
 typedef struct s_env
 {
@@ -104,14 +117,14 @@ typedef struct s_cmd
 t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
 
 //token
-t_token	*make_token_lst(char *line, t_env *env, int status_num);
+t_token	*make_token_lst(char *line, int status_num);
 void	add_token_kind(t_token *token, int status_num);
 t_token	*create_special_token(char **input, t_kind kind, int length);
 t_token	*create_command_token(char *start, bool is_quoted, bool is_double_quoted);
 t_token *process_quote(char **input, int *error_status, char quote_char);
 
 // lexer.c
-t_token	*lexer(t_env *env, char *line, int *error_status);
+t_token	*lexer(char *line, int *error_status);
 
 // tokenizer.c
 t_token	*tokenizer(char *input, int *error_status);
@@ -123,6 +136,7 @@ int		ft_isspace(char c);
 char	*ft_strcpy(char *dest, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
 bool	is_quote(char c);
+int		check_builtin(char *str);
 
 // tokenizer_error.c
 bool	find_syntax_error(t_token *tokenized);
@@ -142,25 +156,31 @@ bool	expand_quote(t_token *tokenized);
 bool	remove_quotes(t_token *tokenized);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path, char *pwd);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path);
 void	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(t_env *env, char *str);
+bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 
 // open
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, char **path, char *pwd,
-			int *original_stdin);
+int		run_process(t_token *token, t_env *env, char **path, int *stdio);
+
+// end process
+void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
+void	end_process(t_token *token, int stdio[2]);
+void	child_exit_process(t_cmd *cmd, int stdio[2]);
+int		builtin_end_process(t_cmd *cmd);
 
 // process utils
 int		cmd_count(t_token *token);
+int		pipe_count(t_token *token);
 int		make_fork(pid_t *pid);
-void	exit_child_process(t_cmd *cmd);
 void	close_fds(t_cmd *cmd);
 
 // free functions
@@ -187,10 +207,12 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-bool    main_exit(char *line, int *status);
-int		builtin_exit(char **split);
-void	print_env(t_env *env);
-void	print_dolquestion(char *str, int status);
-bool	builtin(char *line, t_env *env, int *status);
+int		do_builtin(t_cmd *cmd, t_env *env);
+int		builtin_unset(t_cmd *cmd, t_env **env);
+int		builtin_env(t_env *env);
+int		builtin_exit(t_cmd *cmd);
+
+// 仮のもの
+bool	print_dolquestion(char *line, int *status);
 
 #endif

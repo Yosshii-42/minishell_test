@@ -1,5 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yotsurud <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/20 16:01:49 by yotsurud         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-// atoi_pointer LONG_MIN~LONG_MAXの数値か、NULL を返す
+
+int	builtin_unset(t_cmd *cmd, t_env **env)
+{
+	if (!cmd->cmd[1])
+		return (EXIT_SUCCESS);
+	while ((*env))
+	{
+		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
+		{
+			if ((*env)->pre)
+				(*env)->pre->next = (*env)->next;
+			else
+			{
+				if ((*env)->next)
+				{
+					(*env)->next->pre = NULL;
+					env = &(*env)->next;
+				}
+			}
+			return (free((*env)->key), free((*env)->value), free(*env), 0);
+		}
+		*env = (*env)->next;
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	builtin_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf(1, "%s=%s\n", env->key, env->value);
+		env = env->next;
+	}
+	return (EXIT_SUCCESS);
+}
 
 static bool	ft_isover(long long sign, long long num, long long next_num)
 {
@@ -15,10 +61,11 @@ static bool	ft_isover(long long sign, long long num, long long next_num)
 		return (false);
 }
 
+// atoi_pointer return long num or NULL
 static long	*atol_pointer(const char *nptr)
 {
 	long long	num;
-    long        *ptr;
+	long		*ptr;
 	long long	sign;
 
 	num = 0;
@@ -35,70 +82,50 @@ static long	*atol_pointer(const char *nptr)
 			return (NULL);
 		num = num * 10 + *nptr++ - '0';
 	}
-    num = sign * num;
-    ptr = (long *)&num;
-    if (*nptr && !ft_isdigit(*nptr))
-        return (NULL);
-    else
-        return (ptr);
+	num = sign * num;
+	ptr = (long *)&num;
+	if (*nptr && !ft_isdigit(*nptr))
+		return (NULL);
+	else
+		return (ptr);
 }
 
-static int split_count(char **split)
+int	builtin_exit(t_cmd *cmd)
 {
-    int i;
+	int		count;
+	long	*result;
 
-    i = 0;
-    if (!split)
-        return (0);
-    else
-    {
-        while (split[i])
-            i++;
-    }
-    return (i);
-}
-
-int    builtin_exit(char **split)
-{
-    long *result;
-
-    result = NULL;
-    if (split_count(split) == 1)
-        return (0);
-    else if (split_count(split) == 3)
-        return (ft_printf(2, "exit\nbash: exit: too many arguments\n"), 1);
-    else
-    {
-        result = atol_pointer(split[1]);
-        if (result == NULL)
-        {
-            ft_printf(2, "bash: exit: %s", split[1]);
-            ft_printf(2, ": numeric argument rewuired\n");
-            return (2);
-        }
-        else
-            return ((*result) % 256);
-    }
-}
-
-bool main_exit(char *line, int *status)
-{
-    char    **split;
-
-    split = NULL;
-    if (ft_memcmp(line, "exit", 5) == 32 || ft_memcmp(line, "exit", 5) == 0)
-    {
-        if (ft_strchr(line, '|'))
-            return (false);
-        else
-        {
-            split = ft_split(line, ' ');
-            if (!split)
-                return (*status = 2, true);
-            *status = builtin_exit(split);
-                return (free_split(split), true);
-        }
-    }
-    else
-        return (false);
+	count = 0;
+	while (cmd->cmd[count])
+		count++;
+	result = NULL;
+	if (count == 1)
+	{
+		free_cmd(cmd);
+		exit (0);
+	}
+	else if (count >= 3)
+	{
+		ft_printf(2, "exit\nbash: exit: too many arguments\n");
+		free_cmd(cmd);
+		exit (EXIT_FAILURE);
+	}
+	else
+	{
+		result = atol_pointer(cmd->cmd[1]);
+		printf("result = %ld\n", *result);
+		if (result == NULL)
+		{
+			ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
+			ft_printf(2, ": numeric argument rewuired\n");
+			free_cmd(cmd);
+			exit (2);
+		}
+		else
+		{
+			free_cmd(cmd);
+			printf("exit result = %ld\n", *result);
+			exit ((*result) % 256);
+		}
+	}
 }

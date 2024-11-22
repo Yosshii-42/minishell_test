@@ -31,6 +31,9 @@ bool	append_char(char **str, char c)
 // トークンを展開する
 bool	expand_token(t_env *env, t_token *tokenized)
 {
+	int	flag;
+
+	flag = 0;
 	while (tokenized)
 	{
 		// コマンドや文字列トークンだけが対象

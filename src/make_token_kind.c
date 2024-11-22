@@ -100,6 +100,22 @@ static t_token	*add_command_kind(t_token *token, int command_flag)
 	return (token);
 }
 
+int	check_builtin(char *str)
+{
+	static char	*builtin[] =
+		{"echo", "cd", "pwd", "export", "unset", "env", "exit"};
+	int			i;
+
+	i = 0;
+	while (i < 7)
+	{
+		if (ft_strncmp(str, builtin[i], ft_strlen(builtin[i])) == 0)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 void	add_token_kind(t_token *token, int status_num)
 {
 	int	commnad_flag;
@@ -123,13 +139,16 @@ void	add_token_kind(t_token *token, int status_num)
 				token->status = END;
 			token->word = ft_itoa(status_num);
 		}
+		else if (check_builtin(token->word) >= 0)
+			token->kind = BUILTIN;
 		else
 			token = add_command_kind(token, commnad_flag);
-		if (token->kind == COMMAND)
+		if (token->kind == BUILTIN || token->kind == COMMAND)
 			commnad_flag++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
+		token = token->next;
+		// if (token->next)
+		// 	token = token->next;
+		// else
+		// 	break ;
 	}
 }

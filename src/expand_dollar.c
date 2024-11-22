@@ -65,7 +65,7 @@ bool	handle_dollar(t_env *env, t_token *tokenized, char **new, int *i)
     
     while (env)
     {
-        if (ft_strncmp(env_key, env->key, ft_strlen(env_key)) == 0)
+        if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)
         {
     		tokenized->word = ft_strdup(env->value);
             //printf("[DEBUG] value = [%s] [%s]\n", tokenized->word, env->key);

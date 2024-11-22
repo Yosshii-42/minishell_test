@@ -12,12 +12,12 @@
 
 #include "../minishell.h"
 
-t_token	*lexer(t_env *env, char *line, int *error_status)
+t_token	*lexer(char *line, int *error_status)
 {
 	t_token	*tokenized;
 
 	*error_status = 0;
-	(void)env;
+	// (void)env;
 	if (!(*line))
 		return (NULL);
 	// 1.tokenizerを呼び出しトークンリスト生成
@@ -32,12 +32,12 @@ t_token	*lexer(t_env *env, char *line, int *error_status)
 		return (NULL);
 	}
 	// 3.環境変数の展開
-	if (!expand_token(env, tokenized))
-	{
-		free_token(tokenized);
-		*error_status = 1;
-		return (NULL);
-	}
+	// if (!expand_token(env, tokenized))
+	// {
+	// 	free_token(tokenized);
+	// 	*error_status = 1;
+	// 	return (NULL);
+	// }
 	// 4. クォート削除(不要かも。いらなければ削除予定。)
 	//remove_quotes(tokenized);
 	return (tokenized);

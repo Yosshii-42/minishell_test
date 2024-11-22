@@ -53,17 +53,16 @@
 //	lstadd_back(start, new);
 //}
 
-t_token	*make_token_lst(char *line, t_env *env, int status_num)
+t_token	*make_token_lst(char *line, int status_num)
 {
 	t_token	*token;
 	int		error_status;
 
 	error_status = 0;
-	(void)*env;
 	if (!(*line))
 		return (NULL);
 	token = NULL;
-	token = lexer(env, line, &error_status);
+	token = lexer(line, &error_status);
 	if (error_status || !token)
 		return (NULL);
 	add_token_kind(token, status_num);
