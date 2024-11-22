@@ -62,7 +62,10 @@ t_token	*make_token_lst(char *line, int status_num)
 	if (!(*line))
 		return (NULL);
 	token = NULL;
-	token = tokenizer(line, &error_status);
+	// token = tokenizer(line, &error_status);
+	token = lexer(env, line, &error_status);
+	if (error_status || !token)
+		return (NULL);
 	add_token_kind(token, status_num);
 	return (token);
 }
