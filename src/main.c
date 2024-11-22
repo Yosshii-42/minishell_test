@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 17:58:26 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/20 17:08:13 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ static int	do_minishell(t_env *env, char *line, char *pwd, int status_num)
 	add_history(line);
 	dup_stdin(&origi_stdin);
 	token = make_token_lst(line, env, status_num);
-	//token = make_token_lst(line, env, status_num);
-	// if (!token)
-	// 	return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_history();
 	else
@@ -68,12 +65,11 @@ int	main(int argc, char **argv, char **envp)
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
 		else if (main_exit(line, &status) == true)
-		 	break ;
+			break ;
 		else if (builtin(line, env, &status) == true)
 			status = do_minishell(env, line, pwd, status);
 		free(line);
 	}
-
 	free_env(env);
 	clear_history();
 	exit(0);

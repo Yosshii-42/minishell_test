@@ -14,10 +14,16 @@ SRCS	= src/main.c \
 		  src/signal_handler.c \
 		  src/builtin1.c \
 		  src/builtin2.c \
+		  src/lexer.c \
 		  src/tokenizer.c \
-		  src/tokenizer_utils.c
+		  src/tokenizer_utils.c \
+		  src/tokenizer_error.c \
+		  src/expand_token.c \
+		  src/expand_dollar.c \
+		  src/expand_quote.c \
+		#  src/tokenizer_rm_quotes.c
 OBJS	= $(SRCS:.c=.o)
-CC		= gcc
+CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline -lhistory
 # FLAGS   += -fsanitize=address
