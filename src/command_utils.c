@@ -69,7 +69,7 @@ int	count_token(t_token *token)
 int	make_pipe(t_cmd *cmd)
 {
 	if (pipe(cmd->pp) == -1)
-		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+		return (ft_printf(2, "pipe: %s\n", strerror(errno)), FALSE);
 	return (TRUE);
 }
 

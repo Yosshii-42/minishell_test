@@ -18,7 +18,7 @@ SRCS	= src/main.c \
 		  src/tokenizer.c \
 		  src/tokenizer_utils.c
 OBJS	= $(SRCS:.c=.o)
-CC		= gcc
+CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline -lhistory
 # FLAGS   += -fsanitize=address

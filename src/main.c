@@ -39,8 +39,8 @@ static int	do_minishell(t_env *env, char *line, int status_num)
 	if (dup_stdio(stdio) == false)
 		return (EXIT_FAILURE);
 	token = make_token_lst(line, status_num);
-	if (!token)
-		return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
+	// if (!token) //malloc errorをどこかで出す
+	// 	return (ft_printf(2, "bash: %s\n", strerror(errno)), EXIT_FAILURE);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_history();
 	else

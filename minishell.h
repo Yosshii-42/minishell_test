@@ -182,7 +182,7 @@ void	signal_handler(int signum);
 
 // builtin
 int		do_builtin(t_cmd *cmd, t_env *env);
-int		builtin_unset(void);//t_env *env)
+int		builtin_unset(t_cmd *cmd, t_env **env);
 int		builtin_env(t_env *env);
 int		builtin_exit(t_cmd *cmd);
 

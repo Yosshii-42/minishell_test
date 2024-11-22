@@ -63,7 +63,7 @@ SRCS_PRINTF = ./printf/ft_printf.c \
 OBJS	= $(SRCS:.c=.o)
 OBJS_B	= $(SRCS_B:.c=.o)
 OBJS_PRINTF = $(SRCS_PRINTF:.c=.o)
-CC		= gcc
+CC		= cc
 FLAGS	= -Wall -Wextra -Werror 
 HEADDIR	= ./includes
 

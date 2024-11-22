@@ -48,8 +48,8 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
 			return (builtin_end_process(cmd));
-		do_builtin(cmd, env);
-		return (EXIT_SUCCESS);
+		return (do_builtin(cmd, env));
+		// return (EXIT_SUCCESS);
 	}
 	if (cmd->status == SYNTAX)
 		ft_printf(2, "bash: syntax error\n");
@@ -69,11 +69,15 @@ static void	child_process(t_cmd *cmd, t_env *env, char **path, int stdio[2])
 		dup2(cmd->writefd, STDOUT_FILENO);
 	else if (cmd->pp[1] > 0)
 		dup2(cmd->pp[1], STDOUT_FILENO);
-	if (check_builtin(cmd->cmd[0]) >= 0)
-		do_builtin(cmd, env);
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
+	if (check_builtin(cmd->cmd[0]) >= 0)
+	{
+		int status = do_builtin(cmd, env);
+		exit(status);
+	}
+		exit (do_builtin(cmd, env));
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
@@ -109,10 +113,13 @@ int	run_process(t_token *token, t_env *env, char **path, int *stdio)
 			break ;
 		cmd = make_cmd(token, cmd, path);
 		if (!cmd)
-			return (end_process(ptr, stdio), -1);
+			return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
-			return (parent_process(cmd, env, NO_PIPE), free_cmd(cmd)
-				, end_process(ptr, stdio), 126);
+		{
+			int status = parent_process(cmd, env, NO_PIPE);
+			printf("status = %d\n", status);
+			return (free_cmd(cmd), end_process(ptr, stdio), status);
+		}
 		else if (minishell_engine(cmd, env, path, stdio) == false)
 			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (cmd->status == SYNTAX)

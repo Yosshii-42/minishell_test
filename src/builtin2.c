@@ -12,8 +12,28 @@
 
 #include "../minishell.h"
 
-int	builtin_unset(void)//t_env *env)
+int	builtin_unset(t_cmd *cmd, t_env **env)
 {
+	if (!cmd->cmd[1])
+		return (EXIT_SUCCESS);
+	while ((*env))
+	{
+		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
+		{
+			if ((*env)->pre)
+				(*env)->pre->next = (*env)->next;
+			else
+			{
+				if ((*env)->next)
+				{
+					(*env)->next->pre = NULL;
+					env = &(*env)->next;
+				}
+			}
+			return (free((*env)->key), free((*env)->value), free(*env), 0);
+		}
+		*env = (*env)->next;
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -93,6 +113,7 @@ int	builtin_exit(t_cmd *cmd)
 	else
 	{
 		result = atol_pointer(cmd->cmd[1]);
+		printf("result = %ld\n", *result);
 		if (result == NULL)
 		{
 			ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
@@ -103,6 +124,7 @@ int	builtin_exit(t_cmd *cmd)
 		else
 		{
 			free_cmd(cmd);
+			printf("exit result = %ld\n", *result);
 			exit ((*result) % 256);
 		}
 	}

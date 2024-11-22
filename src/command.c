@@ -25,8 +25,10 @@ static bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 		if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg,
 					": ", FREE_S1);
-		if (cmd->err_msg)
+		if (cmd->err_msg && (cmd->cmd[0][0] == '.' || cmd->cmd[0][0] == '/'))
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, err_str, FREE_S1);
+		else if (cmd->err_msg)
+			cmd->err_msg = strjoin_with_free(cmd->err_msg, "command not found", FREE_S1);
 		if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
 	}
