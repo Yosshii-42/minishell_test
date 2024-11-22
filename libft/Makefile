@@ -22,7 +22,9 @@ SRCS	= ft_isdigit.c \
  		  ft_isalpha.c \
  		  ft_isdigit.c \
  		  ft_isalnum.c \
- 		  ft_substr.c
+ 		  ft_substr.c \
+ 		  ft_strjoin.c \
+ 		  ft_calloc.c
 # 		  ft_isascii.c \
 # 		  ft_isprint.c \
 # 		  ft_strlen.c \
@@ -43,8 +45,6 @@ SRCS	= ft_isdigit.c \
 # 		  ft_strnstr.c \
 # 		  ft_atoi.c \
 # 		  ft_atol.c \
-# 		  ft_calloc.c \
-# 		  ft_strjoin.c \
 # 		  ft_strtrim.c \
 # 		  ft_split.c \
 # 		  ft_strmapi.c \

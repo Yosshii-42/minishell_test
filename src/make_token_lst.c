@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/11/10 17:08:01 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/20 17:08:36 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ t_token	*make_token_lst(char *line, t_env *env, int status_num)
 	if (!(*line))
 		return (NULL);
 	token = NULL;
-	token = tokenizer(line, &error_status); // トークナイズ
-	printf("token = %s\n", token->word);
+	token = lexer(env, line, &error_status);
+	if (error_status || !token)
+		return (NULL);
 	add_token_kind(token, status_num);
 	return (token);
 }
