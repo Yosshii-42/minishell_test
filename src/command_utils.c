@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	init_cmd(t_cmd *cmd)
+bool	init_cmd(t_cmd *cmd, t_env *env)
 {
 	cmd->readfd = -1;
 	cmd->writefd = -1;
@@ -21,10 +21,18 @@ void	init_cmd(t_cmd *cmd)
 	cmd->pp[1] = -1;
 	cmd->pathname = NULL;
 	cmd->cmd = NULL;
+	cmd->path = NULL;
+	if (getenv_str(env, "PATH"))
+	{
+		cmd->path = ft_split(getenv_str(env, "PATH"), ':');
+		if (!cmd->path)
+			return (ft_printf(2, "malloc: %s\n", strerror(errno)), false);
+	}
 	cmd->err_msg = NULL;
 	cmd->token = NULL;
 	cmd->status = -1;
 	cmd->flag = 0;
+	return (true);
 }
 
 int	count_array(t_token *token)

@@ -107,6 +107,7 @@ typedef struct s_cmd
 	int				pp[2];
 	char			*pathname;
 	char			**cmd;
+	char			**path;
 	char			*err_msg;
 	struct s_token	*token;
 	t_kind			status;
@@ -156,8 +157,8 @@ bool	expand_quote(t_token *tokenized);
 bool	remove_quotes(t_token *tokenized);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path);
-void	init_cmd(t_cmd *cmd);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);//, char **path);
+bool	init_cmd(t_cmd *cmd, t_env *env);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
@@ -207,10 +208,10 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-int		do_builtin(t_cmd *cmd, t_env *env);
-int		builtin_unset(t_cmd *cmd, t_env **env);
-int		builtin_env(t_env *env);
-int		builtin_exit(t_cmd *cmd);
+bool		do_builtin(t_cmd *cmd, t_env *env, int *status);
+void		builtin_unset(t_cmd *cmd, t_env **env, int *status);
+void		builtin_env(t_env *env, int *status);
+void		builtin_exit(t_cmd *cmd, int *status);
 
 // 仮のもの
 bool	print_dolquestion(char *line, int *status);

@@ -56,9 +56,7 @@
 t_token	*make_token_lst(char *line, int *status)
 {
 	t_token	*token;
-	// int		error_status;
 
-	// error_status = 0;
 	if (!(*line))
 		return (NULL);
 	token = NULL;

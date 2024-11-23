@@ -25,28 +25,26 @@ static int	dup_stdio(int *stdio)
 
 static int	do_minishell(t_env *env, char *line, int *status)
 {
-	// char	**path;
 	int		stdio[2];
-	// int		status;
 	t_token	*token;
 
 	stdio[0] = -1;
 	stdio[1] = -1;
-	// status = 0;
-	// path = NULL;
-	// if (getenv_str(env, "PATH"))
-	// 	path = ft_split(getenv_str(env, "PATH"), ':');
 	add_history(line);
-	// dup_stdin(&origi_stdin);
 	if (dup_stdio(stdio) == false)
 		return (EXIT_FAILURE);
+	token = NULL;
+	// printf("here\n");
 	token = make_token_lst(line, status);
+	// printf("token = %s\n", token->word);
 	if (!ft_memcmp(line, "clear", 6))
+	{
 		clear_history();
+		*status = 0;
+	}
 	else
 		*status = run_process(token, env, status, stdio);
-	// if (path)
-	// 	free_split(path);
+	printf("status = %d\n", *status);
 	return (*status);
 }
 

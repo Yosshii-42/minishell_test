@@ -13,24 +13,24 @@
 #include "../minishell.h"
 
 // 仮のもの
-bool	print_dolquestion(char *line, int *status)
-{
-	if (!ft_strncmp(line, "$\?", 2))
-	{
-		ft_putnbr_fd(*status, 2);
-		ft_printf(2, ": command not found\n");
-		return (*status = 127, false);
-	}
-	else
-		return (true);
-} 
+// bool	print_dolquestion(char *line, int *status)
+// {
+// 	if (!ft_strncmp(line, "$\?", 2))
+// 	{
+// 		ft_putnbr_fd(*status, 2);
+// 		ft_printf(2, ": command not found\n");
+// 		return (*status = 127, false);
+// 	}
+// 	else
+// 		return (true);
+// } 
 
-int	builtin_echo(t_cmd *cmd)
+void	builtin_echo(t_cmd *cmd, int *status)
 {
 	int	i;
 
 	if (!cmd->cmd[1])
-		return (EXIT_SUCCESS);
+		*status = EXIT_SUCCESS;
 	i = 0;
 	while (cmd->cmd[++i])
 	{
@@ -40,43 +40,43 @@ int	builtin_echo(t_cmd *cmd)
 		else
 			ft_printf(1, "\n");
 	}
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
-int	builtin_cd(void)
+void	builtin_cd(int *status)
 {
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
-int	builtin_pwd(void)
+void	builtin_pwd(int *status)
 {
 	ft_printf(1, "%s\n", getenv("PWD"));
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
-int	builtin_export(void)//t_env *env)
+void	builtin_export(int *status)//t_env *env)
 {
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
-int	do_builtin(t_cmd *cmd, t_env *env)
+bool	do_builtin(t_cmd *cmd, t_env *env, int *status)
 {
 	int	type;
 
 	type = check_builtin(cmd->cmd[0]);
 	if (type == ECHO)
-		return (builtin_echo(cmd));
-	else if (type == CD)
-		return (builtin_cd());
+		return (builtin_echo(cmd, status), true);
+	else if (type == CD) 
+		return (builtin_cd(status), true);
 	else if (type == PWD)
-		return (builtin_pwd());
+		return (builtin_pwd(status), true);
 	else if (type == EXPORT)
-		return (builtin_export());//cmd, env));
+		return (builtin_export(status), true);//cmd, env));
 	else if (type == UNSET)
-		return (builtin_unset(cmd, &env));
+		return (builtin_unset(cmd, &env, status), true);
 	else if (type == ENV)
-		return (builtin_env(env));
+		return (builtin_env(env, status), true);
 	else if (type == EXIT)
-		return (builtin_exit(cmd));
-	return (EXIT_FAILURE);
+		return (builtin_exit(cmd, status), false);
+	return (true);
 }

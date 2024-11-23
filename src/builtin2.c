@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-int	builtin_unset(t_cmd *cmd, t_env **env)
+void	builtin_unset(t_cmd *cmd, t_env **env, int *status)
 {
 	if (!cmd->cmd[1])
-		return (EXIT_SUCCESS);
+		*status = EXIT_SUCCESS;
 	while ((*env))
 	{
 		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
@@ -30,21 +30,24 @@ int	builtin_unset(t_cmd *cmd, t_env **env)
 					env = &(*env)->next;
 				}
 			}
-			return (free((*env)->key), free((*env)->value), free(*env), 0);
+			free((*env)->key);
+			free((*env)->value);
+			free(*env);
+			*status = 0;
 		}
 		*env = (*env)->next;
 	}
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
-int	builtin_env(t_env *env)
+void	builtin_env(t_env *env, int *status)
 {
 	while (env)
 	{
 		ft_printf(1, "%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	return (EXIT_SUCCESS);
+	*status = EXIT_SUCCESS;
 }
 
 static bool	ft_isover(long long sign, long long num, long long next_num)
@@ -90,7 +93,7 @@ static long	*atol_pointer(const char *nptr)
 		return (ptr);
 }
 
-int	builtin_exit(t_cmd *cmd)
+void	builtin_exit(t_cmd *cmd, int *status)
 {
 	int		count;
 	long	*result;
@@ -101,31 +104,31 @@ int	builtin_exit(t_cmd *cmd)
 	result = NULL;
 	if (count == 1)
 	{
-		free_cmd(cmd);
-		exit (0);
+		// free_cmd(cmd);
+		*status = 0;
 	}
 	else if (count >= 3)
 	{
 		ft_printf(2, "exit\nbash: exit: too many arguments\n");
-		free_cmd(cmd);
-		exit (EXIT_FAILURE);
+		// free_cmd(cmd);
+		*status = EXIT_FAILURE;
 	}
 	else
 	{
 		result = atol_pointer(cmd->cmd[1]);
-		printf("result = %ld\n", *result);
 		if (result == NULL)
 		{
 			ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
 			ft_printf(2, ": numeric argument rewuired\n");
-			free_cmd(cmd);
-			exit (2);
+			// free_cmd(cmd);
+			*status = 2;
 		}
 		else
 		{
-			free_cmd(cmd);
+	printf("result = %ld\n", *result);
+			// free_cmd(cmd);
 			printf("exit result = %ld\n", *result);
-			exit ((*result) % 256);
+			*status = (*result) % 256;
 		}
 	}
 }

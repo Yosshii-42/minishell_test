@@ -37,19 +37,19 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 	return (true);
 }
 
-static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
+static char	*make_cmd_and_check_access(t_cmd *cmd, char *pwd)
 {
 	char	*str;
 	int		i;
 
 	str = NULL;
-	if (!path)
-		return (make_pwd_path(command, pwd));
+	if (!cmd->path)
+		return (make_pwd_path(cmd->cmd[0], pwd));
 	i = -1;
-	while (path[++i])
+	while (cmd->path[++i])
 	{
-		str = strjoin_with_free(path[i], "/", NO_FREE);
-		str = strjoin_with_free(str, command, FREE_S1);
+		str = strjoin_with_free(cmd->path[i], "/", NO_FREE);
+		str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
 		if (!str)
 			return (NULL);//後で検討
 		if (!access(str, X_OK))
@@ -57,7 +57,7 @@ static char	*make_cmd_and_check_access(char *command, char **path, char *pwd)
 		free(str);
 		str = NULL;
 	}
-	return (strjoin_with_free("x", command, NO_FREE));
+	return (strjoin_with_free("x", cmd->cmd[0], NO_FREE));
 }
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
@@ -89,7 +89,7 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	return (cmd);
 }
 
-static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
+static bool	make_path_cmd(t_token *token, t_cmd *cmd)//, char **path)
 {
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
@@ -103,8 +103,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 		else if (cmd->cmd[0][0] == '.')
 			cmd->pathname = make_pwd_path(cmd->cmd[0], getenv("PWD"));
 		else
-			cmd->pathname = make_cmd_and_check_access(cmd->cmd[0],
-					path, getenv("PWD"));
+			cmd->pathname = make_cmd_and_check_access(cmd, getenv("PWD"));
 		if (cmd->pathname)
 			return (true);
 	}
@@ -114,16 +113,18 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, char **path)
 	return (true);
 }
 
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)//, char **path)
 {
 	int	flag;
+	printf("token = %s, kind = %d\n", token->word, token->kind);
 
 	flag = 0;
 	cmd = NULL;
 	cmd = (t_cmd *)malloc(sizeof (t_cmd));
 	if (!cmd)
 		return (NULL);
-	init_cmd(cmd);
+	if (init_cmd(cmd, env) == false)
+		return (free(cmd), NULL);	
 	while (token)
 	{
 		if (token->kind == SYNTAX)
@@ -142,7 +143,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path)
 		if (count_array(token) && flag == 0)
 		{
 			flag++;
-			if (!make_path_cmd(token, cmd, path))
+			if (!make_path_cmd(token, cmd))//, path))
 				return (free_cmd(cmd), NULL);
 		}
 		if (token->kind >= RDFILE && token->kind <= WRF_APP)

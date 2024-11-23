@@ -16,11 +16,12 @@ t_token	*lexer(char *line, int *error_status)
 {
 	t_token	*tokenized;
 
-	// *error_status = 0;
+	*error_status = 0;
 	// (void)env;
 	if (!(*line))
 		return (NULL);
 	// 1.tokenizerを呼び出しトークンリスト生成
+	printf("lexer\n");
 	tokenized = tokenizer(line, error_status);
 	if (*error_status || !tokenized)
 		return (NULL);

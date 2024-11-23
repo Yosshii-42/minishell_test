@@ -40,10 +40,17 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
-	if (!ft_strnstr(cmd->err_msg, "Permission", 10))
+	if (ft_strnstr(cmd->err_msg, "Permission", 10) == 0)
+	{
+
+	ft_printf(2, "child_exit_process\n");
 		exit(126);
+	}
 	else
+	{
 		exit(127);
+
+	}
 }
 
 int	builtin_end_process(t_cmd *cmd)
