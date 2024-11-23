@@ -32,7 +32,7 @@
 # define FREE_S2 2
 # define NO_FREE 0
 # define SPECIAL_CHAR "~`#&*()[]{};!?"
-# define SPECIAL_TOKEN "<>|$"
+# define SPECIAL_TOKEN "<>|"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
@@ -44,7 +44,7 @@
 # define ERROR_PRESTR "minishell: "
 
 extern volatile sig_atomic_t	g_sig_status;
-extern volatile sig_atomic_t	g_exit_status;
+extern volatile sig_atomic_t	g_exit_status;	// <--削除　gloval変数は１つだけ
 
 typedef enum e_kind
 {
@@ -114,11 +114,11 @@ typedef struct s_cmd
 }t_cmd;
 
 // env
-t_env	*set_env(int argc, char **argv, char **envp, int *statsu);
+t_env	*set_env(int argc, char **argv, char **envp);
 
 //token
-t_token	*make_token_lst(char *line, int status_num);
-void	add_token_kind(t_token *token, int status_num);
+t_token	*make_token_lst(char *line, int *status);
+void	add_token_kind(t_token *token);
 t_token	*create_special_token(char **input, t_kind kind, int length);
 t_token	*create_command_token(char *start, bool is_quoted, bool is_double_quoted);
 t_token *process_quote(char **input, int *error_status, char quote_char);
@@ -142,12 +142,12 @@ int		check_builtin(char *str);
 bool	find_syntax_error(t_token *tokenized);
 
 // expand_token.c
-bool	expand_token(t_env *env, t_token *tokenized);
+bool	expand_token(t_env *env, t_token *tokenized, int *status);
 bool	append_char(char **str, char c);
 
 // expand_dollar.c
-bool	expand_dollar(t_env *env, t_token *tokenized);
-bool	handle_dollar(t_env *env, t_token *tokenized, char **new, int *i);
+bool	expand_dollar(t_env *env, t_token *tokenized, int *status);
+bool	handle_dollar(t_env *env, t_token *tokenized, int *status, int *i);
 
 // expand_quote.c
 bool	expand_quote(t_token *tokenized);
@@ -169,7 +169,7 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, t_env *env, char **path, int *stdio);
+int		run_process(t_token *token, t_env *env, int *status, int *stdio);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);

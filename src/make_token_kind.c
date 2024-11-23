@@ -109,14 +109,14 @@ int	check_builtin(char *str)
 	i = 0;
 	while (i < 7)
 	{
-		if (ft_strncmp(str, builtin[i], ft_strlen(builtin[i])) == 0)
+		if (ft_memcmp(str, builtin[i], ft_strlen(builtin[i]) + 1) == 0)
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-void	add_token_kind(t_token *token, int status_num)
+void	add_token_kind(t_token *token)
 {
 	int	commnad_flag;
 
@@ -132,13 +132,13 @@ void	add_token_kind(t_token *token, int status_num)
 			token = add_kind_lessthan(token);
 		else if (*(token->word) == '>')
 			token = add_kind_morethan(token);
-		else if (!ft_memcmp(token->word, "$?", 3))// TODO '' ""実装後に再実装する
-		{
-			token->kind = OPTION;
-			if (!token->next)
-				token->status = END;
-			token->word = ft_itoa(status_num);
-		}
+		// else if (!ft_memcmp(token->word, "$?", 3))// TODO '' ""実装後に再実装する
+		// {
+		// 	token->kind = OPTION;
+		// 	if (!token->next)
+		// 		token->status = END;
+		// 	token->word = ft_itoa(status_num);
+		// }
 		else if (check_builtin(token->word) >= 0)
 			token->kind = BUILTIN;
 		else

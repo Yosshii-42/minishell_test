@@ -176,7 +176,7 @@ t_token *tokenizer(char *input, int *error_status)
     bool is_quoted = false;
     bool is_double_quoted = false;
 
-    *error_status = 0;
+    // *error_status = 0;
     input = space_skip(input);
 
     while (*input)

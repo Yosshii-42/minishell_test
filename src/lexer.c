@@ -16,7 +16,7 @@ t_token	*lexer(char *line, int *error_status)
 {
 	t_token	*tokenized;
 
-	*error_status = 0;
+	// *error_status = 0;
 	// (void)env;
 	if (!(*line))
 		return (NULL);

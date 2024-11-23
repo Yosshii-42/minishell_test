@@ -3,14 +3,14 @@ SRCS	= src/main.c \
 		  src/set_env.c \
 		  src/make_token_lst.c \
 		  src/make_token_kind.c \
-		  src/command.c \
+		  src/command_main.c \
+		  src/command_open_file.c \
 		  src/command_utils.c \
-		  src/open_file.c \
-		  src/process.c \
+		  src/process_main.c \
 		  src/process_ends.c \
 		  src/process_utils.c \
 		  src/utils.c \
-		  src/free.c \
+		  src/utils_free.c \
 		  src/signal.c \
 		  src/signal_handler.c \
 		  src/builtin1.c \

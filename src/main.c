@@ -23,31 +23,31 @@ static int	dup_stdio(int *stdio)
 	return (true);
 }
 
-static int	do_minishell(t_env *env, char *line, int status_num)
+static int	do_minishell(t_env *env, char *line, int *status)
 {
-	char	**path;
+	// char	**path;
 	int		stdio[2];
-	int		status;
+	// int		status;
 	t_token	*token;
 
 	stdio[0] = -1;
 	stdio[1] = -1;
-	status = 0;
-	path = NULL;
-	if (getenv_str(env, "PATH"))
-		path = ft_split(getenv_str(env, "PATH"), ':');
+	// status = 0;
+	// path = NULL;
+	// if (getenv_str(env, "PATH"))
+	// 	path = ft_split(getenv_str(env, "PATH"), ':');
 	add_history(line);
 	// dup_stdin(&origi_stdin);
 	if (dup_stdio(stdio) == false)
 		return (EXIT_FAILURE);
-	token = make_token_lst(line, status_num);
+	token = make_token_lst(line, status);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_history();
 	else
-		status = run_process(token, env, path, stdio);
-	if (path)
-		free_split(path);
-	return (status);
+		*status = run_process(token, env, status, stdio);
+	// if (path)
+	// 	free_split(path);
+	return (*status);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 
 	init_signal();
 	status = 0;
-	env = set_env(argc, argv, envp, &status);
+	env = set_env(argc, argv, envp);
 	if (!env)
 		exit(EXIT_FAILURE);
 	rl_outstream = stdout;
@@ -70,7 +70,7 @@ int	main(int argc, char **argv, char **envp)
 		// else if (main_exit(line, &status) == true)
 		// 	break ;
 		// else// if (builtin(line, env, &status) == true)
-		status = do_minishell(env, line, status);
+		do_minishell(env, line, &status);
 		free(line);
 	}
 	free_env(env);

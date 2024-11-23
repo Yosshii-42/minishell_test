@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command.c                                          :+:      :+:    :+:   */
+/*   command_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 06:27:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 18:39:37 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-11-23 06:48:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-11-23 06:48:51 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 {
-		printf("set_err_msg here\n");
 	if (cmd->err_msg)
 		return (true);
 	cmd->err_msg = NULL;

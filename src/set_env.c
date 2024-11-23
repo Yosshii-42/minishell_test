@@ -21,6 +21,24 @@ static t_env	*lstlast(t_env *lst)
 	return (lst);
 }
 
+static t_env	*change_last_node(t_env *env)
+{
+	char	*tmp;
+	t_env	*ptr;
+
+	ptr = env;
+	env = lstlast(env);
+	tmp = env->value;
+	env->value = ft_strdup("/usr/bin/env");
+	free(tmp);
+	if (!env->value)
+	{
+		ft_printf(2, "bash: malloc: %s\n", strerror(errno));
+		return (free_env(ptr), NULL);
+	}
+	return (ptr);
+}
+
 static void	lstadd_back(t_env **start, t_env *new)
 {
 	t_env	*ptr;
@@ -59,14 +77,14 @@ static int	lstnew(t_env **start, char *env)
 	return (TRUE);
 }
 
-t_env	*set_env(int argc, char **argv, char **envp, int *status)
+t_env	*set_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
 	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
-	*status = 0;
+	// *status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])
@@ -74,5 +92,6 @@ t_env	*set_env(int argc, char **argv, char **envp, int *status)
 		if (!lstnew(&start, envp[i]))
 			return (free_env(start), NULL);
 	}
+	start = change_last_node(start);
 	return (start);
 }

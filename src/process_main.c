@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process.c                                          :+:      :+:    :+:   */
+/*   process_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 06:28:54 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/21 14:02:35 by hurabe           ###   ########.fr       */
+/*   Created: 2024-11-23 06:49:20 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-11-23 06:49:20 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ static void	child_process(t_cmd *cmd, t_env *env, char **path, int stdio[2])
 		int status = do_builtin(cmd, env);
 		exit(status);
 	}
-		// exit (do_builtin(cmd, env));
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, path) == -1)
@@ -99,34 +98,42 @@ static bool	minishell_engine(t_cmd *cmd, t_env *env, char **path, int stdio[2])
 	return (true);
 }
 
-int	run_process(t_token *token, t_env *env, char **path, int *stdio)
+int	run_process(t_token *token, t_env *env, int *status, int *stdio)
 {
 	t_cmd	*cmd;
 	t_token	*ptr;
 	int		count;
+	char	**path;
+	// int		status;
+
 	ptr = token;
+	// path = NULL;
 	count = cmd_count(token);
 	while (count--)
 	{
 		if (!token)
 			break ;
-		if (!expand_token(env, token))
+		if (!expand_token(env, token, status))
 			return (free_token(token), EXIT_FAILURE);
+		path = NULL;
+		if (getenv_str(env, "PATH"))
+			path = ft_split(getenv_str(env, "PATH"), ':');
 		cmd = NULL;
 		cmd = make_cmd(token, cmd, path);
+		// printf("pathname = %s, cmd = %s\n", cmd->pathname, cmd->cmd[0]);
 		if (!cmd)
 			return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 		{
-			int status = parent_process(cmd, env, NO_PIPE);
-			printf("status = %d\n", status);
-			return (free_cmd(cmd), end_process(ptr, stdio), status);
+			*status = parent_process(cmd, env, NO_PIPE);
+			return (free_cmd(cmd), end_process(ptr, stdio), *status);
 		}
 		else if (minishell_engine(cmd, env, path, stdio) == false)
 			return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, stdio), 2);
 		token = cmd->token;
+		free_split(path);
 		free_cmd(cmd);
 	}
 	end_process(ptr, stdio);

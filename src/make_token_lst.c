@@ -53,18 +53,18 @@
 //	lstadd_back(start, new);
 //}
 
-t_token	*make_token_lst(char *line, int status_num)
+t_token	*make_token_lst(char *line, int *status)
 {
 	t_token	*token;
-	int		error_status;
+	// int		error_status;
 
-	error_status = 0;
+	// error_status = 0;
 	if (!(*line))
 		return (NULL);
 	token = NULL;
-	token = lexer(line, &error_status);
-	if (error_status || !token)
+	token = lexer(line, status);
+	if (!token)
 		return (NULL);
-	add_token_kind(token, status_num);
+	add_token_kind(token);
 	return (token);
 }
