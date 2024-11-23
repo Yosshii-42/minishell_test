@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 17:08:13 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/23 20:07:03 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("minishell$ ");
-		if (!line)
+		if (!line && ft_printf(1, "exit\n"))
 			break ;
 		// else if (main_exit(line, &status) == true)
 		// 	break ;

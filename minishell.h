@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/21 13:37:10 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/23 19:37:21 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "./libft/includes/libft.h"
@@ -115,6 +116,10 @@ typedef struct s_cmd
 
 // env
 t_env	*set_env(int argc, char **argv, char **envp);
+
+// builtin_cd
+void	update_env_var(t_env *env, char *key, char *value);
+int	builtin_cd(t_cmd *cmd, t_env *env);
 
 //token
 t_token	*make_token_lst(char *line, int *status);
