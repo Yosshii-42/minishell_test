@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 05:45:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 16:04:08 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/23 19:39:50 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,46 @@ int	builtin_echo(t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	builtin_cd(void)
+int	builtin_cd(t_cmd *cmd, t_env *env)
 {
+	char	*target_path;
+	char	cwd[PATH_MAX];
+
+	// 引数が多すぎる場合エラー
+	if (cmd->cmd[2])
+		return (ft_printf(2, "bash: cd: too many arguments\n"), EXIT_FAILURE);
+	// 移動パス決定
+	// 引数がない場合、HOMEへ移動する
+	if (!cmd->cmd[1])
+		target_path = getenv_str(env, "HOME");
+	else if (ft_strncmp(cmd->cmd[1], "-", 2) == 0)
+		target_path = getenv_str(env, "OLDPWD");
+	else
+		target_path = cmd->cmd[1];
+
+	if (!target_path)
+	{
+		if (cmd->cmd[1] && ft_strncmp(cmd->cmd[1], "-", 2) == 0)
+			ft_printf(2, "bash: cd: OLDPWD not set\n");
+		else
+			ft_printf(2, "bash: cd: HOME not set\n");
+		return (EXIT_FAILURE);
+	}
+
+	// ディレクトリ移動処理
+	if (chdir(target_path) == -1)
+	{
+		ft_printf(2, "bash: cd: %s: %s\n", target_path, strerror(errno));
+		return (EXIT_FAILURE);
+	}
+	// PWDとOLDPWDを更新する
+	if (!getcwd(cwd, sizeof(cwd)))
+	{
+		ft_printf(2, "bash: cd: error retrieving current directory\n");
+        return (EXIT_FAILURE);
+	}
+	update_env_var(env, "OLDPWD", getenv_str(env, "PWD"));
+    update_env_var(env, "PWD", cwd);
 	return (EXIT_SUCCESS);
 }
 
@@ -67,7 +105,7 @@ int	do_builtin(t_cmd *cmd, t_env *env)
 	if (type == ECHO)
 		return (builtin_echo(cmd));
 	else if (type == CD)
-		return (builtin_cd());
+		return (builtin_cd(cmd, env));
 	else if (type == PWD)
 		return (builtin_pwd());
 	else if (type == EXPORT)

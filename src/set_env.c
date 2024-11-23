@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 20:30:43 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/23 19:37:53 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,30 @@ t_env	*set_env(int argc, char **argv, char **envp)
 	}
 	start = change_last_node(start);
 	return (start);
+}
+
+// 追加
+void	update_env_var(t_env *env, char *key, char *value)
+{
+    t_env *current = env;
+
+    while (current)
+    {
+        if (ft_strcmp(current->key, key) == 0)
+        {
+            free(current->value);
+            current->value = ft_strdup(value);
+            return;
+        }
+        current = current->next;
+    }
+
+    // 存在しない場合、新しいノードを追加
+    t_env *new_node = malloc(sizeof(t_env));
+    if (!new_node)
+        return;
+    new_node->key = ft_strdup(key);
+    new_node->value = ft_strdup(value);
+    new_node->next = NULL;
+    lstadd_back(&env, new_node);
 }

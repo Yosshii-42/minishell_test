@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/20 17:12:57 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/23 20:00:43 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ t_token *tokenizer(char *input, int *error_status)
                     *error_status = 1;
                     return (NULL);
                 }
-                input += token_len + 1;
+                input += token_len;
             }
         }
         else
