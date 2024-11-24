@@ -29,7 +29,7 @@ bool	append_char(char **str, char c)
 }
 
 // トークンを展開する
-bool	expand_token(t_env *env, t_token *tokenized, int *status)
+bool	expand_token(t_env *env, t_token *tokenized)
 {
 	int	flag;
 
@@ -40,7 +40,7 @@ bool	expand_token(t_env *env, t_token *tokenized, int *status)
 		if (tokenized->kind == COMMAND || tokenized->kind == OPTION)
 		{
 			// 環境変数の展開
-			if (!expand_dollar(env, tokenized, status))
+			if (!expand_dollar(env, tokenized))
 				return (false);
 			// クォートの処理
 			if (!expand_quote(tokenized))

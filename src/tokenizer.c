@@ -119,7 +119,8 @@ int count_envname_len(char *token, int i)
     return (len);
 }
 
-static t_token *create_dollar_token(char **input, int *error_status)
+// static t_token *create_dollar_token(char **input, int *error_status)
+static t_token *create_dollar_token(char **input)
 {
     char *env_key;
     int len;
@@ -130,7 +131,7 @@ static t_token *create_dollar_token(char **input, int *error_status)
     len = count_envname_len(*input, 0);
     if (len == 0)
     {
-        *error_status = 1;
+        end_status(SET, EXIT_FAILURE);
         fprintf(stderr, "[DEBUG] Error: Invalid environment variable name after `$`\n");
         return (NULL);
     }
@@ -139,7 +140,7 @@ static t_token *create_dollar_token(char **input, int *error_status)
     env_key = ft_substr(*input, 0, len + 1);
     if (!env_key)
     {
-        *error_status = 1;
+        end_status(SET, EXIT_FAILURE);
         perror("[DEBUG] Error: malloc failed while extracting env_key");
         return (NULL);
     }
@@ -151,7 +152,7 @@ static t_token *create_dollar_token(char **input, int *error_status)
     t_token *dollar_token = (t_token *)malloc(sizeof(t_token));
     if (!dollar_token)
     {
-        *error_status = 1;
+        end_status(SET, EXIT_FAILURE);
         free(env_key);
         perror("[DEBUG] Error: malloc failed while creating dollar_token");
         return (NULL);
@@ -167,7 +168,7 @@ static t_token *create_dollar_token(char **input, int *error_status)
 }
 
 // トークナイズ処理
-t_token *tokenizer(char *input, int *error_status)
+t_token *tokenizer(char *input)//, int *error_status)
 {
     t_token *head = NULL;
     t_token *current = NULL;
@@ -176,9 +177,7 @@ t_token *tokenizer(char *input, int *error_status)
     bool is_quoted = false;
     bool is_double_quoted = false;
 
-    // *error_status = 0;
     input = space_skip(input);
-
     while (*input)
     {
         if (ft_strchr(SPECIAL_TOKEN, *input))
@@ -188,25 +187,25 @@ t_token *tokenizer(char *input, int *error_status)
             if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
             {
                 free_token(head);
-                *error_status = 1;
+                end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
             input += token_len;
         }
         else if (*input == '$') // `$` の特別な処理
         {
-            t_token *dollar_token = create_dollar_token(&input, error_status);
+             t_token *dollar_token = create_dollar_token(&input);
             if (!dollar_token)
             {
                 free_token(head);
-                *error_status = 1;
+                end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
             if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
             {
                 free_token(head);
                 free(dollar_token);
-                *error_status = 1;
+                end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
             free(dollar_token);
@@ -218,14 +217,14 @@ t_token *tokenizer(char *input, int *error_status)
             {
                 fprintf(stderr, "error: unmatched quote\n");
                 free_token(head);
-                *error_status = 1;
+                end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
             token_content = ft_substr(input, 0, token_len);
             if (!append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted))
             {
                 free_token(head);
-                *error_status = 1;
+                end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
             input += token_len;

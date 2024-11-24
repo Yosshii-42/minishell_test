@@ -12,24 +12,22 @@
 
 #include "../minishell.h"
 
-t_token	*lexer(char *line, int *error_status)
+t_token	*lexer(char *line)
 {
 	t_token	*tokenized;
 
-	*error_status = 0;
-	// (void)env;
 	if (!(*line))
 		return (NULL);
 	// 1.tokenizerを呼び出しトークンリスト生成
 	printf("lexer\n");
-	tokenized = tokenizer(line, error_status);
-	if (*error_status || !tokenized)
+	tokenized = tokenizer(line);
+	if (!tokenized)
 		return (NULL);
 	// 2.シンタックスエラー確認
 	if (!find_syntax_error(tokenized))
 	{
 		free_token(tokenized);
-		*error_status = 1;
+		end_status(SET, 1);
 		return (NULL);
 	}
 	// 3.環境変数の展開
