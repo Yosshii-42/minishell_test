@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-05 06:29:31 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/24 20:05:44 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	ready_signal(int signum)
 
 	if (sigemptyset(&sa.sa_mask) < 0)
 		fatal_error_exit("failed to sigemptyset");
-	sa.sa_flags = 0;
+	//sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sa.sa_handler = signal_handler;
 	if (sigaction(signum, &sa, NULL) < 0)
 		fatal_error_exit("failed to sigaction");

@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 17:16:23 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:45:16 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@
 # define PIPE_EXIST	1
 # define NO_PIPE 0
 // シグナル状態の定義
-# define READLINE 1
-# define HEREDOC 2
-# define IN_CMD 3
-# define SIG_INT 4
+# define IN_SHELL 0 // シェルがインタラクティブモードにいる状態
+# define READLINE 1 // readlineの入力待ち状態
+# define HEREDOC 2 // Here-Documentモード
+# define IN_CMD 3  // 外部コマンド実行中
+# define SIG_INT 4 // シグナルで中断された
 # define ERROR_PRESTR "minishell: "
 
 extern volatile sig_atomic_t	g_sig_status;
@@ -229,6 +230,11 @@ int		event(void);
 void	perror_prestr(void);
 void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
+
+// signal_process
+void	restore_stdio(int *stdio);
+void	external_command_signals(void);
+void	execute_command(char **argv, char **envp);
 
 // builtin
 // bool		do_builtin(t_cmd *cmd, t_env *env, int *status);

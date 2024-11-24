@@ -13,6 +13,7 @@ SRCS	= src/main.c \
 		  src/utils_free.c \
 		  src/signal.c \
 		  src/signal_handler.c \
+		  src/signal_process.c \
 		  src/builtin1.c \
 		  src/builtin2.c \
 		  src/lexer.c \

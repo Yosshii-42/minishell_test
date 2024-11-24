@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-23 06:49:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-23 06:49:20 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/23 06:49:20 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/24 21:46:25 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,10 @@ static bool	minishell_engine(t_cmd *cmd, t_env *env, int stdio[2])
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
+	{
 		child_process(cmd, env, stdio);
+		execute_command(cmd->cmd, cmd->path);  // 外部コマンド実行
+	}
 	else if (pid > 0)
 		parent_process(cmd, env, PIPE_EXIST);
 	return (true);
@@ -113,24 +116,41 @@ int	run_process(t_token *token, t_env *env, int *stdio)
 		if (!token)
 			break ;
 		if (!expand_token(env, token))
-			return (free_token(ptr), EXIT_FAILURE);
+			return (restore_stdio(stdio), free_token(ptr), EXIT_FAILURE);
+			//return (free_token(ptr), EXIT_FAILURE);
 		cmd = NULL;
 		cmd = make_cmd(token, cmd, env);
 		if (!cmd)
-			return (end_process(ptr, stdio), 1);
+			return (restore_stdio(stdio), end_process(ptr, stdio), EXIT_FAILURE);
+			//return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 		{
 			cmd->count = 1;
 			end_status(SET, parent_process(cmd, env, NO_PIPE));
-			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
+			return (restore_stdio(stdio), syntax_end(cmd, ptr, stdio), end_status(GET, 0));
+			//return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		}
-		else if (minishell_engine(cmd, env, stdio) == false)
-			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
-		if (cmd->status == SYNTAX)
-			return (syntax_end(cmd, ptr, stdio), 2);
+		// 外部コマンド実行 (シグナルとプロセス管理)
+		external_command_signals(); // 外部コマンド用シグナル設定
+		if (!minishell_engine(cmd, env, stdio))
+		{
+			restore_stdio(stdio);
+			free_cmd(cmd);
+			return (EXIT_FAILURE);
+		}
+		init_signal(); // シグナル設定を復元
+		// 次のトークンに進む
 		token = cmd->token;
 		free_cmd(cmd);
+		//else if (minishell_engine(cmd, env, path, stdio) == false)
+		//	return (free_token(ptr), free_cmd(cmd), EXIT_FAILURE);
+		//if (cmd->status == SYNTAX)
+		//	return (syntax_end(cmd, ptr, stdio), 2);
+		//token = cmd->token;
+		//free_split(path);
+		//free_cmd(cmd);
 	}
+	restore_stdio(stdio); // 標準入出力を復元
 	end_process(ptr, stdio);
 	return (wait_process());
 }

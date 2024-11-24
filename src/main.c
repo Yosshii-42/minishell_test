@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/23 20:07:03 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/24 21:45:01 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char	*line;
 
-	init_signal();
+	init_signal(); // シェル全体のシグナルを初期化する
 	env = set_env(argc, argv, envp);
 	if (!env)
 		exit(EXIT_FAILURE);
