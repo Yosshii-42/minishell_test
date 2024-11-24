@@ -27,11 +27,14 @@
 # include "./libft/includes/libft.h"
 # include "./libft/includes/ft_printf.h"
 # include "./libft/includes/get_next_line.h"
-
+// strjoin_with_free
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
-# define SPECIAL_CHAR "~`#&*()[]{};!?"
+// end_status
+# define SET 0
+# define GET 1
+// # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
@@ -114,6 +117,15 @@ typedef struct s_cmd
 	int				flag;
 }t_cmd;
 
+typedef struct s_package
+{
+	t_env	*env;
+	t_token	*token;
+}t_package;
+
+// status
+int end_status(int type, int end_status);
+
 // env
 t_env	*set_env(int argc, char **argv, char **envp);
 
@@ -171,6 +183,7 @@ bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(t_token *token, t_env *env, int *status, int *stdio);
+// int		run_process(t_token *token, t_env *env, int *stdio);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);

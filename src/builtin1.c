@@ -34,10 +34,13 @@ void	builtin_echo(t_cmd *cmd, int *status)
 	i = 0;
 	while (cmd->cmd[++i])
 	{
-		ft_printf(1, "%s", cmd->cmd[i]);
+		if (!ft_memcmp(cmd->cmd[1], "-n", 3))
+			i++;
+		if (cmd->cmd[i])
+			ft_printf(1, "%s", cmd->cmd[i]);
 		if (cmd->cmd[i + 1])
 			ft_printf(1, " ");
-		else
+		else if (ft_memcmp(cmd->cmd[1], "-n", 3))
 			ft_printf(1, "\n");
 	}
 	*status = EXIT_SUCCESS;
