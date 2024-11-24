@@ -32,13 +32,11 @@ static	void	update_quote_status(char *quote, char c)
 }
 
 // `$` を処理する
-bool	handle_dollar(t_env *env, t_token *tokenized, int *status, int *i)
+bool	handle_dollar(t_env *env, t_token *tokenized, int *i)
 {
     char *env_key;
     char	*tmp;
     char	*exit_status;
-    // (void)new;
-    //char *env_value;
 
     (*i)++; // `$` をスキップ
     env_key = split_keyname(tokenized->word, *i);
@@ -52,14 +50,14 @@ bool	handle_dollar(t_env *env, t_token *tokenized, int *status, int *i)
     // $?処理 (これがないとecho $?をしたときに何も表示されない)
     if (ft_strncmp(env_key, "?", 2) == 0)
     {
-        exit_status = ft_itoa(*status); // <-- 2つ目のgloval変数なので変更
+        exit_status = ft_itoa(end_status(GET, 0));
         if (!exit_status)
         {
             free(env_key);
             return (false);
         }
         tokenized->word = exit_status;
-        tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
+        // tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
         return (free(env_key), free(tmp), true);
     }
     
@@ -78,7 +76,7 @@ bool	handle_dollar(t_env *env, t_token *tokenized, int *status, int *i)
 }
 
 // トークン内の `$` を展開する
-bool	expand_dollar(t_env *env, t_token *tokenized, int *status)
+bool	expand_dollar(t_env *env, t_token *tokenized)
 {
     int i = 0;
     char quote = 0;
@@ -94,7 +92,7 @@ bool	expand_dollar(t_env *env, t_token *tokenized, int *status)
 
         if (quote != '\'' && tokenized->word[i] == '$')
         {
-            if (!handle_dollar(env, tokenized, status, &i))
+            if (!handle_dollar(env, tokenized, &i))
             {
                 free(new);
                 return (false);

@@ -23,7 +23,7 @@ static int	dup_stdio(int *stdio)
 	return (true);
 }
 
-static int	do_minishell(t_env *env, char *line, int *status)
+static void	do_minishell(t_env *env, char *line)
 {
 	int			stdio[2];
 	t_token		*token;
@@ -32,28 +32,28 @@ static int	do_minishell(t_env *env, char *line, int *status)
 	stdio[1] = -1;
 	add_history(line);
 	if (dup_stdio(stdio) == false)
-		return (EXIT_FAILURE);
+	{
+		end_status(SET, EXIT_FAILURE);
+		return ;
+	}
 	token = NULL;
-	token = make_token_lst(line, status);
+	token = make_token_lst(line);
 	if (!ft_memcmp(line, "clear", 6))
 	{
 		rl_clear_history();
-		*status = 0;
+		end_status(SET, 0);
 	}
 	else
-		*status = run_process(token, env, status, stdio);
-	printf("status = %d\n", *status);
-	return (*status);
+		end_status(SET, run_process(token, env, stdio));
+	printf("status = %d\n", end_status(GET, 0));
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
 	char	*line;
-	int		status;
 
 	init_signal();
-	status = 0;
 	env = set_env(argc, argv, envp);
 	if (!env)
 		exit(EXIT_FAILURE);
@@ -63,10 +63,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		// else if (main_exit(line, &status) == true)
-		// 	break ;
-		// else// if (builtin(line, env, &status) == true)
-		do_minishell(env, line, &status);
+		do_minishell(env, line);
 		free(line);
 	}
 	free_env(env);
@@ -74,18 +71,11 @@ int	main(int argc, char **argv, char **envp)
 	exit(EXIT_SUCCESS);
 }
 
-// #define SET 0
-// #define GET 1
-// int end_status(int type, int end_status)
-// {
-// 	static int e_status;
-// 	if (type == SET)
-// 	{
-// 		e_status = end_status;
-// 		reteurn (e_status);
-// 	}
-// 	if (type == GET)
-// 	{
-// 		return (e-status);	
-// 	}
-// }
+int end_status(int type, int end_status)
+{
+	static int e_status;
+
+	if (type == SET)
+		e_status = end_status;
+	return (e_status);
+}
