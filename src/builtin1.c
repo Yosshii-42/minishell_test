@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 05:45:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/23 19:39:50 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/23 21:44:02 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,25 @@ int	builtin_cd(t_cmd *cmd, t_env *env)
 		ft_printf(2, "bash: cd: error retrieving current directory\n");
         return (EXIT_FAILURE);
 	}
-	update_env_var(env, "OLDPWD", getenv_str(env, "PWD"));
     update_env_var(env, "PWD", cwd);
+	update_env_var(env, "OLDPWD", getenv_str(env, "PWD"));
 	return (EXIT_SUCCESS);
 }
 
 int	builtin_pwd(void)
 {
-	ft_printf(1, "%s\n", getenv("PWD"));
-	return (EXIT_SUCCESS);
+	//ft_printf(1, "%s\n", getenv("PWD"));
+	//return (EXIT_SUCCESS);
+	char	cwd[PATH_MAX];
+	
+	if (getcwd(cwd, sizeof(cwd)))
+	{
+		ft_printf(1, "%s\n", cwd);
+		return (EXIT_SUCCESS);
+	}
+	// 取得に失敗した場合
+	ft_printf(2, "bash: pwd: error retrieving current directory: %s\n", strerror(errno));
+	return (EXIT_FAILURE);
 }
 
 int	builtin_export(void)//t_env *env)

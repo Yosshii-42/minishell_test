@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/23 19:37:21 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/24 17:16:23 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@
 # define ERROR_PRESTR "minishell: "
 
 extern volatile sig_atomic_t	g_sig_status;
-extern volatile sig_atomic_t	g_exit_status;	// <--削除　gloval変数は１つだけ
 
 typedef enum e_kind
 {
