@@ -183,36 +183,33 @@ t_token *tokenizer(char *input, int *error_status)
     {
         if (ft_strchr(SPECIAL_TOKEN, *input))
         {
-            if (*input == '$') // `$` の特別な処理
+            token_len = count_meta_len(input);
+            token_content = ft_substr(input, 0, token_len);
+            if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
             {
-                t_token *dollar_token = create_dollar_token(&input, error_status);
-                if (!dollar_token)
-                {
-                    free_token(head);
-                    *error_status = 1;
-                    return (NULL);
-                }
-                if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
-                {
-                    free_token(head);
-                    free(dollar_token);
-                    *error_status = 1;
-                    return (NULL);
-                }
+                free_token(head);
+                *error_status = 1;
+                return (NULL);
+            }
+            input += token_len;
+        }
+        else if (*input == '$') // `$` の特別な処理
+        {
+            t_token *dollar_token = create_dollar_token(&input, error_status);
+            if (!dollar_token)
+            {
+                free_token(head);
+                *error_status = 1;
+                return (NULL);
+            }
+            if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
+            {
+                free_token(head);
                 free(dollar_token);
+                *error_status = 1;
+                return (NULL);
             }
-            else
-            {
-                token_len = count_meta_len(input);
-                token_content = ft_substr(input, 0, token_len);
-                if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
-                {
-                    free_token(head);
-                    *error_status = 1;
-                    return (NULL);
-                }
-                input += token_len;
-            }
+            free(dollar_token);
         }
         else
         {

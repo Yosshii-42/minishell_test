@@ -80,6 +80,8 @@ void	free_cmd(t_cmd *cmd)
 			free(cmd->pathname);
 		if (cmd->cmd)
 			free_split(cmd->cmd);
+		if (cmd->path)
+			free_split(cmd->path);
 		if (cmd->err_msg)
 			free(cmd->err_msg);
 		free(cmd);

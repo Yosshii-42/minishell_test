@@ -25,28 +25,24 @@ static int	dup_stdio(int *stdio)
 
 static int	do_minishell(t_env *env, char *line, int *status)
 {
-	// char	**path;
-	int		stdio[2];
-	// int		status;
-	t_token	*token;
+	int			stdio[2];
+	t_token		*token;
 
 	stdio[0] = -1;
 	stdio[1] = -1;
-	// status = 0;
-	// path = NULL;
-	// if (getenv_str(env, "PATH"))
-	// 	path = ft_split(getenv_str(env, "PATH"), ':');
 	add_history(line);
-	// dup_stdin(&origi_stdin);
 	if (dup_stdio(stdio) == false)
 		return (EXIT_FAILURE);
+	token = NULL;
 	token = make_token_lst(line, status);
 	if (!ft_memcmp(line, "clear", 6))
-		clear_history();
+	{
+		rl_clear_history();
+		*status = 0;
+	}
 	else
 		*status = run_process(token, env, status, stdio);
-	// if (path)
-	// 	free_split(path);
+	printf("status = %d\n", *status);
 	return (*status);
 }
 
@@ -77,3 +73,19 @@ int	main(int argc, char **argv, char **envp)
 	clear_history();
 	exit(EXIT_SUCCESS);
 }
+
+// #define SET 0
+// #define GET 1
+// int end_status(int type, int end_status)
+// {
+// 	static int e_status;
+// 	if (type == SET)
+// 	{
+// 		e_status = end_status;
+// 		reteurn (e_status);
+// 	}
+// 	if (type == GET)
+// 	{
+// 		return (e-status);	
+// 	}
+// }

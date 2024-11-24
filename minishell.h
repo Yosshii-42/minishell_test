@@ -28,11 +28,14 @@
 # include "./libft/includes/libft.h"
 # include "./libft/includes/ft_printf.h"
 # include "./libft/includes/get_next_line.h"
-
+// strjoin_with_free
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
-# define SPECIAL_CHAR "~`#&*()[]{};!?"
+// end_status
+# define SET 0
+# define GET 1
+// # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
@@ -107,18 +110,28 @@ typedef struct s_cmd
 	int				pp[2];
 	char			*pathname;
 	char			**cmd;
+	char			**path;
 	char			*err_msg;
 	struct s_token	*token;
 	t_kind			status;
 	int				flag;
 }t_cmd;
 
+typedef struct s_package
+{
+	t_env	*env;
+	t_token	*token;
+}t_package;
+
+// status
+int end_status(int type, int end_status);
+
 // env
 t_env	*set_env(int argc, char **argv, char **envp);
 
 // builtin_cd
 void	update_env_var(t_env *env, char *key, char *value);
-int	builtin_cd(t_cmd *cmd, t_env *env);
+// int	builtin_cd(t_cmd *cmd, t_env *env);
 
 //token
 t_token	*make_token_lst(char *line, int *status);
@@ -160,8 +173,8 @@ bool	expand_quote(t_token *tokenized);
 bool	remove_quotes(t_token *tokenized);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, char **path);
-void	init_cmd(t_cmd *cmd);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);//, char **path);
+bool	init_cmd(t_cmd *cmd, t_env *env);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
@@ -174,6 +187,7 @@ bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(t_token *token, t_env *env, int *status, int *stdio);
+// int		run_process(t_token *token, t_env *env, int *stdio);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
@@ -211,10 +225,10 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-int		do_builtin(t_cmd *cmd, t_env *env);
-int		builtin_unset(t_cmd *cmd, t_env **env);
-int		builtin_env(t_env *env);
-int		builtin_exit(t_cmd *cmd);
+bool		do_builtin(t_cmd *cmd, t_env *env, int *status);
+void		builtin_unset(t_cmd *cmd, t_env **env, int *status);
+void		builtin_env(t_env *env, int *status);
+void		builtin_exit(t_cmd *cmd, int *status);
 
 // 仮のもの
 bool	print_dolquestion(char *line, int *status);
