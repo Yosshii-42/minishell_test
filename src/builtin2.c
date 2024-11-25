@@ -40,8 +40,12 @@ void	builtin_unset(t_cmd *cmd, t_env **env)
 	end_status(SET, EXIT_SUCCESS);
 }
 
-void	builtin_env(t_env *env)
+// void	builtin_env(t_env *env)
+void	builtin_env(void)
 {
+	t_env	*env;
+
+	env = set_get_env(GET, NULL);
 	while (env)
 	{
 		ft_printf(1, "%s=%s\n", env->key, env->value);

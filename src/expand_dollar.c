@@ -32,11 +32,12 @@ static	void	update_quote_status(char *quote, char c)
 }
 
 // `$` を処理する
-bool	handle_dollar(t_env *env, t_token *tokenized, int *i)
+bool	handle_dollar(t_token *tokenized, int *i)
 {
-    char *env_key;
-    char	*tmp;
-    char	*exit_status;
+    char    *env_key;
+    char    *tmp;
+    char    *exit_status;
+    t_env   *env;
 
     (*i)++; // `$` をスキップ
     env_key = split_keyname(tokenized->word, *i);
@@ -48,9 +49,11 @@ bool	handle_dollar(t_env *env, t_token *tokenized, int *i)
 	tmp = tokenized->word;
 
     // $?処理 (これがないとecho $?をしたときに何も表示されない)
-    if (ft_strncmp(env_key, "?", 2) == 0)
+    if (ft_strncmp(env_key, "?", 1) == 0)
     {
         exit_status = ft_itoa(end_status(GET, 0));
+        if (tokenized->word[++(*i)])
+            exit_status = strjoin_with_free(exit_status, &tokenized->word[*i], FREE_S1);
         if (!exit_status)
         {
             free(env_key);
@@ -60,13 +63,12 @@ bool	handle_dollar(t_env *env, t_token *tokenized, int *i)
         // tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
         return (free(env_key), free(tmp), true);
     }
-    
+    env = set_get_env(GET, NULL);
     while (env)
     {
         if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)
         {
     		tokenized->word = ft_strdup(env->value);
-            //printf("[DEBUG] value = [%s] [%s]\n", tokenized->word, env->key);
             return (free(tmp), true);
         }
         env = env->next;
@@ -76,7 +78,7 @@ bool	handle_dollar(t_env *env, t_token *tokenized, int *i)
 }
 
 // トークン内の `$` を展開する
-bool	expand_dollar(t_env *env, t_token *tokenized)
+bool	expand_dollar(t_token *tokenized)
 {
     int i = 0;
     char quote = 0;
@@ -92,12 +94,11 @@ bool	expand_dollar(t_env *env, t_token *tokenized)
 
         if (quote != '\'' && tokenized->word[i] == '$')
         {
-            if (!handle_dollar(env, tokenized, &i))
+            if (!handle_dollar(tokenized, &i))
             {
                 free(new);
                 return (false);
             }
-    		//printf("[DEBUG] value = [%s] [%s]\n", tokenized->word, env->key);
         }
         else
         {

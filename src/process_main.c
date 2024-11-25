@@ -37,7 +37,7 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-static int	parent_process(t_cmd *cmd, t_env *env, int count)
+static int	parent_process(t_cmd *cmd, int count)
 {
 	if (count == NO_PIPE && cmd->status == BUILTIN)
 	{
@@ -48,7 +48,7 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
 			return (builtin_end_process(cmd));
-		if (do_builtin(cmd, env) == false)
+		if (do_builtin(cmd) == false)
 			exit(end_status(GET, 0));
 		else
 			return (end_status(GET, 0));
@@ -61,7 +61,7 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 	return (EXIT_SUCCESS);
 }
 
-static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
+static void	child_process(t_cmd *cmd, int stdio[2])
 {
 	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
@@ -76,7 +76,7 @@ static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
 	close(stdio[1]);
 	if (check_builtin(cmd->cmd[0]) >= 0)
 	{
-		do_builtin(cmd, env);
+		do_builtin(cmd);
 		exit(end_status(GET, 0));
 	}
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
@@ -87,20 +87,20 @@ static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
 	}
 }
 
-static bool	minishell_engine(t_cmd *cmd, t_env *env, int stdio[2])
+static bool	minishell_engine(t_cmd *cmd, int stdio[2])
 {
 	int	pid;
 
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
-		child_process(cmd, env, stdio);
+		child_process(cmd, stdio);
 	else if (pid > 0)
-		parent_process(cmd, env, PIPE_EXIST);
+		parent_process(cmd, PIPE_EXIST);
 	return (true);
 }
 
-int	run_process(t_token *token, t_env *env, int *stdio)
+int	run_process(t_token *token, int *stdio)
 {
 	t_cmd		*cmd;
 	t_token		*ptr;
@@ -112,19 +112,19 @@ int	run_process(t_token *token, t_env *env, int *stdio)
 	{
 		if (!token)
 			break ;
-		if (!expand_token(env, token))
+		if (!expand_token(token))
 			return (free_token(ptr), EXIT_FAILURE);
 		cmd = NULL;
-		cmd = make_cmd(token, cmd, env);
+		cmd = make_cmd(token, cmd);
 		if (!cmd)
 			return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 		{
 			cmd->count = 1;
-			end_status(SET, parent_process(cmd, env, NO_PIPE));
+			end_status(SET, parent_process(cmd, NO_PIPE));
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		}
-		else if (minishell_engine(cmd, env, stdio) == false)
+		else if (minishell_engine(cmd, stdio) == false)
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, stdio), 2);
