@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 00:14:33 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 01:12:34 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-static int	parent_process(t_cmd *cmd, int count)
+static int	parent_process(t_cmd *cmd, t_token *token, int count)
 {
 	ignore_signal(SIGQUIT);
 	ignore_signal(SIGINT);
-	if (count == NO_PIPE && cmd->status == BUILTIN)
+	if (count == NO_PIPE && (cmd->status == BUILTIN || cmd->status == SYNTAX))
 	{
 		if (cmd->writefd > 0)
 			dup2(cmd->writefd, STDOUT_FILENO);
@@ -49,25 +49,25 @@ static int	parent_process(t_cmd *cmd, int count)
 		if (cmd->status == SYNTAX)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
-			return (builtin_end_process(cmd));
+			return (builtin_end_process(cmd, token));
 		if (do_builtin(cmd) == false)
 			exit(end_status(GET, 0));
 		else
 			return (end_status(GET, 0));
 	}
-	if (cmd->status == SYNTAX)
-		ft_printf(2, "bash: syntax error\n");
 	else if (cmd->pp[0] > 0)
+	// if (cmd->pp[0] > 0)
 		dup2(cmd->pp[0], STDIN_FILENO);
 	close_fds(cmd);
 	return (EXIT_SUCCESS);
 }
 
-static void	child_process(t_cmd *cmd, int stdio[2])
+static void	child_process(t_cmd *cmd, t_token *token, int stdio[2])
 {
+	printf("here\n");
 	child_signal();
 	if (cmd->err_msg || !cmd->cmd)
-		child_exit_process(cmd, stdio);
+		child_exit_process(cmd, token, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
@@ -90,16 +90,16 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	}
 }
 
-static bool	minishell_engine(t_cmd *cmd, int stdio[2])
+static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 {
 	int	pid;
 
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
-		child_process(cmd, stdio);
+		child_process(cmd, token, stdio);
 	else if (pid > 0)
-		parent_process(cmd, PIPE_EXIST);
+		parent_process(cmd, token, PIPE_EXIST);
 	return (true);
 }
 
@@ -121,13 +121,13 @@ int	run_process(t_token *token, int *stdio)
 		cmd = make_cmd(token, cmd);
 		if (!cmd)
 			return (end_process(ptr, stdio), 1);
-		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
+		if (pipe_count(ptr) == 0 && (cmd->status == BUILTIN || cmd->status == SYNTAX))
 		{
 			cmd->count = 1;
-			end_status(SET, parent_process(cmd, NO_PIPE));
+			end_status(SET, parent_process(cmd, ptr, NO_PIPE));
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		}
-		else if (minishell_engine(cmd, stdio) == false)
+		else if (minishell_engine(cmd, ptr, stdio) == false)
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, stdio), 2);
