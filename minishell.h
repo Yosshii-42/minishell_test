@@ -123,8 +123,9 @@ typedef struct s_package
 	t_token	*token;
 }t_package;
 
-// status
-int end_status(int type, int end_status);
+// gloval like function
+int 	end_status(int type, int end_status);
+t_env	*set_get_env(int type, t_env *new_env);
 
 // env
 t_env	*set_env(int argc, char **argv, char **envp);
@@ -134,7 +135,6 @@ void	update_env_var(t_env *env, char *key, char *value);
 void	builtin_cd(t_cmd *cmd, t_env *env);
 
 //token
-// t_token	*make_token_lst(char *line, int *status);
 t_token	*make_token_lst(char *line);
 void	add_token_kind(t_token *token);
 t_token	*create_special_token(char **input, t_kind kind, int length);
@@ -142,11 +142,9 @@ t_token	*create_command_token(char *start, bool is_quoted, bool is_double_quoted
 t_token *process_quote(char **input, int *error_status, char quote_char);
 
 // lexer.c
-// t_token	*lexer(char *line, int *error_status);
 t_token	*lexer(char *line);
 
 // tokenizer.c
-// t_token	*tokenizer(char *input, int *error_status);
 t_token	*tokenizer(char *input);
 int		count_envname_len(char *token, int i);
 
@@ -162,15 +160,12 @@ int		check_builtin(char *str);
 bool	find_syntax_error(t_token *tokenized);
 
 // expand_token.c
-// bool	expand_token(t_env *env, t_token *tokenized, int *status);
-bool	expand_token(t_env *env, t_token *tokenized);
+bool	expand_token(t_token *tokenized);
 bool	append_char(char **str, char c);
 
 // expand_dollar.c
-// bool	expand_dollar(t_env *env, t_token *tokenized, int *status);
-bool	expand_dollar(t_env *env, t_token *tokenized);
-// bool	handle_dollar(t_env *env, t_token *tokenized, int *status, int *i);
-bool	handle_dollar(t_env *env, t_token *tokenized, int *i);
+bool	expand_dollar(t_token *tokenized);
+bool	handle_dollar(t_token *tokenized, int *i);
 
 // expand_quote.c
 bool	expand_quote(t_token *tokenized);
@@ -179,21 +174,20 @@ bool	expand_quote(t_token *tokenized);
 bool	remove_quotes(t_token *tokenized);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env);//, char **path);
-bool	init_cmd(t_cmd *cmd, t_env *env);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd);
+bool	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
-char	*getenv_str(t_env *env, char *str);
+char	*getenv_str(char *str);
 bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 
 // open
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, t_env *env, int *stdio);
-// int		run_process(t_token *token, t_env *env, int *stdio);
+int		run_process(t_token *token, int *stdio);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
@@ -235,9 +229,10 @@ void	signal_handler(int signum);
 // void		builtin_unset(t_cmd *cmd, t_env **env, int *status);
 // void		builtin_env(t_env *env, int *status);
 // void		builtin_exit(t_cmd *cmd, int *status);
-bool		do_builtin(t_cmd *cmd, t_env *env);
+// bool		do_builtin(t_cmd *cmd, t_env *env);
+bool		do_builtin(t_cmd *cmd);
 void		builtin_unset(t_cmd *cmd, t_env **env);
-void		builtin_env(t_env *env);
+void		builtin_env(void);
 void		builtin_exit(t_cmd *cmd);
 
 // 仮のもの

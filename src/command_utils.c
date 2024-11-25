@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-bool	init_cmd(t_cmd *cmd, t_env *env)
+bool	init_cmd(t_cmd *cmd)
 {
 	cmd->readfd = -1;
 	cmd->writefd = -1;
@@ -22,9 +22,9 @@ bool	init_cmd(t_cmd *cmd, t_env *env)
 	cmd->pathname = NULL;
 	cmd->cmd = NULL;
 	cmd->path = NULL;
-	if (getenv_str(env, "PATH"))
+	if (getenv_str("PATH"))
 	{
-		cmd->path = ft_split(getenv_str(env, "PATH"), ':');
+		cmd->path = ft_split(getenv_str("PATH"), ':');
 		if (!cmd->path)
 			return (ft_printf(2, "malloc: %s\n", strerror(errno)), false);
 	}
@@ -44,10 +44,6 @@ int	count_array(t_token *token)
 		if (token->kind == COMMAND || token->kind == BUILTIN
 			|| token->kind == OPTION)
 			count++;
-		// if (token->next)
-		// 	token = token->next;
-		// else
-		// 	break ;
 		if (token->kind == PIPE)
 			break;
 		token = token->next;
@@ -63,10 +59,6 @@ int	count_token(t_token *token)
 	while (token)
 	{
 		count++;
-		// if (token->next)
-		// 	token = token->next;
-		// else
-		// 	break ;
 		if (token->kind == PIPE)
 			break;
 		token = token->next;
@@ -96,10 +88,12 @@ char	*make_pwd_path(char *command, char *pwd)
 	return (str);
 }
 
-char	*getenv_str(t_env *env, char *str)
+char	*getenv_str(char *str)
 {
+	t_env	*env;
 	t_env	*tmp;
 
+	env = set_get_env(GET, NULL);
 	if (!env)
 		return (NULL);
 	tmp = env;
