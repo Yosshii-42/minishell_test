@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-25 10:49:03 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-25 10:49:03 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/25 10:49:03 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/25 23:43:09 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ bool	do_builtin(t_cmd *cmd)
 	t_env	*env;
 
 	type = check_builtin(cmd->cmd[0]);
-	env = set_get_env(GET, NULL);
+	env = set_env(GET, NULL);
 	if (type == ECHO)
 		return (builtin_echo(cmd), true);
 	else if (type == CD)
-		return (builtin_cd(cmd, set_get_env(GET, NULL)), true);
+		return (builtin_cd(cmd, set_env(GET, NULL)), true);
 	else if (type == PWD)
 		return (builtin_pwd(), true);
 	else if (type == EXPORT)

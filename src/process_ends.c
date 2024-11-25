@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 23:50:25 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 00:13:42 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,14 @@ void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2])
 	if (cmd)
 		free_cmd(cmd);
 	end_process(token, stdio);
-	// free_token(token);
-	// dup2(stdio[0], STDIN_FILENO);
-	// dup2(stdio[1], STDOUT_FILENO);
-	// close(stdio[0]);
-	// close(stdio[1]);
 }
 
 void	child_exit_process(t_cmd *cmd, int stdio[2])
 {
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
-	if (cmd->status != SYNTAX && cmd->err_msg)
-		ft_printf(2, "%s", cmd->err_msg);
+	// if (cmd->status != SYNTAX && cmd->err_msg)
+	ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
@@ -50,8 +45,8 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 
 int	builtin_end_process(t_cmd *cmd)
 {
-	if (cmd->status != SYNTAX && cmd->err_msg)
-		ft_printf(2, "%s", cmd->err_msg);
+	// if (cmd->status != SYNTAX && cmd->err_msg)
+	ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);
 	if (ft_strnstr(cmd->err_msg, "Permission", 10) != NULL)
 		return  (126);

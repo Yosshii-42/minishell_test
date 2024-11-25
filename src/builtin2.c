@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 00:25:42 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/25 23:43:13 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	builtin_env(void)
 {
 	t_env	*env;
 
-	env = set_get_env(GET, NULL);
+	env = set_env(GET, NULL);
 	while (env)
 	{
 		ft_printf(1, "%s=%s\n", env->key, env->value);

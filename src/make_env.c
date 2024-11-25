@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_env.c                                          :+:      :+:    :+:   */
+/*   make_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:43:52 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/25 23:05:04 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	lstnew(t_env **start, char *env)
 	return (TRUE);
 }
 
-t_env	*set_env(int argc, char **argv, char **envp)
+t_env	*make_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
 	int		i;

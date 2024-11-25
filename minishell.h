@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:06:54 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 23:47:47 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,11 @@ typedef struct s_package
 
 // gloval like function
 int 	end_status(int type, int end_status);
-t_env	*set_get_env(int type, t_env *new_env);
+t_env	*set_env(int type, t_env *new_env);
+t_token	*set_token(int type, t_token *new_token);
 
 // env
-t_env	*set_env(int argc, char **argv, char **envp);
+t_env	*make_env(int argc, char **argv, char **envp);
 void	lstadd_back(t_env **start, t_env *new);
 
 // lexer.c
