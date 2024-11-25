@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 17:16:23 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 23:06:54 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,10 @@ int		event(void);
 void	perror_prestr(void);
 void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
+
+// signal_process
+void	default_signal(int signum);
+void	child_signal(void);
 
 // builtin
 bool		do_builtin(t_cmd *cmd);
