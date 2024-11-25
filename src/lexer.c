@@ -19,7 +19,6 @@ t_token	*lexer(char *line)
 	if (!(*line))
 		return (NULL);
 	// 1.tokenizerを呼び出しトークンリスト生成
-	// printf("lexer\n");
 	tokenized = tokenizer(line);
 	if (!tokenized)
 		return (NULL);
