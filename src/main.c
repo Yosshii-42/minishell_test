@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/23 20:07:03 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 21:51:19 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	do_minishell(char *line)
 	}
 	else
 		end_status(SET, run_process(token, stdio));
+	ready_signal(SIGINT);
 	printf("status = %d\n", end_status(GET, 0));
 }
 
@@ -54,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char	*line;
 
-	init_signal();
+	//init_signal();
 	env = NULL;
 	env = set_env(argc, argv, envp);
 	if (!env)
@@ -63,6 +64,7 @@ int	main(int argc, char **argv, char **envp)
 	rl_outstream = stdout;
 	while (1)
 	{
+		init_signal();
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-25 10:50:40 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/25 22:47:02 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static int	wait_process(void)
 
 static int	parent_process(t_cmd *cmd, int count)
 {
+	ignore_signal(SIGQUIT);
+	ignore_signal(SIGINT);
 	if (count == NO_PIPE && cmd->status == BUILTIN)
 	{
 		if (cmd->writefd > 0)
@@ -63,6 +65,7 @@ static int	parent_process(t_cmd *cmd, int count)
 
 static void	child_process(t_cmd *cmd, int stdio[2])
 {
+	child_signal();
 	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
