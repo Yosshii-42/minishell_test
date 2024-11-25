@@ -37,7 +37,7 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-static int	parent_process(t_cmd *cmd, int count)
+static int	parent_process(t_cmd *cmd, t_token *token, int count)
 {
 	if (count == NO_PIPE && cmd->status == BUILTIN)
 	{
@@ -47,7 +47,7 @@ static int	parent_process(t_cmd *cmd, int count)
 		if (cmd->status == SYNTAX)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
-			return (builtin_end_process(cmd));
+			return (builtin_end_process(cmd, token));
 		if (do_builtin(cmd) == false)
 			exit(end_status(GET, 0));
 		else
@@ -61,10 +61,10 @@ static int	parent_process(t_cmd *cmd, int count)
 	return (EXIT_SUCCESS);
 }
 
-static void	child_process(t_cmd *cmd, int stdio[2])
+static void	child_process(t_cmd *cmd, t_token *token, int stdio[2])
 {
 	if (cmd->err_msg || !cmd->cmd)
-		child_exit_process(cmd, stdio);
+		child_exit_process(cmd, token, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
@@ -87,16 +87,16 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	}
 }
 
-static bool	minishell_engine(t_cmd *cmd, int stdio[2])
+static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 {
 	int	pid;
 
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
-		child_process(cmd, stdio);
+		child_process(cmd, token, stdio);
 	else if (pid > 0)
-		parent_process(cmd, PIPE_EXIST);
+		parent_process(cmd, token, PIPE_EXIST);
 	return (true);
 }
 
@@ -121,10 +121,10 @@ int	run_process(t_token *token, int *stdio)
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 		{
 			cmd->count = 1;
-			end_status(SET, parent_process(cmd, NO_PIPE));
+			end_status(SET, parent_process(cmd, ptr, NO_PIPE));
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		}
-		else if (minishell_engine(cmd, stdio) == false)
+		else if (minishell_engine(cmd, ptr, stdio) == false)
 			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, ptr, stdio), 2);
