@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-23 06:48:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-23 06:48:51 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/23 06:48:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/25 00:28:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd)//, char **path)
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, t_env *env)//, char **path)
 {
 	int	flag;
-	printf("token = %s, kind = %d\n", token->word, token->kind);
+	// printf("token = %s, kind = %d\n", token->word, token->kind);
 
 	flag = 0;
 	cmd = NULL;

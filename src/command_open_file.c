@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_open_file.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-23 06:49:07 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-23 06:49:07 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/23 06:49:07 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/24 23:44:40 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static bool	open_read_file(t_cmd *cmd, t_token *token)
 			if (!cmd->err_msg)
 				return (false);
 		}
+		else
+			end_status(SET, EXIT_SUCCESS);
 	}
 	else if (token->kind == RDFILE)
 	{
@@ -89,6 +91,8 @@ static bool	open_read_file(t_cmd *cmd, t_token *token)
 			if (!cmd->err_msg)
 				return (false);
 		}
+		else
+			end_status(SET, EXIT_SUCCESS);
 	}
 	return (true);
 }
@@ -106,6 +110,8 @@ static bool	open_write_file(t_cmd *cmd, t_token *token)
 			if (!cmd->err_msg)
 				return (false);
 		}
+		else
+			end_status(SET, EXIT_SUCCESS);
 	}
 	else if (token->kind == WRFILE)
 	{
@@ -116,6 +122,8 @@ static bool	open_write_file(t_cmd *cmd, t_token *token)
 			if (!cmd->err_msg)
 				return (true);
 		}
+		else
+			end_status(SET, EXIT_SUCCESS);
 	}
 	return (true);
 }

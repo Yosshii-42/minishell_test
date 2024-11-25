@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-23 06:49:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-23 06:49:20 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/23 06:49:20 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/24 23:49:19 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 
 static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
 {
-	if (cmd->err_msg)
+	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);

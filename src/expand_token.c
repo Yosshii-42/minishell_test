@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 23:44:28 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/20 17:14:40 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/24 22:34:50 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ bool	append_char(char **str, char c)
 // トークンを展開する
 bool	expand_token(t_env *env, t_token *tokenized)
 {
-	int	flag;
+	// int	flag;
 
-	flag = 0;
+	// flag = 0;
 	while (tokenized)
 	{
 		// コマンドや文字列トークンだけが対象

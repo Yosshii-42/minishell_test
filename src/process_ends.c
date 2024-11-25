@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_ends.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-20 05:20:14 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/24 23:50:25 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2])
 
 void	child_exit_process(t_cmd *cmd, int stdio[2])
 {
+	if (!cmd->cmd)
+		exit(EXIT_SUCCESS);
 	if (cmd->status != SYNTAX && cmd->err_msg)
 		ft_printf(2, "%s", cmd->err_msg);
 	close_fds(cmd);

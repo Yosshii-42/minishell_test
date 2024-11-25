@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 16:01:49 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/25 00:25:42 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	builtin_exit(t_cmd *cmd)
 		else
 		{
 	printf("result = %ld\n", *result);
-			printf("exit result = %ld\n", *result);
+			printf("exit result = %d\n", end_status(GET, 0));
 			end_status(SET, (*result) % 256);
 		}
 	}
