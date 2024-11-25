@@ -34,7 +34,7 @@ static t_env	*change_last_node(t_env *env)
 	if (!env->value)
 	{
 		ft_printf(2, "bash: malloc: %s\n", strerror(errno));
-		return (free_env(ptr), NULL);
+		return (free_env(set_get_env(GET, NULL)), NULL);
 	}
 	return (ptr);
 }
@@ -84,13 +84,12 @@ t_env	*set_env(int argc, char **argv, char **envp)
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
-	// *status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])
 	{
 		if (!lstnew(&start, envp[i]))
-			return (free_env(start), NULL);
+			return (free_env(set_get_env(GET, NULL)), NULL);
 	}
 	start = change_last_node(start);
 	return (start);

@@ -6,11 +6,23 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 20:05:44 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 19:46:02 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	setup_parent_signal(void)
+{
+	struct sigaction	sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+}
 
 void	reset_signal(int signum)
 {

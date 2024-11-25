@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/23 06:49:20 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 21:46:25 by hurabe           ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/11/25 19:16:40 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../minishell.h"
 
@@ -37,7 +38,7 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-static int	parent_process(t_cmd *cmd, t_env *env, int count)
+static int	parent_process(t_cmd *cmd, int count)
 {
 	if (count == NO_PIPE && cmd->status == BUILTIN)
 	{
@@ -48,7 +49,7 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
 			return (builtin_end_process(cmd));
-		if (do_builtin(cmd, env) == false)
+		if (do_builtin(cmd) == false)
 			exit(end_status(GET, 0));
 		else
 			return (end_status(GET, 0));
@@ -61,9 +62,9 @@ static int	parent_process(t_cmd *cmd, t_env *env, int count)
 	return (EXIT_SUCCESS);
 }
 
-static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
+static void	child_process(t_cmd *cmd, int stdio[2])
 {
-	if (cmd->err_msg)
+	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
@@ -76,7 +77,7 @@ static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
 	close(stdio[1]);
 	if (check_builtin(cmd->cmd[0]) >= 0)
 	{
-		do_builtin(cmd, env);
+		do_builtin(cmd);
 		exit(end_status(GET, 0));
 	}
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
@@ -87,23 +88,20 @@ static void	child_process(t_cmd *cmd, t_env *env, int stdio[2])
 	}
 }
 
-static bool	minishell_engine(t_cmd *cmd, t_env *env, int stdio[2])
+static bool	minishell_engine(t_cmd *cmd, int stdio[2])
 {
 	int	pid;
 
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
-	{
-		child_process(cmd, env, stdio);
-		execute_command(cmd->cmd, cmd->path);  // 外部コマンド実行
-	}
+		child_process(cmd, stdio);
 	else if (pid > 0)
-		parent_process(cmd, env, PIPE_EXIST);
+		parent_process(cmd, PIPE_EXIST);
 	return (true);
 }
 
-int	run_process(t_token *token, t_env *env, int *stdio)
+int	run_process(t_token *token, int *stdio)
 {
 	t_cmd		*cmd;
 	t_token		*ptr;
@@ -115,31 +113,23 @@ int	run_process(t_token *token, t_env *env, int *stdio)
 	{
 		if (!token)
 			break ;
-		if (!expand_token(env, token))
-			return (restore_stdio(stdio), free_token(ptr), EXIT_FAILURE);
-			//return (free_token(ptr), EXIT_FAILURE);
+		if (!expand_token(token))
+			return (free_token(ptr), EXIT_FAILURE);
 		cmd = NULL;
-		cmd = make_cmd(token, cmd, env);
+		cmd = make_cmd(token, cmd);
 		if (!cmd)
 			return (restore_stdio(stdio), end_process(ptr, stdio), EXIT_FAILURE);
 			//return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
 		{
 			cmd->count = 1;
-			end_status(SET, parent_process(cmd, env, NO_PIPE));
-			return (restore_stdio(stdio), syntax_end(cmd, ptr, stdio), end_status(GET, 0));
-			//return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
+			end_status(SET, parent_process(cmd, NO_PIPE));
+			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
 		}
-		// 外部コマンド実行 (シグナルとプロセス管理)
-		external_command_signals(); // 外部コマンド用シグナル設定
-		if (!minishell_engine(cmd, env, stdio))
-		{
-			restore_stdio(stdio);
-			free_cmd(cmd);
-			return (EXIT_FAILURE);
-		}
-		init_signal(); // シグナル設定を復元
-		// 次のトークンに進む
+		else if (minishell_engine(cmd, stdio) == false)
+			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
+		if (cmd->status == SYNTAX)
+			return (syntax_end(cmd, ptr, stdio), 2);
 		token = cmd->token;
 		free_cmd(cmd);
 		//else if (minishell_engine(cmd, env, path, stdio) == false)

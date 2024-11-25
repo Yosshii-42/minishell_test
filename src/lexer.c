@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:35:00 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/22 16:24:28 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 00:27:58 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ t_token	*lexer(char *line)
 	if (!(*line))
 		return (NULL);
 	// 1.tokenizerを呼び出しトークンリスト生成
-	printf("lexer\n");
 	tokenized = tokenizer(line);
 	if (!tokenized)
 		return (NULL);

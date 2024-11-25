@@ -47,9 +47,9 @@ void	builtin_cd(t_cmd *cmd, t_env *env)
 	// 移動パス決定
 	// 引数がない場合、HOMEへ移動する
 	if (!cmd->cmd[1])
-		target_path = getenv_str(env, "HOME");
+		target_path = getenv_str("HOME");
 	else if (ft_strncmp(cmd->cmd[1], "-", 2) == 0)
-		target_path = getenv_str(env, "OLDPWD");
+		target_path = getenv_str("OLDPWD");
 	else
 		target_path = cmd->cmd[1];
 
@@ -75,7 +75,7 @@ void	builtin_cd(t_cmd *cmd, t_env *env)
 		end_status(SET, EXIT_FAILURE);
 	}
     update_env_var(env, "PWD", cwd);
-	update_env_var(env, "OLDPWD", getenv_str(env, "PWD"));
+	update_env_var(env, "OLDPWD", getenv_str("PWD"));
 	end_status(SET, EXIT_SUCCESS);
 }
 
@@ -98,23 +98,28 @@ void	builtin_export(void)
 	end_status(SET, EXIT_SUCCESS);
 }
 
-bool	do_builtin(t_cmd *cmd, t_env *env)
+// bool	do_builtin(t_cmd *cmd, t_env *env)
+bool	do_builtin(t_cmd *cmd)
 {
-	int	type;
+	int		type;
+	t_env	*env;
 
 	type = check_builtin(cmd->cmd[0]);
+	env = set_get_env(GET, NULL);
 	if (type == ECHO)
 		return (builtin_echo(cmd), true);
 	else if (type == CD)
-		return (builtin_cd(cmd, env), true);
+		return (builtin_cd(cmd, set_get_env(GET, NULL)), true);
 	else if (type == PWD)
 		return (builtin_pwd(), true);
 	else if (type == EXPORT)
 		return (builtin_export(), true);//cmd, env));
 	else if (type == UNSET)
+		// return (builtin_unset(cmd, &env), true);
 		return (builtin_unset(cmd, &env), true);
 	else if (type == ENV)
-		return (builtin_env(env), true);
+		// return (builtin_env(env), true);
+		return (builtin_env(), true);
 	else if (type == EXIT)
 		return (builtin_exit(cmd), false);
 	return (true);

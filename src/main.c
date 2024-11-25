@@ -6,13 +6,13 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 21:45:01 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 20:16:32 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-volatile sig_atomic_t	g_sig_status = READLINE;
+volatile sig_atomic_t	g_sig_status = 0;
 
 static int	dup_stdio(int *stdio)
 {
@@ -23,7 +23,7 @@ static int	dup_stdio(int *stdio)
 	return (true);
 }
 
-static void	do_minishell(t_env *env, char *line)
+static void	do_minishell(char *line)
 {
 	int			stdio[2];
 	t_token		*token;
@@ -44,38 +44,52 @@ static void	do_minishell(t_env *env, char *line)
 		end_status(SET, 0);
 	}
 	else
-		end_status(SET, run_process(token, env, stdio));
+		end_status(SET, run_process(token, stdio));
 	printf("status = %d\n", end_status(GET, 0));
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_env	*env;
-	char	*line;
+	t_env			*env;
+	char			*line;
+	t_shell_state	shell_state;
 
-	init_signal(); // シェル全体のシグナルを初期化する
+	env = NULL;
 	env = set_env(argc, argv, envp);
 	if (!env)
 		exit(EXIT_FAILURE);
+	env = set_get_env(SET, env);
+	shell_state.exit_status = 0;
+	shell_state.sig_status = &g_sig_status;
 	rl_outstream = stdout;
 	while (1)
 	{
+		init_signal(&shell_state);
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		do_minishell(env, line);
+		do_minishell(line);
 		free(line);
 	}
-	free_env(env);
+	free_env(set_get_env(GET, NULL));
 	clear_history();
 	exit(EXIT_SUCCESS);
 }
 
-int end_status(int type, int end_status)
+int	end_status(int type, int end_status)
 {
-	static int e_status;
+	static int	status;
 
 	if (type == SET)
-		e_status = end_status;
-	return (e_status);
+		status = end_status;
+	return (status);
+}
+
+t_env	*set_get_env(int type, t_env *new_env)
+{
+	static t_env	*env;
+
+	if (type == SET)
+		env = new_env;
+	return (env);
 }
