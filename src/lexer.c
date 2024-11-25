@@ -12,31 +12,48 @@
 
 #include "../minishell.h"
 
+static void	add_token_kind(t_token *token)
+{
+	int	commnad_flag;
+
+	commnad_flag = 0;
+	while (token)
+	{
+		if (*(token->word) == '|')
+		{
+			token = add_kind_pipe(token);
+			commnad_flag = 0;
+		}
+		else if (*(token->word) == '<')
+			token = add_kind_lessthan(token);
+		else if (*(token->word) == '>')
+			token = add_kind_morethan(token);
+		else if (check_builtin(token->word) >= 0)
+			token->kind = BUILTIN;
+		else
+			token = add_command_kind(token, commnad_flag);
+		if (token->kind == BUILTIN || token->kind == COMMAND)
+			commnad_flag++;
+		token = token->next;
+	}
+}
+
 t_token	*lexer(char *line)
 {
-	t_token	*tokenized;
+	t_token	*token;
 
 	if (!(*line))
 		return (NULL);
-	// 1.tokenizerを呼び出しトークンリスト生成
-	tokenized = tokenizer(line);
-	if (!tokenized)
+	token = NULL;
+	token = tokenizer(line);
+	if (!token)
 		return (NULL);
-	// 2.シンタックスエラー確認
-	if (!find_syntax_error(tokenized))
+	if (!find_syntax_error(token))
 	{
-		free_token(tokenized);
+		free_token(token);
 		end_status(SET, 1);
 		return (NULL);
-	}
-	// 3.環境変数の展開
-	// if (!expand_token(env, tokenized))
-	// {
-	// 	free_token(tokenized);
-	// 	*error_status = 1;
-	// 	return (NULL);
-	// }
-	// 4. クォート削除(不要かも。いらなければ削除予定。)
-	//remove_quotes(tokenized);
-	return (tokenized);
+	}		
+	add_token_kind(token);
+	return (token);	
 }

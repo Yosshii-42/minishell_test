@@ -39,7 +39,7 @@ static t_env	*change_last_node(t_env *env)
 	return (ptr);
 }
 
-static void	lstadd_back(t_env **start, t_env *new)
+void	lstadd_back(t_env **start, t_env *new)
 {
 	t_env	*ptr;
 
@@ -93,30 +93,4 @@ t_env	*set_env(int argc, char **argv, char **envp)
 	}
 	start = change_last_node(start);
 	return (start);
-}
-
-// 追加
-void	update_env_var(t_env *env, char *key, char *value)
-{
-    t_env *current = env;
-
-    while (current)
-    {
-        if (ft_strcmp(current->key, key) == 0)
-        {
-            free(current->value);
-            current->value = ft_strdup(value);
-            return;
-        }
-        current = current->next;
-    }
-
-    // 存在しない場合、新しいノードを追加
-    t_env *new_node = malloc(sizeof(t_env));
-    if (!new_node)
-        return;
-    new_node->key = ft_strdup(key);
-    new_node->value = ft_strdup(value);
-    new_node->next = NULL;
-    lstadd_back(&env, new_node);
 }

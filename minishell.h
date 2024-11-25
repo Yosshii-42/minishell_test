@@ -129,20 +129,15 @@ t_env	*set_get_env(int type, t_env *new_env);
 
 // env
 t_env	*set_env(int argc, char **argv, char **envp);
-
-// builtin_cd
-void	update_env_var(t_env *env, char *key, char *value);
-void	builtin_cd(t_cmd *cmd, t_env *env);
-
-//token
-t_token	*make_token_lst(char *line);
-void	add_token_kind(t_token *token);
-t_token	*create_special_token(char **input, t_kind kind, int length);
-t_token	*create_command_token(char *start, bool is_quoted, bool is_double_quoted);
-t_token *process_quote(char **input, int *error_status, char quote_char);
+void	lstadd_back(t_env **start, t_env *new);
 
 // lexer.c
 t_token	*lexer(char *line);
+t_token	*add_kind_pipe(t_token *token);
+t_token	*add_kind_lessthan(t_token *token);
+t_token	*add_kind_morethan(t_token *token);
+t_token	*add_command_kind(t_token *token, int command_flag);
+int		check_builtin(char *str);
 
 // tokenizer.c
 t_token	*tokenizer(char *input);
@@ -183,7 +178,7 @@ char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(char *str);
 bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 
-// open
+// open_files
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
@@ -225,17 +220,10 @@ void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
 
 // builtin
-// bool		do_builtin(t_cmd *cmd, t_env *env, int *status);
-// void		builtin_unset(t_cmd *cmd, t_env **env, int *status);
-// void		builtin_env(t_env *env, int *status);
-// void		builtin_exit(t_cmd *cmd, int *status);
-// bool		do_builtin(t_cmd *cmd, t_env *env);
 bool		do_builtin(t_cmd *cmd);
+void		builtin_cd(t_cmd *cmd, t_env *env);
 void		builtin_unset(t_cmd *cmd, t_env **env);
 void		builtin_env(void);
 void		builtin_exit(t_cmd *cmd);
-
-// 仮のもの
-bool	print_dolquestion(char *line, int *status);
 
 #endif

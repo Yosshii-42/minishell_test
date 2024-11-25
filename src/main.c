@@ -37,7 +37,8 @@ static void	do_minishell(char *line)
 		return ;
 	}
 	token = NULL;
-	token = make_token_lst(line);
+	// token = make_token_lst(line);
+	token = lexer(line);
 	if (!ft_memcmp(line, "clear", 6))
 	{
 		rl_clear_history();
