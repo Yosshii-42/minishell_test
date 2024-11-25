@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 01:55:10 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/25 23:43:18 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*getenv_str(char *str)
 	t_env	*env;
 	t_env	*tmp;
 
-	env = set_get_env(GET, NULL);
+	env = set_env(GET, NULL);
 	if (!env)
 		return (NULL);
 	tmp = env;

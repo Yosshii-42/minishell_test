@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-25 10:15:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-25 10:15:09 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/25 10:15:09 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/25 23:45:05 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	update_env_var(t_env *env, char *key, char *value)
 {

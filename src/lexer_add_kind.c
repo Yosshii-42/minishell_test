@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_add_kind.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-25 10:49:58 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-25 10:49:58 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/25 10:49:58 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/26 00:47:05 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ t_token	*add_kind_pipe(t_token *token)
 
 t_token	*add_kind_lessthan(t_token *token)
 {
-	if (!token->pre && !token->next)
-		return (token->kind = SYNTAX, token);
+	if (!token->next)
+		return (token->kind = SYNTAX, token);		
+	// if (!token->pre && !token->next)
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
 	else if (token->pre && (*(token->pre->word) == '<'
@@ -72,7 +73,9 @@ t_token	*add_kind_morethan(t_token *token)
 
 t_token	*add_command_kind(t_token *token, int command_flag)
 {
-	if (token->pre)
+	if (token->next && token->next->kind == SYNTAX)
+		token->kind = SYNTAX;
+	else if (token->pre)
 	{
 		if (token->pre->kind == LESSTHAN)
 			token->kind = RDFILE;
