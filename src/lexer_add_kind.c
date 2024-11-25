@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_token_kind.c                                  :+:      :+:    :+:   */
+/*   lexer_add_kind.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 06:28:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/09 17:52:05 by hurabe           ###   ########.fr       */
+/*   Created: 2024-11-25 10:49:58 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-11-25 10:49:58 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static t_token	*add_kind_pipe(t_token *token)
+t_token	*add_kind_pipe(t_token *token)
 {
 	if (!token->pre && !token->next)
 		return (token->kind = SYNTAX, token);
@@ -29,7 +29,7 @@ static t_token	*add_kind_pipe(t_token *token)
 	return (token);
 }
 
-static t_token	*add_kind_lessthan(t_token *token)
+t_token	*add_kind_lessthan(t_token *token)
 {
 	if (!token->pre && !token->next)
 		return (token->kind = SYNTAX, token);
@@ -50,7 +50,7 @@ static t_token	*add_kind_lessthan(t_token *token)
 	return (token);
 }
 
-static t_token	*add_kind_morethan(t_token *token)
+t_token	*add_kind_morethan(t_token *token)
 {
 	if (!token->next)
 		return (token->kind = SYNTAX, token);
@@ -70,7 +70,7 @@ static t_token	*add_kind_morethan(t_token *token)
 	return (token);
 }
 
-static t_token	*add_command_kind(t_token *token, int command_flag)
+t_token	*add_command_kind(t_token *token, int command_flag)
 {
 	if (token->pre)
 	{
@@ -114,41 +114,4 @@ int	check_builtin(char *str)
 		i++;
 	}
 	return (-1);
-}
-
-void	add_token_kind(t_token *token)
-{
-	int	commnad_flag;
-
-	commnad_flag = 0;
-	while (token)
-	{
-		if (*(token->word) == '|')
-		{
-			token = add_kind_pipe(token);
-			commnad_flag = 0;
-		}
-		else if (*(token->word) == '<')
-			token = add_kind_lessthan(token);
-		else if (*(token->word) == '>')
-			token = add_kind_morethan(token);
-		// else if (!ft_memcmp(token->word, "$?", 3))// TODO '' ""実装後に再実装する
-		// {
-		// 	token->kind = OPTION;
-		// 	if (!token->next)
-		// 		token->status = END;
-		// 	token->word = ft_itoa(status_num);
-		// }
-		else if (check_builtin(token->word) >= 0)
-			token->kind = BUILTIN;
-		else
-			token = add_command_kind(token, commnad_flag);
-		if (token->kind == BUILTIN || token->kind == COMMAND)
-			commnad_flag++;
-		token = token->next;
-		// if (token->next)
-		// 	token = token->next;
-		// else
-		// 	break ;
-	}
 }

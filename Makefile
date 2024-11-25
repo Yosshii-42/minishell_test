@@ -1,21 +1,21 @@
 NAME 	= minishell
 SRCS	= src/main.c \
 		  src/set_env.c \
-		  src/make_token_lst.c \
-		  src/make_token_kind.c \
-		  src/command_main.c \
+		  src/command.c \
 		  src/command_open_file.c \
 		  src/command_utils.c \
-		  src/process_main.c \
+		  src/process.c \
 		  src/process_ends.c \
 		  src/process_utils.c \
 		  src/utils.c \
 		  src/utils_free.c \
 		  src/signal.c \
 		  src/signal_handler.c \
-		  src/builtin1.c \
+		  src/builtin.c \
+		  src/builtin_cd.c \
 		  src/builtin2.c \
 		  src/lexer.c \
+		  src/lexer_add_kind.c \
 		  src/tokenizer.c \
 		  src/tokenizer_utils.c \
 		  src/tokenizer_error.c \
