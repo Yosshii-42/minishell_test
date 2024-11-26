@@ -12,23 +12,23 @@
 
 #include "../minishell.h"
 
-void	end_process(t_token *token, int stdio[2])
+void	end_process(int stdio[2])
 {
-	free_token(token);
+	free_token(set_token(GET, NULL));
 	dup2(stdio[0], STDIN_FILENO);
 	dup2(stdio[1], STDOUT_FILENO);
 	close(stdio[0]);
 	close(stdio[1]);
 }
 
-void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2])
+void	syntax_end(t_cmd *cmd, int stdio[2])
 {
 	if (cmd)
 		free_cmd(cmd);
-	end_process(token, stdio);
+	end_process(stdio);
 }
 
-void	child_exit_process(t_cmd *cmd, t_token *token, int stdio[2])
+void	child_exit_process(t_cmd *cmd, int stdio[2])
 {
 	char	*find_permission;
 
@@ -41,7 +41,8 @@ void	child_exit_process(t_cmd *cmd, t_token *token, int stdio[2])
 	close(stdio[0]);
 	close(stdio[1]);
 	free_cmd(cmd);
-	free_token(token);
+	// free_token(token);
+	free_token(set_token(GET, NULL));
 	if (find_permission != NULL)
 		exit(126);
 	else

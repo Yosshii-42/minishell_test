@@ -170,7 +170,7 @@ bool	expand_quote(t_token *tokenized);
 bool	remove_quotes(t_token *tokenized);
 
 // command
-t_cmd	*make_cmd(t_token *token, t_cmd *cmd);
+t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
 bool	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
@@ -183,13 +183,17 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
+// int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
+int		run_process(t_token *token, int *stdio, int command_count);
+int		parent_process(t_cmd *cmd, t_token *token, int count);
 
 // end process
-void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
-void	end_process(t_token *token, int stdio[2]);
-void	child_exit_process(t_cmd *cmd, t_token *token, int stdio[2]);
+void	syntax_end(t_cmd *cmd, int stdio[2]);
+void	end_process(int stdio[2]);
+void	child_exit_process(t_cmd *cmd, int stdio[2]);
 int		builtin_end_process(t_cmd *cmd, t_token *token);
+int    no_pipe_process(t_cmd *cmd, int *stdio);
+
 
 // process utils
 int		cmd_count(t_token *token);

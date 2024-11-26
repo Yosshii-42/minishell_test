@@ -26,7 +26,7 @@ bool	init_cmd(t_cmd *cmd)
 	{
 		cmd->path = ft_split(getenv_str("PATH"), ':');
 		if (!cmd->path)
-			return (ft_printf(2, "malloc: %s\n", strerror(errno)), false);
+			exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
 	}
 	cmd->err_msg = NULL;
 	cmd->token = NULL;
@@ -69,7 +69,7 @@ int	count_token(t_token *token)
 int	make_pipe(t_cmd *cmd)
 {
 	if (pipe(cmd->pp) == -1)
-		return (ft_printf(2, "pipe: %s\n", strerror(errno)), FALSE);
+		exit((ft_printf(2, "pipe: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (TRUE);
 }
 
@@ -83,8 +83,8 @@ char	*make_pwd_path(char *command, char *pwd)
 	str = strjoin_with_free(pwd, "/", NO_FREE);
 	if (str)
 		str = strjoin_with_free(str, command, FREE_S1);
-	if (!str)
-		ft_printf(2, "malloc: %s\n", strerror(errno));
+	// if (!str)
+	// 	exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (str);
 }
 

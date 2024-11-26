@@ -43,7 +43,8 @@ void	builtin_pwd(void)
 		end_status(SET, EXIT_SUCCESS);
 	}
 	// 取得に失敗した場合
-	ft_printf(2, "bash: pwd: error retrieving current directory: %s\n", strerror(errno));
+	ft_printf(2, "bash: pwd: error retrieving current directory: ");
+	ft_printf(2, "%s\n", strerror(errno));
 	end_status(SET, EXIT_FAILURE);
 }
 

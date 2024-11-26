@@ -44,6 +44,7 @@ char	*ft_itoa(int n)
 	num = (long)n;
 	if (num <= 0)
 		is_0orless = 1;
+	buf = NULL;
 	buf = (char *)ft_calloc((digit + is_0orless + 1), sizeof(char));
 	if (!buf)
 		return (NULL);
