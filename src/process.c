@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 23:26:48 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 01:00:32 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 	int	pid;
 
 	if (!make_fork(&pid))
-		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
+		exit((ft_printf(2, "fork : %s", strerror(errno)), EXIT_FAILURE));
 	if (pid == 0)
 		child_process(cmd, stdio);
 	else if (pid > 0)
@@ -114,8 +114,6 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		// if (!cmd)
-		// 	return (end_process(ptr, stdio), 1);
 		if (pipe_count(ptr) == 0
 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX))
 			return (no_pipe_process(cmd, stdio));
