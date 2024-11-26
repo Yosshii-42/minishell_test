@@ -1,6 +1,6 @@
 NAME 	= minishell
 SRCS	= src/main.c \
-		  src/set_env.c \
+		  src/make_env.c \
 		  src/command.c \
 		  src/command_open_file.c \
 		  src/command_utils.c \
@@ -11,6 +11,7 @@ SRCS	= src/main.c \
 		  src/utils_free.c \
 		  src/signal.c \
 		  src/signal_handler.c \
+		  src/signal_process.c \
 		  src/builtin.c \
 		  src/builtin_cd.c \
 		  src/builtin2.c \
@@ -21,28 +22,29 @@ SRCS	= src/main.c \
 		  src/tokenizer_error.c \
 		  src/expand_token.c \
 		  src/expand_dollar.c \
-		  src/expand_quote.c \
-		#  src/tokenizer_rm_quotes.c
+		  src/expand_quote.c
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-LIBS	= -lreadline -lhistory
-# FLAGS   += -fsanitize=address
-HEADDIR	= .
+LIBS	= -lreadline
+# FLAGS   += -fsanitize=address -g
+HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
-# RLDIR   = $(shell brew --prefix readline)
+INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+LIBDIRS  = -L$(RLDIR)/lib
+RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
+	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) $(HEADDER) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
-
+	$(CC) $(FLAGS) $(LIBDIRS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+	
 
 clean:
 	make fclean -C ./libft

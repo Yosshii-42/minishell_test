@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 17:16:23 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/26 01:30:28 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,11 @@ typedef struct s_package
 
 // gloval like function
 int 	end_status(int type, int end_status);
-t_env	*set_get_env(int type, t_env *new_env);
+t_env	*set_env(int type, t_env *new_env);
+t_token	*set_token(int type, t_token *new_token);
 
 // env
-t_env	*set_env(int argc, char **argv, char **envp);
+t_env	*make_env(int argc, char **argv, char **envp);
 void	lstadd_back(t_env **start, t_env *new);
 
 // lexer.c
@@ -182,7 +183,7 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, int *stdio);
+int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
@@ -218,6 +219,10 @@ int		event(void);
 void	perror_prestr(void);
 void	fatal_error_exit(char *err_msg);
 void	signal_handler(int signum);
+
+// signal_process
+void	default_signal(int signum);
+void	child_signal(void);
 
 // builtin
 bool		do_builtin(t_cmd *cmd);

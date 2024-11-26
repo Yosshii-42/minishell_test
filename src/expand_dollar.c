@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/21 15:19:55 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 23:43:23 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool	handle_dollar(t_token *tokenized, int *i)
         // tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
         return (free(env_key), free(tmp), true);
     }
-    env = set_get_env(GET, NULL);
+    env = set_env(GET, NULL);
     while (env)
     {
         if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)

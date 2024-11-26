@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/24 23:50:25 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 00:48:26 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	child_exit_process(t_cmd *cmd, t_token *token, int stdio[2])
 
 	if (!cmd->cmd)
 		exit(EXIT_SUCCESS);
-	if (cmd->status != SYNTAX && cmd->err_msg)
-		ft_printf(2, "%s", cmd->err_msg);
+	// if (cmd->status != SYNTAX && cmd->err_msg)
+	ft_printf(2, "%s", cmd->err_msg);
 	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
 	close_fds(cmd);
 	close(stdio[0]);
@@ -51,10 +51,10 @@ void	child_exit_process(t_cmd *cmd, t_token *token, int stdio[2])
 int	builtin_end_process(t_cmd *cmd, t_token *token)
 {
 	char	*find_permission;
-
-	if (cmd->status != SYNTAX && cmd->err_msg)
-		ft_printf(2, "%s", cmd->err_msg);
-	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
+	
+	// if (cmd->status != SYNTAX && cmd->err_msg)
+	ft_printf(2, "%s", cmd->err_msg);
+	find_permission = ft_strnstr(cmd->err_msg, "fPermission", 10);
 	close_fds(cmd);
 	free_cmd(cmd);
 	free_token(token);

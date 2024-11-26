@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-25 10:49:39 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/26 00:51:07 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 	if (cmd->err_msg)
 		return (true);
 	cmd->err_msg = NULL;
-	if (!str || !*str)
+	if (cmd->status == SYNTAX)
+		cmd->err_msg = ft_strdup("bash: syntax error\n");
+	else if (!str || !*str)
 		cmd->err_msg = strjoin_with_free("", "Command ' ' not found\n", NO_FREE);
 	else
 	{

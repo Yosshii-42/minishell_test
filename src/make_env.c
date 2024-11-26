@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_env.c                                          :+:      :+:    :+:   */
+/*   make_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/23 19:37:53 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/25 23:05:04 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static t_env	*change_last_node(t_env *env)
 	if (!env->value)
 	{
 		ft_printf(2, "bash: malloc: %s\n", strerror(errno));
-		return (free_env(set_get_env(GET, NULL)), NULL);
+		return (free_env(set_env(GET, NULL)), NULL);
 	}
 	return (ptr);
 }
@@ -77,7 +77,7 @@ static int	lstnew(t_env **start, char *env)
 	return (TRUE);
 }
 
-t_env	*set_env(int argc, char **argv, char **envp)
+t_env	*make_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
 	int		i;
@@ -89,7 +89,7 @@ t_env	*set_env(int argc, char **argv, char **envp)
 	while (envp[++i])
 	{
 		if (!lstnew(&start, envp[i]))
-			return (free_env(set_get_env(GET, NULL)), NULL);
+			return (free_env(set_env(GET, NULL)), NULL);
 	}
 	start = change_last_node(start);
 	return (start);
