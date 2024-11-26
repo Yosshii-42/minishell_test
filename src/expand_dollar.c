@@ -52,8 +52,8 @@ bool	handle_dollar(t_token *tokenized, int *i)
     if (ft_strncmp(env_key, "?", 1) == 0)
     {
         exit_status = ft_itoa(end_status(GET, 0));
-        if (tokenized->word[++(*i)])
-            exit_status = strjoin_with_free(exit_status, &tokenized->word[*i], FREE_S1);
+        // if (tokenized->word[++(*i)])
+        //     exit_status = strjoin_with_free(exit_status, &tokenized->word[*i], FREE_S1);
         if (!exit_status)
         {
             free(env_key);

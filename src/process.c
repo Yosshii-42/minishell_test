@@ -37,11 +37,11 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-static int	parent_process(t_cmd *cmd, t_token *token, int count)
+int	parent_process(t_cmd *cmd, t_token *token, int count)
 {
 	ignore_signal(SIGQUIT);
 	ignore_signal(SIGINT);
-	if (count == NO_PIPE && (cmd->status == BUILTIN || cmd->status == SYNTAX))
+	if (cmd->status == SYNTAX || (count == NO_PIPE && cmd->status == BUILTIN))
 	{
 		if (cmd->writefd > 0)
 			dup2(cmd->writefd, STDOUT_FILENO);
@@ -61,11 +61,11 @@ static int	parent_process(t_cmd *cmd, t_token *token, int count)
 	return (EXIT_SUCCESS);
 }
 
-static void	child_process(t_cmd *cmd, t_token *token, int stdio[2])
+static void	child_process(t_cmd *cmd, int stdio[2])
 {
 	child_signal();
 	if (cmd->err_msg || !cmd->cmd)
-		child_exit_process(cmd, token, stdio);
+		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
@@ -76,13 +76,11 @@ static void	child_process(t_cmd *cmd, t_token *token, int stdio[2])
 	close(stdio[0]);
 	close(stdio[1]);
 	if (check_builtin(cmd->cmd[0]) >= 0)
-	{
-		do_builtin(cmd);
-		exit(end_status(GET, 0));
-	}
+		exit((do_builtin(cmd), end_status(GET, 0)));
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
-	if (execve(cmd->pathname, cmd->cmd, cmd->path) == -1)
+	write(2, "here\n", 5);
+	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
 	{
 		exit(EXIT_FAILURE);
 	}
@@ -95,15 +93,17 @@ static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 	if (!make_fork(&pid))
 		return (ft_printf(2, "fork error: %s", strerror(errno)), false);
 	if (pid == 0)
-		child_process(cmd, token, stdio);
+		child_process(cmd, stdio);
 	else if (pid > 0)
 		parent_process(cmd, token, PIPE_EXIST);
 	return (true);
 }
 
-int	run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count)
+int	run_process(t_token *token, int *stdio, int command_count)
 {
 	t_token		*ptr;
+	t_cmd		*cmd;
+	int			command_flag;
 
 	ptr = token;
 	while (command_count--)
@@ -112,22 +112,20 @@ int	run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count)
 			break ;
 		if (!expand_token(token))
 			return (free_token(ptr), EXIT_FAILURE);
-		cmd = make_cmd(token, cmd);
-		if (!cmd)
-			return (end_process(ptr, stdio), 1);
-		if (pipe_count(ptr) == 0 && (cmd->status == BUILTIN || cmd->status == SYNTAX))//順番を逆にして syntaxerrorの特は親プロセスで終了する
-		{
-			cmd->count = 1;
-			end_status(SET, parent_process(cmd, ptr, NO_PIPE));
-			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
-		}
+		cmd = NULL;
+		command_flag = 0;
+		cmd = make_cmd(token, cmd, command_flag);
+		// if (!cmd)
+		// 	return (end_process(ptr, stdio), 1);
+		if (pipe_count(ptr) == 0
+				&& (cmd->status == BUILTIN || cmd->status == SYNTAX))
+			return (no_pipe_process(cmd, stdio));
 		else if (minishell_engine(cmd, ptr, stdio) == false)
-			return (syntax_end(cmd, ptr, stdio), end_status(GET, 0));
+			return (syntax_end(cmd, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
-			return (syntax_end(cmd, ptr, stdio), 2);
+			return (syntax_end(cmd, stdio), 2);
 		token = cmd->token;
 		free_cmd(cmd);
 	}
-	end_process(ptr, stdio);
-	return (wait_process());
+	return (end_process(stdio), wait_process());
 }

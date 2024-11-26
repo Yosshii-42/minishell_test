@@ -1,5 +1,6 @@
 NAME 	= minishell
 SRCS	= src/main.c \
+		  src/main_gloval_like_function.c \
 		  src/make_env.c \
 		  src/command.c \
 		  src/command_open_file.c \
@@ -7,6 +8,7 @@ SRCS	= src/main.c \
 		  src/process.c \
 		  src/process_ends.c \
 		  src/process_utils.c \
+		  src/process_specific_process.c \
 		  src/utils.c \
 		  src/utils_free.c \
 		  src/signal.c \
@@ -26,25 +28,23 @@ SRCS	= src/main.c \
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
-HEADDIR	= ./minishell.h
+LIBS	= -lreadline -lhistory
+# FLAGS   += -fsanitize=address
+HEADDIR	= .
 LIBFT	= ./libft/libft.a
-INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
-LIBDIRS  = -L$(RLDIR)/lib
-RLDIR   = $(shell brew --prefix readline)
+# RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) $(LIBDIRS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
-	
+	$(CC) $(FLAGS) $(HEADDER) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+
 
 clean:
 	make fclean -C ./libft
@@ -62,9 +62,9 @@ test: all
 
 #################################################################
 
-OS := $(shell uname -s)
+# OS := $(shell uname -s)
 
-ifeq ($(OS), Linus)
-	# commands for Linux
-endif
+# ifeq ($(OS), Linus)
+# 	# commands for Linux
+# endif
 
