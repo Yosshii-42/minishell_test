@@ -6,16 +6,16 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 23:13:24 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 00:44:40 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
+void	set_err_message(t_cmd *cmd, char *str, char *err_str)
 {
 	if (cmd->err_msg)
-		return (true);
+		return ;
 	cmd->err_msg = NULL;
 	if (cmd->status == SYNTAX)
 		cmd->err_msg = ft_strdup("bash: syntax error\n");
@@ -31,7 +31,6 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, "command not found", FREE_S1);
 		cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
 	}
-	return (true);
 }
 
 static char	*make_cmd_and_check_access(t_cmd *cmd, char *pwd)
@@ -48,8 +47,6 @@ static char	*make_cmd_and_check_access(t_cmd *cmd, char *pwd)
 		str = strjoin_with_free(cmd->path[i], "/", NO_FREE);
 		if (str)
 			str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
-		// if (!str)
-		// 	return (NULL);//後で検討
 		if (!access(str, X_OK))
 			return (str);
 		free(str);

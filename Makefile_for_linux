@@ -4,7 +4,8 @@ SRCS	= src/main.c \
 		  src/make_env.c \
 		  src/command.c \
 		  src/command_open_file.c \
-		  src/command_utils.c \
+		  src/command_utils1.c \
+		  src/command_utils2.c \
 		  src/process.c \
 		  src/process_ends.c \
 		  src/process_utils.c \

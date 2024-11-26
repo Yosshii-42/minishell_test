@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_utils.c                                    :+:      :+:    :+:   */
+/*   command_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 23:04:56 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 00:47:23 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,37 +31,6 @@ bool	init_cmd(t_cmd *cmd)
 	cmd->status = -1;
 	cmd->flag = 0;
 	return (true);
-}
-
-int	count_array(t_token *token)
-{
-	int	count;
-	count = 0;
-	while (token)
-	{
-		if (token->kind == COMMAND || token->kind == BUILTIN
-			|| token->kind == OPTION)
-			count++;
-		if (token->kind == PIPE)
-			break;
-		token = token->next;
-	}
-	return (count);
-}
-
-int	count_token(t_token *token)
-{
-	int	count;
-
-	count = 0;
-	while (token)
-	{
-		count++;
-		if (token->kind == PIPE)
-			break;
-		token = token->next;
-	}
-	return (count);
 }
 
 int	make_pipe(t_cmd *cmd)
