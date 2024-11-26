@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-23 06:49:30 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-11-23 06:49:30 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/23 06:49:30 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/27 01:08:16 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	free_env(t_env *env)
 		else
 		{
 			free(env);
+			env = NULL;
 			break ;
 		}
 	}
@@ -46,7 +47,10 @@ void	free_token(t_token *token)
 		if (token->kind == LIMITTER)
 			unlink(FILE_NAME);
 		if (token->word)
+		{
 			free(token->word);
+			token->word = NULL;
+		}
 		if (token->next)
 		{
 			token = token->next;
@@ -55,6 +59,7 @@ void	free_token(t_token *token)
 		else
 		{
 			free(token);
+			token = NULL;
 			break ;
 		}
 	}
@@ -64,12 +69,16 @@ void	free_split(char **split)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (!split || !split[0])
 		return ;
-	while (split[i])
-		free(split[i++]);
+	while (split[++i])
+	{
+		free(split[i]);
+		split[i] = NULL;
+	}
 	free(split);
+	split = NULL;
 }
 
 void	free_cmd(t_cmd *cmd)
@@ -77,13 +86,20 @@ void	free_cmd(t_cmd *cmd)
 	if (cmd)
 	{
 		if (cmd->pathname)
+		{
 			free(cmd->pathname);
+			cmd->pathname = NULL;
+		}
 		if (cmd->cmd)
 			free_split(cmd->cmd);
 		if (cmd->path)
 			free_split(cmd->path);
 		if (cmd->err_msg)
+		{
 			free(cmd->err_msg);
+			cmd->err_msg = NULL;
+		}
 		free(cmd);
+		cmd = NULL;
 	}
 }
