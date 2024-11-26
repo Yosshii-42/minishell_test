@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:41:10 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/19 19:41:13 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/26 23:18:03 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ char	*ft_strjoin_one(char *str, char c)
 	len = 0;
 	if (str)
 		len = ft_strlen(str);
-	new_str = (char *)malloc(len + 2);
-	if (!new_str)
-		return (NULL);
+	new_str = (char *)safe_malloc(len + 2, sizeof(char));
 	if (str)
 	{
 		ft_strcpy(new_str, str);

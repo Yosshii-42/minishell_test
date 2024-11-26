@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 17:50:45 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/05 06:29:40 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/26 22:48:23 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	i = -1;
 	j = -1;
 	if (!(*s1))
-		result = (char *)malloc(sizeof(char) * (ft_strlen(s2) + 1));
+		result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
 	else
-		result = (char *)malloc(sizeof(char) * (ft_strlen(s1)
-					+ ft_strlen(s2) + 1));
-	if (!result)
-		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
+		result = (char *)safe_malloc(ft_strlen(s1) + ft_strlen(s2) + 1
+				, sizeof(char));
 	while (s1[++i])
 		result[i] = s1[i];
 	while (s2[++j])
@@ -57,4 +55,14 @@ size_t	strchr_len(const char *s, int c)
 		return (i);
 	else
 		return (0);
+}
+
+void	*safe_malloc(size_t count, size_t size)
+{
+	void	*tmp;
+	
+	tmp = ft_calloc(size, count);
+	if (!tmp)
+		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
+	return (tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 01:30:28 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 22:42:15 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ typedef struct s_cmd
 	char			**cmd;
 	char			**path;
 	char			*err_msg;
+	char			*err_file;
+	int				err_no;
 	struct s_token	*token;
 	t_kind			status;
 	int				flag;
@@ -210,6 +212,7 @@ void	free_cmd(t_cmd *cmd);
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
+void	*safe_malloc(size_t count, size_t size);
 
 // signal
 void	reset_signal(int signum);

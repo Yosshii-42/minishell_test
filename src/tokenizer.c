@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/23 20:00:43 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/26 23:24:20 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,7 @@ static t_token *append_token(t_token **head, t_token **current, char *content, t
 {
 	t_token	*new_token;
 
-	new_token = (t_token *)malloc(sizeof(t_token));
-	if (!new_token)
-	{
-		perror("malloc");
-		free_token(*head);
-		return (NULL);
-	}
+	new_token = (t_token *)safe_malloc(1, sizeof(t_token));
 	new_token->word = content;
 	new_token->kind = kind;
 	new_token->is_quoted = is_quoted;
@@ -138,25 +132,27 @@ static t_token *create_dollar_token(char **input)
 	(*input)--;
     // 環境変数名を抽出
     env_key = ft_substr(*input, 0, len + 1);
-    if (!env_key)
-    {
-        end_status(SET, EXIT_FAILURE);
-        perror("[DEBUG] Error: malloc failed while extracting env_key");
-        return (NULL);
-    }
+    // if (!env_key)
+    // {
+    //     end_status(SET, EXIT_FAILURE);
+    //     perror("[DEBUG] Error: malloc failed while extracting env_key");
+    //     return (NULL);
+    // }
 
     // 入力ポインタを環境変数名の長さ分進める
     *input += len + 1;
 
     // 新しいトークンを作成
-    t_token *dollar_token = (t_token *)malloc(sizeof(t_token));
-    if (!dollar_token)
-    {
-        end_status(SET, EXIT_FAILURE);
-        free(env_key);
-        perror("[DEBUG] Error: malloc failed while creating dollar_token");
-        return (NULL);
-    }
+    t_token *dollar_token;
+    
+    dollar_token = (t_token *)safe_malloc(1, sizeof(t_token));
+    // if (!dollar_token)
+    // {
+    //     end_status(SET, EXIT_FAILURE);
+    //     free(env_key);
+    //     perror("[DEBUG] Error: malloc failed while creating dollar_token");
+    //     return (NULL);
+    // }
 
 	dollar_token->word = env_key;
 	dollar_token->kind = OPTION;

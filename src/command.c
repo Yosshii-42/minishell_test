@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 00:51:07 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 23:13:24 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,13 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str)
 	else
 	{
 		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		if (cmd->err_msg)
-			cmd->err_msg = strjoin_with_free(cmd->err_msg,
-					": ", FREE_S1);
+		cmd->err_msg = strjoin_with_free(cmd->err_msg, ": ", FREE_S1);
 		if (cmd->err_msg && (cmd->cmd[0][0] == '.' || cmd->cmd[0][0] == '/'))
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, err_str, FREE_S1);
 		else if (cmd->err_msg)
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, "command not found", FREE_S1);
-		if (cmd->err_msg)
-			cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
+		cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
 	}
-	if (!cmd->err_msg)
-		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (true);
 }
 
@@ -72,19 +67,13 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 
 	array_count = count_array(token);
 	token_count = count_token(token);
-	cmd->cmd = (char **)malloc(sizeof(char *) * (array_count + 1));
-	if (!(cmd->cmd))
-		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
+	cmd->cmd = (char **)safe_malloc(array_count + 1, sizeof(char *));
 	i = -1;
 	j = -1;
 	while (++i < token_count)
 	{
 		if (token->kind == BUILTIN || token->kind == COMMAND || token->kind == OPTION)
-		{
 			cmd->cmd[++j] = ft_strdup(token->word);
-			if (!cmd->cmd[j])
-				exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
-		}
 		token = token->next;
 	}
 	cmd->cmd[array_count] = NULL;
@@ -113,25 +102,15 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd)
 
 t_cmd	*command_return(t_cmd *cmd, t_token *token)
 {
-	if (cmd->pathname && access(cmd->pathname, X_OK) != 0
-		&& !set_err_message(cmd, cmd->cmd[0], strerror(errno)))
-	return (NULL);
+	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
+		set_err_message(cmd, cmd->cmd[0], strerror(errno));
 	cmd->token = token;
-	return (cmd);
-}
-
-t_cmd	*malloc_command(t_cmd *cmd)
-{
-	cmd = NULL;
-	cmd = (t_cmd *)malloc(sizeof (t_cmd));
-	if (!cmd)
-		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (cmd);
 }
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
-	cmd = malloc_command(cmd);
+	cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
 	init_cmd(cmd);
 	while (token)
 	{

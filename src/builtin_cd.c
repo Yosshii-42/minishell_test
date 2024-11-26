@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:15:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:45:05 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 23:03:06 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	update_env_var(t_env *env, char *key, char *value)
 {
     t_env *current = env;
+    t_env *new_node;
 
     while (current)
     {
@@ -26,11 +27,8 @@ static void	update_env_var(t_env *env, char *key, char *value)
         }
         current = current->next;
     }
-
     // 存在しない場合、新しいノードを追加
-    t_env *new_node = malloc(sizeof(t_env));
-    if (!new_node)
-        return;
+	new_node = (t_env *)safe_malloc(1, sizeof(t_env));
     new_node->key = ft_strdup(key);
     new_node->value = ft_strdup(value);
     new_node->next = NULL;
