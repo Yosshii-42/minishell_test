@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 01:12:34 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 01:41:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static int	parent_process(t_cmd *cmd, t_token *token, int count)
 			return (end_status(GET, 0));
 	}
 	else if (cmd->pp[0] > 0)
-	// if (cmd->pp[0] > 0)
 		dup2(cmd->pp[0], STDIN_FILENO);
 	close_fds(cmd);
 	return (EXIT_SUCCESS);
@@ -64,7 +63,6 @@ static int	parent_process(t_cmd *cmd, t_token *token, int count)
 
 static void	child_process(t_cmd *cmd, t_token *token, int stdio[2])
 {
-	printf("here\n");
 	child_signal();
 	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, token, stdio);
@@ -103,25 +101,21 @@ static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 	return (true);
 }
 
-int	run_process(t_token *token, int *stdio)
+int	run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count)
 {
-	t_cmd		*cmd;
 	t_token		*ptr;
-	int			count;
 
 	ptr = token;
-	count = cmd_count(token);
-	while (count--)
+	while (command_count--)
 	{
 		if (!token)
 			break ;
 		if (!expand_token(token))
 			return (free_token(ptr), EXIT_FAILURE);
-		cmd = NULL;
 		cmd = make_cmd(token, cmd);
 		if (!cmd)
 			return (end_process(ptr, stdio), 1);
-		if (pipe_count(ptr) == 0 && (cmd->status == BUILTIN || cmd->status == SYNTAX))
+		if (pipe_count(ptr) == 0 && (cmd->status == BUILTIN || cmd->status == SYNTAX))//順番を逆にして syntaxerrorの特は親プロセスで終了する
 		{
 			cmd->count = 1;
 			end_status(SET, parent_process(cmd, ptr, NO_PIPE));

@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:47:47 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 01:30:28 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
 bool	open_files(t_cmd *cmd, t_token *token);
 
 // process
-int		run_process(t_token *token, int *stdio);
+int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
 
 // end process
 void	syntax_end(t_cmd *cmd, t_token *token, int stdio[2]);
