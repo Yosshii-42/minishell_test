@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 22:42:15 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 00:48:17 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,10 +179,11 @@ int		count_token(t_token *token);
 int		make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(char *str);
-bool	set_err_message(t_cmd *cmd, char *str, char *err_str);
+void	set_err_message(t_cmd *cmd, char *str, char *err_str);
+void	limitter_warning(int count, char *eof);
 
 // open_files
-bool	open_files(t_cmd *cmd, t_token *token);
+void	open_files(t_cmd *cmd, t_token *token);
 
 // process
 // int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
