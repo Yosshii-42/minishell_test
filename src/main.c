@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 00:04:13 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 01:30:24 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static void	do_minishell(char *line)
 {
 	int			stdio[2];
 	t_token		*token;
+	t_cmd		*cmd;
+	int			command_count;
 
 	add_history(line);
 	if (dup_stdio(stdio) == false)
@@ -42,10 +44,12 @@ static void	do_minishell(char *line)
 	token = NULL;
 	token = lexer(line);
 	set_token(SET, token);
+	cmd = NULL;
+	command_count = cmd_count(token);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_process();
 	else
-		end_status(SET, run_process(token, stdio));
+		end_status(SET, run_process(token, cmd, stdio, command_count));
 	ready_signal(SIGINT);
 	printf("status = %d\n", end_status(GET, 0));
 }
