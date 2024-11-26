@@ -28,23 +28,25 @@ SRCS	= src/main.c \
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-LIBS	= -lreadline -lhistory
-# FLAGS   += -fsanitize=address
-HEADDIR	= .
+LIBS	= -lreadline
+# FLAGS   += -fsanitize=address -g
+HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
-# RLDIR   = $(shell brew --prefix readline)
+INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+LIBDIRS  = -L$(RLDIR)/lib
+RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
+	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) $(HEADDER) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
-
+	$(CC) $(FLAGS) $(LIBDIRS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+	
 
 clean:
 	make fclean -C ./libft
@@ -62,9 +64,9 @@ test: all
 
 #################################################################
 
-# OS := $(shell uname -s)
+OS := $(shell uname -s)
 
-# ifeq ($(OS), Linus)
-# 	# commands for Linux
-# endif
+ifeq ($(OS), Linus)
+	# commands for Linux
+endif
 

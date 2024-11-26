@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42tokyo.>       +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:07:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/05/15 15:20:02 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:50:08 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

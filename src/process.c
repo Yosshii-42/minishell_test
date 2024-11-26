@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 01:41:43 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 23:26:48 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 		exit((do_builtin(cmd), end_status(GET, 0)));
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
-	write(2, "here\n", 5);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
 	{
 		exit(EXIT_FAILURE);

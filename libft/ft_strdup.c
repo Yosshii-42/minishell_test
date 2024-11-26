@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 13:21:43 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 19:13:25 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/26 22:55:45 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../minishell.h"
 
 char	*ft_strdup(const char *s1)
 {
@@ -22,9 +23,7 @@ char	*ft_strdup(const char *s1)
 		len = 0;
 	else
 		len = ft_strlen(s1);
-	ptr = (char *)malloc(sizeof(char) * (len + 1));
-	if (!ptr)
-		return (NULL);
+	ptr = (char *)safe_malloc(len + 1, sizeof(char));
 	i = 0;
 	while (i < len)
 	{

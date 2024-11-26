@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 12:46:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/06/29 13:06:20 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:59:08 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "../minishell.h"
 
-static char	*ft_strjoin(char *s1, char c, int len)
+static char	*ft_strjoin_gnl(char *s1, char c, int len)
 {
 	char	*string;
 	int		i;
@@ -21,9 +22,7 @@ static char	*ft_strjoin(char *s1, char c, int len)
 	if (!s1 && !c)
 		return (NULL);
 	string = NULL;
-	string = (char *)malloc(sizeof(char) * len);
-	if (!string)
-		return (free(s1), NULL);
+	string = (char *)safe_malloc(len, sizeof(char));
 	i = -1;
 	while (++i < len - 2)
 		string[i] = s1[i];
@@ -81,7 +80,7 @@ char	*get_next_line(int fd)
 			return (free(result), NULL);
 		if (c == EOF)
 			break ;
-		result = ft_strjoin(result, c, len);
+		result = ft_strjoin_gnl(result, c, len);
 		len++;
 		if (c == '\n')
 			break ;

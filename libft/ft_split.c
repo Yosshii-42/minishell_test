@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 18:54:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/10/27 23:09:08 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 22:53:10 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ static char	*ft_make_string_i(char const *s, char c)
 	len = 0;
 	while (s[len] && (s[len] != c))
 		len++;
-	str = (char *)ft_calloc((len + 1), sizeof(char));
-	if (!str)
-		return (NULL);
+	str = (char *)safe_malloc((len + 1), sizeof(char));
 	j = -1;
 	while (++j < len)
 		str[j] = s[j];
@@ -49,14 +47,14 @@ static char	*ft_make_string_i(char const *s, char c)
 	return (str);
 }
 
-static void	*ft_free_split(char **result, int i)
-{
-	while (result[i])
-		free(result[i--]);
-	if (result)
-		free(result);
-	return (NULL);
-}
+// static void	*ft_free_split(char **result, int i)
+// {
+// 	while (result[i])
+// 		free(result[i--]);
+// 	if (result)
+// 		free(result);
+// 	return (NULL);
+// }
 
 char	**ft_split(char const *s, char c)
 {
@@ -65,9 +63,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	result = (char **)malloc(sizeof(char *) * (ft_count_i(s, c) + 1));
-	if (!result)
-		return (NULL);
+	result = (char **)safe_malloc(ft_count_i(s, c) + 1, sizeof(char *));
 	i = 0;
 	while (*s)
 	{
@@ -76,8 +72,6 @@ char	**ft_split(char const *s, char c)
 		if (*s && *s != c)
 		{
 			result[i] = ft_make_string_i(s, c);
-			if (!result[i])
-				return (ft_free_split(result, i), NULL);
 			i++;
 			while (*s && *s != c)
 				s++;

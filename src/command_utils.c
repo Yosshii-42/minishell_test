@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:43:18 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 23:04:56 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ bool	init_cmd(t_cmd *cmd)
 	cmd->cmd = NULL;
 	cmd->path = NULL;
 	if (getenv_str("PATH"))
-	{
 		cmd->path = ft_split(getenv_str("PATH"), ':');
-		if (!cmd->path)
-			exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
-	}
 	cmd->err_msg = NULL;
+	cmd->err_file = NULL;
+	cmd->err_no = -1;
 	cmd->token = NULL;
 	cmd->status = -1;
 	cmd->flag = 0;
@@ -81,10 +79,7 @@ char	*make_pwd_path(char *command, char *pwd)
 		return (strjoin_with_free("", command, NO_FREE));//不要?
 	str = NULL;
 	str = strjoin_with_free(pwd, "/", NO_FREE);
-	if (str)
-		str = strjoin_with_free(str, command, FREE_S1);
-	// if (!str)
-	// 	exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
+	str = strjoin_with_free(str, command, FREE_S1);
 	return (str);
 }
 

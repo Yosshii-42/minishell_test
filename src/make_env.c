@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:05:04 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/26 23:20:09 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ static t_env	*change_last_node(t_env *env)
 	tmp = env->value;
 	env->value = ft_strdup("/usr/bin/env");
 	free(tmp);
-	if (!env->value)
-	{
-		ft_printf(2, "bash: malloc: %s\n", strerror(errno));
-		return (free_env(set_env(GET, NULL)), NULL);
-	}
 	return (ptr);
 }
 
@@ -60,18 +55,12 @@ static int	lstnew(t_env **start, char *env)
 	t_env	*new;
 	int		len;
 
-	new = (t_env *)malloc(sizeof(t_env));
-	if (!new)
-		return (FALSE);
+	new = (t_env *)safe_malloc(1, sizeof(t_env));
 	len = 0;
 	len = strchr_len(env, '=');
-	new->key = (char *)malloc((len + 1) * sizeof(char));
-	if (!new->key)
-		return (free(new), FALSE);
+	new->key = (char *)safe_malloc(len + 1, sizeof(char));
 	ft_strlcpy(new->key, env, len + 1);
 	new->value = ft_strdup((ft_strchr(env, '=') + 1));
-	if (!new->value)
-		return (free(new->key), free(new), FALSE);
 	new->next = NULL;
 	lstadd_back(start, new);
 	return (TRUE);
