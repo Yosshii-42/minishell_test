@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 01:30:24 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 10:08:41 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,12 @@
 
 volatile sig_atomic_t	g_sig_status = READLINE;
 
-static int	dup_stdio(int *stdio)
+static void	dup_stdio(int *stdio)
 {
 	stdio[0] = -1;
 	stdio[1] = -1;
-	stdio[0] = dup(STDIN_FILENO);
-	stdio[1] = dup(STDOUT_FILENO);
-	if (stdio[0] < 0 || stdio[1] < 0)
-		return (ft_printf(2, "%s\n", strerror(errno)), false);
-	return (true);
+	stdio[0] = safe_dup(STDIN_FILENO);
+	stdio[1] = safe_dup(STDOUT_FILENO);
 }
 
 static void	clear_process(void)
@@ -38,8 +35,7 @@ static void	do_minishell(char *line)
 	int			command_count;
 
 	add_history(line);
-	if (dup_stdio(stdio) == false)
-		exit(EXIT_FAILURE);
+	dup_stdio(stdio);
 	token = NULL;
 	token = lexer(line);
 	set_token(SET, token);

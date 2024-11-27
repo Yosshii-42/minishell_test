@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 23:44:28 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/24 22:34:50 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 01:30:02 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ bool	append_char(char **str, char c)
 	join[0] = c;
 	join[1] = '\0';
 	new = ft_strjoin(*str, join);
-	if (!new)
-		return (false);
 	free(*str);
 	*str = new;
 	return (true);
@@ -31,9 +29,6 @@ bool	append_char(char **str, char c)
 // トークンを展開する
 bool	expand_token(t_token *tokenized)
 {
-	// int	flag;
-
-	// flag = 0;
 	while (tokenized)
 	{
 		// コマンドや文字列トークンだけが対象

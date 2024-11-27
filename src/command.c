@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 00:44:40 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 02:38:14 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,6 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd)
 	return (true);
 }
 
-t_cmd	*command_return(t_cmd *cmd, t_token *token)
-{
-	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
-		set_err_message(cmd, cmd->cmd[0], strerror(errno));
-	cmd->token = token;
-	return (cmd);
-}
-
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
 	cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
@@ -113,8 +105,8 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 	{
 		if (token->kind == SYNTAX)
 			return (cmd->status = SYNTAX, command_return(cmd, token));
-		if (token->kind == PIPE && !make_pipe(cmd))
-			return (free_cmd(cmd), free_token(set_token(GET, NULL)), NULL);
+		if (token->kind == PIPE)
+			 make_pipe(cmd);
 		if (token->kind == PIPE && token->next)
 			return (token = token->next, command_return(cmd, token));
 		if (count_array(token) && command_flag == 0)

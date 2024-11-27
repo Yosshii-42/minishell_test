@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42tokyo.>       +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 13:18:41 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/04/23 13:32:59 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/27 01:22:45 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../minishell.h"
 
 int	ft_cal_digit(int num)
 {
@@ -45,9 +46,7 @@ char	*ft_itoa(int n)
 	if (num <= 0)
 		is_0orless = 1;
 	buf = NULL;
-	buf = (char *)ft_calloc((digit + is_0orless + 1), sizeof(char));
-	if (!buf)
-		return (NULL);
+	buf = (char *)safe_malloc((digit + is_0orless + 1), sizeof(char));
 	if (num <= 0)
 	{
 		buf[0] = '-';

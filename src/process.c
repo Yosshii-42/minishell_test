@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 01:00:32 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 01:17:26 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,7 @@ static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
 {
 	int	pid;
 
-	if (!make_fork(&pid))
-		exit((ft_printf(2, "fork : %s", strerror(errno)), EXIT_FAILURE));
+	make_fork(&pid);
 	if (pid == 0)
 		child_process(cmd, stdio);
 	else if (pid > 0)
