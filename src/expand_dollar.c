@@ -41,27 +41,28 @@ bool	handle_dollar(t_token *tokenized, int *i)
 
     (*i)++; // `$` をスキップ
     env_key = split_keyname(tokenized->word, *i);
-    if (!env_key)
-    {
-        return (false);
-    }
+    // if (!env_key)   <--safe_mallocでガード
+    // {
+    //     return (false);
+    // }
 
 	tmp = tokenized->word;
 
     // $?処理 (これがないとecho $?をしたときに何も表示されない)
     if (ft_strncmp(env_key, "?", 1) == 0)
     {
-        exit_status = ft_itoa(end_status(GET, 0));
+        exit_status = ft_itoa(end_status(GET, 0)); // <--safe_mallocでガード
         if (tokenized->word[++(*i)])
             exit_status = strjoin_with_free(exit_status, &tokenized->word[*i], FREE_S1);
-        if (!exit_status)
-        {
-            free(env_key);
-            return (false);
-        }
+        // if (!exit_status)   <--safe_mallocでガード
+        // {
+        //     free(env_key);
+        //     return (false);
+        // }
         tokenized->word = exit_status;
         // tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
-        return (free(env_key), free(tmp), true);
+        // return (free(env_key), free(tmp), true);
+        return (free(env_key), true);
     }
     env = set_env(GET, NULL);
     while (env)
@@ -69,12 +70,14 @@ bool	handle_dollar(t_token *tokenized, int *i)
         if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)
         {
     		tokenized->word = ft_strdup(env->value);
-            return (free(tmp), true);
+            // return (free(tmp), true);
+            return (true);
         }
         env = env->next;
     }
     tokenized->word = ft_strdup("");
-    return (free(tmp), true);
+    // return (free(tmp), true);
+    return (true);
 }
 
 // トークン内の `$` を展開する
@@ -84,8 +87,8 @@ bool	expand_dollar(t_token *tokenized)
     char quote = 0;
     char *new = ft_strdup("");
 
-    if (!new)
-        return (false);
+    // if (!new)
+    //     return (false);
 
     while (tokenized->word[i])
     {
@@ -118,7 +121,7 @@ bool	expand_dollar(t_token *tokenized)
     //           tokenized->word, tokenized->kind, tokenized->is_quoted, tokenized->is_double_quoted);
     //    tokenized = tokenized->next;
     //}
-
+    free(new);
     return (true);
 }
 
