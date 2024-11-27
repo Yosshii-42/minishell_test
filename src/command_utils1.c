@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 00:47:23 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 02:38:36 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,10 @@ bool	init_cmd(t_cmd *cmd)
 	return (true);
 }
 
-int	make_pipe(t_cmd *cmd)
+void	make_pipe(t_cmd *cmd)
 {
 	if (pipe(cmd->pp) == -1)
 		exit((ft_printf(2, "pipe: %s\n", strerror(errno)), EXIT_FAILURE));
-	return (TRUE);
 }
 
 char	*make_pwd_path(char *command, char *pwd)
@@ -68,4 +67,12 @@ char	*getenv_str(char *str)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+t_cmd	*command_return(t_cmd *cmd, t_token *token)
+{
+	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
+		set_err_message(cmd, cmd->cmd[0], strerror(errno));
+	cmd->token = token;
+	return (cmd);
 }

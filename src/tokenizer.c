@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/26 23:24:20 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 02:24:45 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ static t_token *create_dollar_token(char **input)
     if (len == 0)
     {
         end_status(SET, EXIT_FAILURE);
-        fprintf(stderr, "[DEBUG] Error: Invalid environment variable name after `$`\n");
+        ft_printf(2, "[DEBUG] Error: Invalid environment variable name after `$`\n");
         return (NULL);
     }
 	(*input)--;
@@ -180,12 +180,13 @@ t_token *tokenizer(char *input)//, int *error_status)
         {
             token_len = count_meta_len(input);
             token_content = ft_substr(input, 0, token_len);
-            if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
-            {
-                free_token(head);
-                end_status(SET, EXIT_FAILURE);
-                return (NULL);
-            }
+            append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted);
+            // if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
+            // {
+            //     free_token(set_token(GET, NULL));
+            //     end_status(SET, EXIT_FAILURE);
+            //     return (NULL);
+            // }
             input += token_len;
         }
         else if (*input == '$') // `$` の特別な処理
@@ -197,32 +198,36 @@ t_token *tokenizer(char *input)//, int *error_status)
                 end_status(SET, EXIT_FAILURE);
                 return (NULL);
             }
-            if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
-            {
-                free_token(head);
-                free(dollar_token);
-                end_status(SET, EXIT_FAILURE);
-                return (NULL);
-            }
+            append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted);
+            // if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
+            // {
+            //     free_token(head);
+            //     free(dollar_token);
+            //     end_status(SET, EXIT_FAILURE);
+            //     return (NULL);
+            // }
             free(dollar_token);
         }
         else
         {
             token_len = count_word_len(input, &is_quoted, &is_double_quoted);
             if (token_len == -1)
-            {
-                fprintf(stderr, "error: unmatched quote\n");
-                free_token(head);
-                end_status(SET, EXIT_FAILURE);
-                return (NULL);
-            }
+                return (ft_printf(2, "error: unmatched quote\n"), free_token(head)
+                    , end_status(SET, EXIT_FAILURE), NULL);
+            // {
+            //     ft_printf(2, "error: unmatched quote\n");
+            //     free_token(head);
+            //     end_status(SET, EXIT_FAILURE);
+            //     return (NULL);
+            // }
             token_content = ft_substr(input, 0, token_len);
-            if (!append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted))
-            {
-                free_token(head);
-                end_status(SET, EXIT_FAILURE);
-                return (NULL);
-            }
+            append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted);
+            // if (!append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted))
+            // {
+            //     free_token(head);
+            //     end_status(SET, EXIT_FAILURE);
+            //     return (NULL);
+            // }
             input += token_len;
         }
         input = space_skip(input);

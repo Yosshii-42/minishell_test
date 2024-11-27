@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 00:48:17 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 10:07:59 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,9 +176,10 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
 bool	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
-int		make_pipe(t_cmd *cmd);
+void	make_pipe(t_cmd *cmd);
 char	*make_pwd_path(char *command, char *pwd);
 char	*getenv_str(char *str);
+t_cmd	*command_return(t_cmd *cmd, t_token *token);
 void	set_err_message(t_cmd *cmd, char *str, char *err_str);
 void	limitter_warning(int count, char *eof);
 
@@ -214,6 +215,9 @@ void	free_cmd(t_cmd *cmd);
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
 void	*safe_malloc(size_t count, size_t size);
+int		safe_dup(int fd);
+void	safe_dup2(int *fd, int *new_fd);
+
 
 // signal
 void	reset_signal(int signum);

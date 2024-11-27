@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:28:47 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/20 15:27:25 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/11/27 01:16:33 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	make_fork(pid_t *pid)
 {
 	*pid = fork();
 	if (*pid == -1)
-		return (ft_printf(2, "%s\n", strerror(errno)), FALSE);
+		exit((ft_printf(2, "fork: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (TRUE);
 }
 

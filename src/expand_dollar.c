@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/25 23:43:23 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 02:23:50 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ bool	handle_dollar(t_token *tokenized, int *i)
 
     (*i)++; // `$` をスキップ
     env_key = split_keyname(tokenized->word, *i);
-    if (!env_key)
-    {
-        return (false);
-    }
+    // if (!env_key)
+    // {
+    //     return (false);
+    // }
 
 	tmp = tokenized->word;
 
@@ -54,11 +54,11 @@ bool	handle_dollar(t_token *tokenized, int *i)
         exit_status = ft_itoa(end_status(GET, 0));
         // if (tokenized->word[++(*i)])
         //     exit_status = strjoin_with_free(exit_status, &tokenized->word[*i], FREE_S1);
-        if (!exit_status)
-        {
-            free(env_key);
-            return (false);
-        }
+        // if (!exit_status)
+        // {
+        //     free(env_key);
+        //     return (false);
+        // }
         tokenized->word = exit_status;
         // tokenized->kind = OPTION; //これはいらないかも。COMMANDとして認識されるが要件外かも
         return (free(env_key), free(tmp), true);
@@ -67,10 +67,10 @@ bool	handle_dollar(t_token *tokenized, int *i)
     while (env)
     {
         if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)
-        {
+        // {
     		tokenized->word = ft_strdup(env->value);
-            return (free(tmp), true);
-        }
+            // return (free(tmp), true);
+        // }
         env = env->next;
     }
     tokenized->word = ft_strdup("");
@@ -82,31 +82,25 @@ bool	expand_dollar(t_token *tokenized)
 {
     int i = 0;
     char quote = 0;
-    char *new = ft_strdup("");
-
-    if (!new)
-        return (false);
-
+    char *new;
+    
+    new = ft_strdup("");
     while (tokenized->word[i])
     {
         if (is_quote(tokenized->word[i]))
             update_quote_status(&quote, tokenized->word[i]);
-
         if (quote != '\'' && tokenized->word[i] == '$')
-        {
-            if (!handle_dollar(tokenized, &i))
-            {
-                free(new);
-                return (false);
-            }
-        }
+            handle_dollar(tokenized, &i);
+        // {
+        //     if (!handle_dollar(tokenized, &i))
+        //         return (free(new), false);
+        // }
         else
         {
-            if (!append_char(&new, tokenized->word[i]))
-            {
-                free(new);
-                return (false);
-            }
+            append_char(&new, tokenized->word[i]);
+        // {
+        //     if (!append_char(&new, tokenized->word[i]))
+        //         return (free(new), false);
             i++;
         }
     }

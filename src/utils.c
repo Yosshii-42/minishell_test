@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 22:48:23 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/27 10:15:32 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,27 @@ void	*safe_malloc(size_t count, size_t size)
 	if (!tmp)
 		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
 	return (tmp);
+}
+
+int	safe_dup(int fd)
+{
+	int	new_fd;
+
+	new_fd = -1;
+	new_fd = dup(fd);
+	if (new_fd == -1)
+		exit((ft_printf(2, "dup: %s\n", strerror(errno)), EXIT_FAILURE));
+	return (new_fd);
+}
+
+void	safe_dup2(int *fd, int *new_fd)
+{
+	if (dup2(*fd, *new_fd) == -1)
+		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));	
+}
+
+void	safe_close(int *fd)
+{
+	if (close(*fd) == -1)
+		exit((ft_printf(2, "close: %s\n", strerror(errno)), EXIT_FAILURE));		
 }
