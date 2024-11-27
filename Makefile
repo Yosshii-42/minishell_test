@@ -1,6 +1,5 @@
 NAME 	= minishell
 SRCS	= src/main.c \
-		  src/main_gloval_like_function.c \
 		  src/make_env.c \
 		  src/command.c \
 		  src/command_open_file.c \
@@ -12,6 +11,8 @@ SRCS	= src/main.c \
 		  src/process_specific_process.c \
 		  src/utils.c \
 		  src/utils_free.c \
+		  src/utils_gloval_like_function.c \
+		  src/utils_safe_functions.c \
 		  src/signal.c \
 		  src/signal_handler.c \
 		  src/signal_process.c \

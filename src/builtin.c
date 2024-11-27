@@ -57,7 +57,7 @@ bool	do_builtin(t_cmd *cmd)
 {
 	int		type;
 	t_env	*env;
-
+	
 	type = check_builtin(cmd->cmd[0]);
 	env = set_env(GET, NULL);
 	if (type == ECHO)

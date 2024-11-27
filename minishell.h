@@ -32,9 +32,13 @@
 # define FREE_S1 1
 # define FREE_S2 2
 # define NO_FREE 0
-// end_status
+// set & get function
 # define SET 0
 # define GET 1
+// safe function
+# define CHILD 0
+# define PARENT 1
+# define EXIT_CHILD_DUP_ERR -2
 // # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
@@ -127,6 +131,7 @@ typedef struct s_package
 
 // gloval like function
 int 	end_status(int type, int end_status);
+char	*set_line(int type, char *new_line);
 t_env	*set_env(int type, t_env *new_env);
 t_token	*set_token(int type, t_token *new_token);
 
@@ -196,7 +201,8 @@ void	syntax_end(t_cmd *cmd, int stdio[2]);
 void	end_process(int stdio[2]);
 void	child_exit_process(t_cmd *cmd, int stdio[2]);
 int		builtin_end_process(t_cmd *cmd, t_token *token);
-int    no_pipe_process(t_cmd *cmd, int *stdio);
+int		no_pipe_process(t_cmd *cmd, int *stdio);
+void	execve_fail_process(t_cmd *cmd);
 
 
 // process utils
@@ -210,14 +216,16 @@ void	free_env(t_env *env);
 void	free_token(t_token *token);
 void	free_split(char **split);
 void	free_cmd(t_cmd *cmd);
+void	free_all(t_cmd *cmd);
 
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
+
 void	*safe_malloc(size_t count, size_t size);
 int		safe_dup(int fd);
-void	safe_dup2(int *fd, int *new_fd);
-
+void	safe_dup2(int fd, int new_fd, int who, t_cmd *cmd);
+void	safe_close(int *fd, int who, t_cmd *cmd);
 
 // signal
 void	reset_signal(int signum);

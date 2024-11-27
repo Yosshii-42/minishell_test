@@ -15,8 +15,10 @@
 void	end_process(int stdio[2])
 {
 	free_token(set_token(GET, NULL));
-	dup2(stdio[0], STDIN_FILENO);
-	dup2(stdio[1], STDOUT_FILENO);
+	if (dup2(stdio[0], STDIN_FILENO) == -1)
+		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));
+	if (dup2(stdio[1], STDOUT_FILENO) == -1)
+		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));
 	close(stdio[0]);
 	close(stdio[1]);
 }
@@ -32,17 +34,16 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 {
 	char	*find_permission;
 
-	if (!cmd->cmd)
-		exit(EXIT_SUCCESS);
-	// if (cmd->status != SYNTAX && cmd->err_msg)
-	ft_printf(2, "%s", cmd->err_msg);
-	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
+	if (!cmd->cmd)
+		exit((free_cmd(cmd), EXIT_SUCCESS));
+	// if (cmd->status != SYNTAX && cmd->err_msg)
+	ft_printf(2, "%s", cmd->err_msg);
+	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
 	free_cmd(cmd);
-	// free_token(token);
-	free_token(set_token(GET, NULL));
+	// free_token(set_token(GET, NULL));
 	if (find_permission != NULL)
 		exit(126);
 	else

@@ -21,6 +21,8 @@ bool	append_char(char **str, char c)
 	join[0] = c;
 	join[1] = '\0';
 	new = ft_strjoin(*str, join);
+	if (!new)
+		return (false);
 	free(*str);
 	*str = new;
 	return (true);
@@ -29,6 +31,9 @@ bool	append_char(char **str, char c)
 // トークンを展開する
 bool	expand_token(t_token *tokenized)
 {
+	// int	flag;
+
+	// flag = 0;
 	while (tokenized)
 	{
 		// コマンドや文字列トークンだけが対象
@@ -45,3 +50,36 @@ bool	expand_token(t_token *tokenized)
 	}
 	return (true);
 }
+// // 文字を追加する関数
+// bool	append_char(char **str, char c)
+// {
+// 	char	*new;
+// 	char	join[2];
+
+// 	join[0] = c;
+// 	join[1] = '\0';
+// 	new = ft_strjoin(*str, join);
+// 	free(*str);
+// 	*str = new;
+// 	return (true);
+// }
+
+// // トークンを展開する
+// bool	expand_token(t_token *tokenized)
+// {
+// 	while (tokenized)
+// 	{
+// 		// コマンドや文字列トークンだけが対象
+// 		if (tokenized->kind == COMMAND || tokenized->kind == OPTION)
+// 		{
+// 			// 環境変数の展開
+// 			if (!expand_dollar(tokenized))
+// 				return (false);
+// 			// クォートの処理
+// 			if (!expand_quote(tokenized))
+// 				return (false);
+// 		}
+// 	tokenized = tokenized->next;
+// 	}
+// 	return (true);
+// }
