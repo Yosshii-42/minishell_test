@@ -50,7 +50,7 @@ void	lstadd_back(t_env **start, t_env *new)
 	new->pre = ptr;
 }
 
-static int	lstnew(t_env **start, char *env)
+int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
@@ -76,10 +76,7 @@ t_env	*make_env(int argc, char **argv, char **envp)
 	i = -1;
 	start = NULL;
 	while (envp[++i])
-	{
-		if (!lstnew(&start, envp[i]))
-			return (free_env(set_env(GET, NULL)), NULL);
-	}
+		lstnew(&start, envp[i]);
 	start = change_last_node(start);
 	return (start);
 }
