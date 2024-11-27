@@ -20,15 +20,14 @@ static int	wait_process(void)
 	status = 0;
 	while (1)
 	{
-		if (waitpid(-1, &status, 0) == -1)
-		{
-			if (errno == ECHILD)
-				break ;
-			else
-				return (ft_printf(2, "%s\n", strerror(errno)), EXIT_FAILURE);
-		}
+		if (waitpid(-1, &status, 0) == -1 && errno == ECHILD)
+			break;
 		if (WIFEXITED(status))
+		{
 			exit_status = WEXITSTATUS(status);
+			if (exit_status == 256 - 2)
+				exit(EXIT_FAILURE);
+		}
 		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			exit_status = WTERMSIG(status) + 128;
 	}
@@ -44,19 +43,22 @@ int	parent_process(t_cmd *cmd, t_token *token, int count)
 	if (cmd->status == SYNTAX || (count == NO_PIPE && cmd->status == BUILTIN))
 	{
 		if (cmd->writefd > 0)
-			dup2(cmd->writefd, STDOUT_FILENO);
+			safe_dup2(cmd->writefd, STDOUT_FILENO, PARENT, cmd);
 		close_fds(cmd);
 		if (cmd->status == SYNTAX)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
 			return (builtin_end_process(cmd, token));
 		if (do_builtin(cmd) == false)
+		{
+			free_all(cmd);
 			exit(end_status(GET, 0));
+		}
 		else
 			return (end_status(GET, 0));
 	}
 	else if (cmd->pp[0] > 0)
-		dup2(cmd->pp[0], STDIN_FILENO);
+		safe_dup2(cmd->pp[0], STDIN_FILENO, PARENT, cmd);
 	close_fds(cmd);
 	return (EXIT_SUCCESS);
 }
@@ -67,11 +69,11 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
-		dup2(cmd->readfd, STDIN_FILENO);
+		safe_dup2(cmd->readfd, STDIN_FILENO, CHILD, cmd);
 	if (cmd->writefd > 0)
-		dup2(cmd->writefd, STDOUT_FILENO);
+		safe_dup2(cmd->writefd, STDOUT_FILENO, CHILD, cmd);
 	else if (cmd->pp[1] > 0)
-		dup2(cmd->pp[1], STDOUT_FILENO);
+		safe_dup2(cmd->pp[1], STDOUT_FILENO, CHILD, cmd);
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
@@ -80,12 +82,10 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
 	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
-	{
-		exit(EXIT_FAILURE);
-	}
+		execve_fail_process(cmd);
 }
 
-static bool	minishell_engine(t_cmd *cmd, t_token *token, int stdio[2])
+static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
 {
 	int	pid;
 
@@ -116,7 +116,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		if (pipe_count(ptr) == 0
 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX))
 			return (no_pipe_process(cmd, stdio));
-		else if (minishell_engine(cmd, ptr, stdio) == false)
+		else if (pipex_engine(cmd, ptr, stdio) == false)
 			return (syntax_end(cmd, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, stdio), 2);

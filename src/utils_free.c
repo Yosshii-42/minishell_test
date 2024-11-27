@@ -42,6 +42,8 @@ void	free_env(t_env *env)
 
 void	free_token(t_token *token)
 {
+	if (!token)
+		return ;
 	while (token)
 	{
 		if (token->kind == LIMITTER)
@@ -83,6 +85,8 @@ void	free_split(char **split)
 
 void	free_cmd(t_cmd *cmd)
 {
+	if (!cmd)
+		return ;
 	if (cmd)
 	{
 		if (cmd->pathname)
@@ -102,4 +106,13 @@ void	free_cmd(t_cmd *cmd)
 		free(cmd);
 		cmd = NULL;
 	}
+}
+
+void	free_all(t_cmd *cmd)
+{
+	if (set_env(GET, NULL))
+		free_env(set_env(GET, NULL));
+	free_token(set_token(GET, NULL));
+	free_cmd(cmd);
+	free(set_line(GET, NULL));
 }

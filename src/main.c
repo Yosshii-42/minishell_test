@@ -65,6 +65,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
+		set_line(SET, line);
 		do_minishell(line);
 		free(line);
 	}

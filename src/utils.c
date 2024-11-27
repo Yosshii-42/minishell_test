@@ -56,36 +56,3 @@ size_t	strchr_len(const char *s, int c)
 	else
 		return (0);
 }
-
-void	*safe_malloc(size_t count, size_t size)
-{
-	void	*tmp;
-	
-	tmp = ft_calloc(size, count);
-	if (!tmp)
-		exit((ft_printf(2, "malloc: %s\n", strerror(errno)), EXIT_FAILURE));
-	return (tmp);
-}
-
-int	safe_dup(int fd)
-{
-	int	new_fd;
-
-	new_fd = -1;
-	new_fd = dup(fd);
-	if (new_fd == -1)
-		exit((ft_printf(2, "dup: %s\n", strerror(errno)), EXIT_FAILURE));
-	return (new_fd);
-}
-
-void	safe_dup2(int *fd, int *new_fd)
-{
-	if (dup2(*fd, *new_fd) == -1)
-		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));	
-}
-
-void	safe_close(int *fd)
-{
-	if (close(*fd) == -1)
-		exit((ft_printf(2, "close: %s\n", strerror(errno)), EXIT_FAILURE));		
-}
