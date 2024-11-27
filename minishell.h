@@ -137,6 +137,7 @@ t_token	*set_token(int type, t_token *new_token);
 
 // env
 t_env	*make_env(int argc, char **argv, char **envp);
+t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
 // lexer.c
@@ -154,7 +155,7 @@ int		count_envname_len(char *token, int i);
 // tokenizer_utils.c
 char	*ft_strjoin_one(char *str, char c);
 int		ft_isspace(char c);
-char	*ft_strcpy(char *dest, const char *src);
+// char	*ft_strcpy(char *dest, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
 bool	is_quote(char c);
 int		check_builtin(char *str);

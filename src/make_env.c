@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static t_env	*lstlast(t_env *lst)
+t_env	*lstlast(t_env *lst)
 {
 	if (!lst)
 		return (NULL);

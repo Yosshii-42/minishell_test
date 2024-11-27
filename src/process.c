@@ -60,6 +60,7 @@ int	parent_process(t_cmd *cmd, t_token *token, int count)
 	else if (cmd->pp[0] > 0)
 		safe_dup2(cmd->pp[0], STDIN_FILENO, PARENT, cmd);
 	close_fds(cmd);
+
 	return (EXIT_SUCCESS);
 }
 
@@ -94,6 +95,8 @@ static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
 		child_process(cmd, stdio);
 	else if (pid > 0)
 		parent_process(cmd, token, PIPE_EXIST);
+	if (access(FILE_NAME, F_OK))
+		unlink(FILE_NAME);
 	return (true);
 }
 

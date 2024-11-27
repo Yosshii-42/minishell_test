@@ -12,6 +12,17 @@
 
 #include "../minishell.h"
 
+static char	*ft_strcpy(char *dest, const char *src)
+{
+	char	*d;
+
+	d = dest;
+	while (*src)
+		*d++ = *src++;
+	*d = '\0';
+	return (dest);
+}
+
 char	*ft_strjoin_one(char *str, char c)
 {
 	char	*new_str;
@@ -21,25 +32,14 @@ char	*ft_strjoin_one(char *str, char c)
 	if (str)
 		len = ft_strlen(str);
 	new_str = (char *)safe_malloc(len + 2, sizeof(char));
-	if (str)
-	{
-		ft_strcpy(new_str, str);
-		free(str);
-	}
+	// if (str)
+	// {
+	ft_strcpy(new_str, str);
+	free(str);
+	// }
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
 	return (new_str);
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	char	*d;
-
-	d = dest;
-	while (*src)
-		*d++ = *src++;
-	*d = '\0';
-	return (dest);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

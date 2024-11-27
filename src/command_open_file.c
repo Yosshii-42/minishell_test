@@ -29,7 +29,7 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	char	*str;
 	int		fd;
 
-	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0600);
+	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0644);
 	if (fd < 0)
 		return (false);
 	str = NULL;
@@ -41,8 +41,8 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 		if (!str)
 			return (limitter_warning(cmd->count + 1, eof), close(fd), true);
 		(cmd->count)++;
-		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10 && (free(str), 1))
-			break ;
+		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
+			return (free(str), close(fd), true);
 		ft_printf(fd, "%s", str);
 		free(str);
 		str = NULL;
