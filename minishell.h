@@ -137,6 +137,7 @@ t_token	*set_token(int type, t_token *new_token);
 
 // env
 t_env	*make_env(int argc, char **argv, char **envp);
+int		lstnew(t_env **start, char *env);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
