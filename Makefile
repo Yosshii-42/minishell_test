@@ -18,15 +18,16 @@ SRCS	= src/main.c \
 		  src/signal_process.c \
 		  src/builtin.c \
 		  src/builtin_cd.c \
+		  src/builtin_export.c \
 		  src/builtin2.c \
-		  src/lexer.c \
-		  src/lexer_add_kind.c \
+		  src/tokenizer_lexer.c \
+		  src/tokenizer_lexer_add_kind.c \
 		  src/tokenizer.c \
 		  src/tokenizer_utils.c \
 		  src/tokenizer_error.c \
-		  src/expand_token.c \
-		  src/expand_dollar.c \
-		  src/expand_quote.c
+		  src/tokenizer_expand_token.c \
+		  src/tokenizer_expand_dollar.c \
+		  src/tokenizer_expand_quote.c
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror

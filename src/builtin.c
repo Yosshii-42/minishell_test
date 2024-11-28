@@ -50,45 +50,6 @@ void	builtin_pwd(void)
 	}
 }
 
-// void	exchange_value(t_env *env, char *str)
-// {
-// 	free(env->value);
-// 	env->value = NULL;
-// 	env->value = ft_strdup(ft_strchr(str, '=') + 1)
-// }
-
-void	builtin_export(void)//t_cmd *cmd)
-{
-	// t_env	*env;
-
-	// env = set_env(GET, NULL);
-	// if (!cmd->cmd[1])
-	// {
-	// 	while (env)
-	// 	{
-	// 		ft_printf(1, "declare -x %s", env->key);
-	// 		if (env->value)
-	// 			ft_printf(1, "=\"%s\"", env->value);
-	// 		ft_printf(1, "\n");
-	// 		env = env->next;
-	// 	}
-	// }
-	// else if (ft_strchr(cmd->cmd[1], '='))
-	// {
-	// 	env = set_env(GET, NULL);
-	// 	while (env)
-	// 	{
-	// 		if (ft_strncmd(cmd->cmd[1], env->key, strchr_len(cmd->cmd[1], '=')) == 61)
-	// 		{
-	// 			exchange_value(env, cmd->cmd[1]);
-	// 			break;
-	// 		}
-	// 		env = env->next;
-	// 	}
-	// }
-	end_status(SET, EXIT_SUCCESS);
-}
-
 bool	do_builtin(t_cmd *cmd)
 {
 	int		type;
@@ -103,7 +64,7 @@ bool	do_builtin(t_cmd *cmd)
 	else if (type == PWD)
 		return (builtin_pwd(), true);
 	else if (type == EXPORT)
-		return (builtin_export(), true);//cmd), true);
+		return (builtin_export(&env, cmd), true);
 	else if (type == UNSET)
 		return (builtin_unset(cmd, &env), true);
 	else if (type == ENV)

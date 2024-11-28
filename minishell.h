@@ -137,6 +137,7 @@ t_token	*set_token(int type, t_token *new_token);
 
 // env
 t_env	*make_env(int argc, char **argv, char **envp);
+int		lstnew(t_env **start, char *env);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
@@ -246,10 +247,11 @@ void	default_signal(int signum);
 void	child_signal(void);
 
 // builtin
-bool		do_builtin(t_cmd *cmd);
-void		builtin_cd(t_cmd *cmd, t_env *env);
-void		builtin_unset(t_cmd *cmd, t_env **env);
-void		builtin_env(void);
-void		builtin_exit(t_cmd *cmd);
+bool	do_builtin(t_cmd *cmd);
+void	builtin_cd(t_cmd *cmd, t_env *env);
+void	builtin_unset(t_cmd *cmd, t_env **env);
+void	builtin_env(void);
+void	builtin_exit(t_cmd *cmd);
+void	builtin_export(t_env **env, t_cmd *cmd);
 
 #endif
