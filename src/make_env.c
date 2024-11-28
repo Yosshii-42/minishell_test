@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 23:20:09 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:07:28 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
+
 	new = (t_env *)safe_malloc(1, sizeof(t_env));
 	len = 0;
 	len = strchr_len(env, '=');

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_add_kind.c                                   :+:      :+:    :+:   */
+/*   tokenizer_lexer_add_kind.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:58 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 00:47:05 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 17:22:45 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ t_token	*add_kind_pipe(t_token *token)
 t_token	*add_kind_lessthan(t_token *token)
 {
 	if (!token->next)
-		return (token->kind = SYNTAX, token);		
-	// if (!token->pre && !token->next)
+		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
 	else if (token->pre && (*(token->pre->word) == '<'
@@ -105,7 +104,7 @@ t_token	*add_command_kind(t_token *token, int command_flag)
 
 int	check_builtin(char *str)
 {
-	static char	*builtin[] =
+	static char	*builtin[] = \
 		{"echo", "cd", "pwd", "export", "unset", "env", "exit"};
 	int			i;
 

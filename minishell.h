@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 10:07:59 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:04:16 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ typedef struct s_package
 }t_package;
 
 // gloval like function
-int 	end_status(int type, int end_status);
+int		end_status(int type, int end_status);
 char	*set_line(int type, char *new_line);
 t_env	*set_env(int type, t_env *new_env);
 t_token	*set_token(int type, t_token *new_token);
@@ -175,9 +175,6 @@ bool	handle_dollar(t_token *tokenized, int *i);
 // expand_quote.c
 bool	expand_quote(t_token *tokenized);
 
-// tokenizer_rm_quote.c
-bool	remove_quotes(t_token *tokenized);
-
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
 bool	init_cmd(t_cmd *cmd);
@@ -194,7 +191,6 @@ void	limitter_warning(int count, char *eof);
 void	open_files(t_cmd *cmd, t_token *token);
 
 // process
-// int		run_process(t_token *token, t_cmd *cmd, int *stdio, int command_count);
 int		run_process(t_token *token, int *stdio, int command_count);
 int		parent_process(t_cmd *cmd, int count);//t_token *token, int count);
 
@@ -205,7 +201,6 @@ void	child_exit_process(t_cmd *cmd, int stdio[2]);
 int		builtin_end_process(t_cmd *cmd);//, t_token *token);
 int		no_pipe_process(t_cmd *cmd, int *stdio);
 void	execve_fail_process(t_cmd *cmd);
-
 
 // process utils
 int		cmd_count(t_token *token);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_ends.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 00:48:26 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:08:10 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 	close(stdio[1]);
 	if (!cmd->cmd)
 		exit((free_cmd(cmd), EXIT_SUCCESS));
-	// if (cmd->status != SYNTAX && cmd->err_msg)
 	ft_printf(2, "%s", cmd->err_msg);
 	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
 	free_cmd(cmd);
-	// free_token(set_token(GET, NULL));
 	if (find_permission != NULL)
 		exit(126);
 	else
@@ -53,8 +51,7 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 int	builtin_end_process(t_cmd *cmd)//, t_token *token)
 {
 	char	*find_permission;
-	
-	// if (cmd->status != SYNTAX && cmd->err_msg)
+
 	ft_printf(2, "%s", cmd->err_msg);
 	find_permission = ft_strnstr(cmd->err_msg, "fPermission", 10);
 	close_fds(cmd);
@@ -63,7 +60,7 @@ int	builtin_end_process(t_cmd *cmd)//, t_token *token)
 	if (set_token(GET, NULL))
 		free_token(set_token(GET, NULL));
 	if (find_permission != NULL)
-		return  (126);
+		return (126);
 	else
-		return  (127);
+		return (127);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:03 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:43:09 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 19:23:09 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	builtin_echo(t_cmd *cmd)
 void	builtin_pwd(void)
 {
 	char	cwd[PATH_MAX];
-	
+
 	if (getcwd(cwd, sizeof(cwd)))
 	{
 		ft_printf(1, "%s\n", cwd);
