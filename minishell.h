@@ -192,13 +192,13 @@ void	open_files(t_cmd *cmd, t_token *token);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);
-int		parent_process(t_cmd *cmd, t_token *token, int count);
+int		parent_process(t_cmd *cmd, int count);//t_token *token, int count);
 
 // end process
 void	syntax_end(t_cmd *cmd, int stdio[2]);
 void	end_process(int stdio[2]);
 void	child_exit_process(t_cmd *cmd, int stdio[2]);
-int		builtin_end_process(t_cmd *cmd, t_token *token);
+int		builtin_end_process(t_cmd *cmd);//, t_token *token);
 int		no_pipe_process(t_cmd *cmd, int *stdio);
 void	execve_fail_process(t_cmd *cmd);
 

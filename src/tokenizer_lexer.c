@@ -34,7 +34,6 @@ static void	add_token_kind(t_token *token)
 			token = add_command_kind(token, commnad_flag);
 		if (token->kind == BUILTIN || token->kind == COMMAND)
 			commnad_flag++;
-		printf("token = %s, kind = %d\n", token->word, token->kind);
 		token = token->next;
 	}
 }

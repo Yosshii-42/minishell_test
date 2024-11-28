@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 02:38:14 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:10:05 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	set_err_message(t_cmd *cmd, char *str, char *err_str)
 		if (cmd->err_msg && (cmd->cmd[0][0] == '.' || cmd->cmd[0][0] == '/'))
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, err_str, FREE_S1);
 		else if (cmd->err_msg)
-			cmd->err_msg = strjoin_with_free(cmd->err_msg, "command not found", FREE_S1);
+			cmd->err_msg = strjoin_with_free
+				(cmd->err_msg, "command not found", FREE_S1);
 		cmd->err_msg = strjoin_with_free(cmd->err_msg, "\n", FREE_S1);
 	}
 }
@@ -37,7 +38,7 @@ static char	*make_cmd_and_check_access(t_cmd *cmd, char *pwd)
 {
 	char	*str;
 	int		i;
-	
+
 	str = NULL;
 	if (!cmd->path)
 		return (make_pwd_path(cmd->cmd[0], pwd));
@@ -69,7 +70,8 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	j = -1;
 	while (++i < token_count)
 	{
-		if (token->kind == BUILTIN || token->kind == COMMAND || token->kind == OPTION)
+		if (token->kind == BUILTIN || token->kind == COMMAND
+			|| token->kind == OPTION)
 			cmd->cmd[++j] = ft_strdup(token->word);
 		token = token->next;
 	}
@@ -106,7 +108,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 		if (token->kind == SYNTAX)
 			return (cmd->status = SYNTAX, command_return(cmd, token));
 		if (token->kind == PIPE)
-			 make_pipe(cmd);
+			make_pipe(cmd);
 		if (token->kind == PIPE && token->next)
 			return (token = token->next, command_return(cmd, token));
 		if (count_array(token) && command_flag == 0)

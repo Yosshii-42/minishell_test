@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 02:38:36 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:11:02 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*make_pwd_path(char *command, char *pwd)
 	char	*str;
 
 	if (!pwd)
-		return (strjoin_with_free("", command, NO_FREE));//不要?
+		return (strjoin_with_free("", command, NO_FREE));
 	str = NULL;
 	str = strjoin_with_free(pwd, "/", NO_FREE);
 	str = strjoin_with_free(str, command, FREE_S1);

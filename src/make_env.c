@@ -60,7 +60,8 @@ int	lstnew(t_env **start, char *env)
 	len = strchr_len(env, '=');
 	new->key = (char *)safe_malloc(len + 1, sizeof(char));
 	ft_strlcpy(new->key, env, len + 1);
-	new->value = ft_strdup((ft_strchr(env, '=') + 1));
+	if (ft_strchr(env, '='))
+		new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	new->next = NULL;
 	lstadd_back(start, new);
 	return (TRUE);
