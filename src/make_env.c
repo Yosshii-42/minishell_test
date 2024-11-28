@@ -54,7 +54,6 @@ int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
-
 	new = (t_env *)safe_malloc(1, sizeof(t_env));
 	len = 0;
 	len = strchr_len(env, '=');

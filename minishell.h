@@ -247,10 +247,11 @@ void	default_signal(int signum);
 void	child_signal(void);
 
 // builtin
-bool		do_builtin(t_cmd *cmd);
-void		builtin_cd(t_cmd *cmd, t_env *env);
-void		builtin_unset(t_cmd *cmd, t_env **env);
-void		builtin_env(void);
-void		builtin_exit(t_cmd *cmd);
+bool	do_builtin(t_cmd *cmd);
+void	builtin_cd(t_cmd *cmd, t_env *env);
+void	builtin_unset(t_cmd *cmd, t_env **env);
+void	builtin_env(void);
+void	builtin_exit(t_cmd *cmd);
+void	builtin_export(t_env **env, t_cmd *cmd);
 
 #endif
