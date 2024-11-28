@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/27 02:24:45 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 19:17:42 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// スペースとタブをスキップする関数
 static char	*space_skip(char *input)
 {
 	while (*input && ft_isspace(*input))
@@ -20,7 +19,6 @@ static char	*space_skip(char *input)
 	return (input);
 }
 
-// クォート内の長さを数える関数
 static	int	count_quote_len(char *line, char quote_char, bool *is_quoted, bool *is_double_quoted)
 {
 	int	len;
@@ -36,9 +34,7 @@ static	int	count_quote_len(char *line, char quote_char, bool *is_quoted, bool *i
 	return (-1);
 }
 
-
-// 単語の長さを数える関数
-static int count_word_len(char *line, bool *is_quoted, bool *is_double_quoted)
+static int	count_word_len(char *line, bool *is_quoted, bool *is_double_quoted)
 {
 	int	count;
 
@@ -164,7 +160,7 @@ static t_token *create_dollar_token(char **input)
 }
 
 // トークナイズ処理
-t_token *tokenizer(char *input)//, int *error_status)
+t_token *tokenizer(char *input)
 {
     t_token *head = NULL;
     t_token *current = NULL;
@@ -173,64 +169,40 @@ t_token *tokenizer(char *input)//, int *error_status)
     bool is_quoted = false;
     bool is_double_quoted = false;
 
-    input = space_skip(input);
-    while (*input)
-    {
-        if (ft_strchr(SPECIAL_TOKEN, *input))
-        {
-            token_len = count_meta_len(input);
-            token_content = ft_substr(input, 0, token_len);
-            append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted);
-            // if (!append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted))
-            // {
-            //     free_token(set_token(GET, NULL));
-            //     end_status(SET, EXIT_FAILURE);
-            //     return (NULL);
-            // }
-            input += token_len;
-        }
-        else if (*input == '$') // `$` の特別な処理
-        {
-             t_token *dollar_token = create_dollar_token(&input);
-            if (!dollar_token)
-            {
-                free_token(head);
-                end_status(SET, EXIT_FAILURE);
-                return (NULL);
-            }
-            append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted);
-            // if (!append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted))
-            // {
-            //     free_token(head);
-            //     free(dollar_token);
-            //     end_status(SET, EXIT_FAILURE);
-            //     return (NULL);
-            // }
-            free(dollar_token);
-        }
-        else
-        {
-            token_len = count_word_len(input, &is_quoted, &is_double_quoted);
-            if (token_len == -1)
-                return (ft_printf(2, "error: unmatched quote\n"), free_token(head)
-                    , end_status(SET, EXIT_FAILURE), NULL);
-            // {
-            //     ft_printf(2, "error: unmatched quote\n");
-            //     free_token(head);
-            //     end_status(SET, EXIT_FAILURE);
-            //     return (NULL);
-            // }
-            token_content = ft_substr(input, 0, token_len);
+	input = space_skip(input);
+	while (*input)
+	{
+		if (ft_strchr(SPECIAL_TOKEN, *input))
+		{
+			token_len = count_meta_len(input);
+			token_content = ft_substr(input, 0, token_len);
+			append_token(&head, &current, token_content, (*input == '<') ? LESSTHAN : (*input == '>') ? MORETHAN : PIPE, is_quoted, is_double_quoted);
+			input += token_len;
+		}
+		else if (*input == '$')
+		{
+			t_token *dollar_token = create_dollar_token(&input);
+			if (!dollar_token)
+			{
+				free_token(head);
+				end_status(SET, EXIT_FAILURE);
+				return (NULL);
+			}
+			append_token(&head, &current, dollar_token->word, COMMAND, is_quoted, is_double_quoted);
+			free(dollar_token);
+		}
+		else
+		{
+			token_len = count_word_len(input, &is_quoted, &is_double_quoted);
+			if (token_len == -1)
+				return (ft_printf(2, "error: unmatched quote\n"), \
+					free_token(head), end_status(SET, EXIT_FAILURE), NULL);
+
+			token_content = ft_substr(input, 0, token_len);
             append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted);
-            // if (!append_token(&head, &current, token_content, COMMAND, is_quoted, is_double_quoted))
-            // {
-            //     free_token(head);
-            //     end_status(SET, EXIT_FAILURE);
-            //     return (NULL);
-            // }
             input += token_len;
-        }
-        input = space_skip(input);
-    }
+		}
+		input = space_skip(input);
+	}
 	return (head);
 }

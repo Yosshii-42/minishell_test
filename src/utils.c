@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 10:15:32 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 17:00:00 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	if (!(*s1))
 		result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
 	else
-		result = (char *)safe_malloc(ft_strlen(s1) + ft_strlen(s2) + 1
-				, sizeof(char));
+		result = (char *)safe_malloc(ft_strlen(s1) + ft_strlen(s2) + 1,
+				sizeof(char));
 	while (s1[++i])
 		result[i] = s1[i];
 	while (s2[++j])
