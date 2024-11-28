@@ -33,7 +33,7 @@ int    no_pipe_process(t_cmd *cmd, int *stdio)
     int status;
 
     cmd->count = 1;
-    status = parent_process(cmd, set_token(GET, NULL), NO_PIPE);
+    status = parent_process(cmd, NO_PIPE);
     end_status(SET, status);
     syntax_end(cmd, stdio);
     return (status);
