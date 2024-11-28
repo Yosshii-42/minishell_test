@@ -82,7 +82,7 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 		exit((do_builtin(cmd), end_status(GET, 0)));
 	if (!(cmd->cmd) || cmd->status == SYNTAX)
 		exit(EXIT_SUCCESS);
-	if (execve(cmd->pathname, cmd->cmd, NULL) == -1)
+	if (execve(cmd->pathname, cmd->cmd, cmd->path) == -1)
 		execve_fail_process(cmd);
 }
 

@@ -16,7 +16,7 @@ void	default_signal(int signum)
 {
 	struct sigaction	sa;
 
-	//sa.sa_flags = 0;
+	// sa.sa_flags = 0;
 	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SIG_DFL;
 	if (sigaction(signum, &sa, NULL) < 0)

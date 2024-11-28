@@ -48,7 +48,13 @@ void	builtin_env(void)
 	env = set_env(GET, NULL);
 	while (env)
 	{
-		ft_printf(1, "%s=%s\n", env->key, env->value);
+		if (env->value)
+		{
+			ft_printf(1, "%s=", env->key);
+			if (*(env->value))
+				ft_printf(1, "%s", env->value);
+			ft_printf(1, "\n");
+		}
 		env = env->next;
 	}
 	end_status(SET, EXIT_SUCCESS);
