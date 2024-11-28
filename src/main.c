@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 10:08:41 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 19:25:31 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	dup_stdio(int *stdio)
 static void	clear_process(void)
 {
 	rl_clear_history();
-	end_status(SET, 0);	
+	end_status(SET, 0);
 }
 
 static void	do_minishell(char *line)
