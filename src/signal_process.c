@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 23:05:29 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/27 21:17:15 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:44:06 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	default_signal(int signum)
 {
 	struct sigaction	sa;
 
-	// sa.sa_flags = 0;
 	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = SIG_DFL;
 	if (sigaction(signum, &sa, NULL) < 0)

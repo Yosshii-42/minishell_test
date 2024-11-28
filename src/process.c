@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 22:01:03 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/28 19:22:49 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	wait_process(void)
 	while (1)
 	{
 		if (waitpid(-1, &status, 0) == -1 && errno == ECHILD)
-			break;
+			break ;
 		if (WIFEXITED(status))
 		{
 			exit_status = WEXITSTATUS(status);
@@ -60,7 +60,6 @@ int	parent_process(t_cmd *cmd, t_token *token, int count)
 	else if (cmd->pp[0] > 0)
 		safe_dup2(cmd->pp[0], STDIN_FILENO, PARENT, cmd);
 	close_fds(cmd);
-
 	return (EXIT_SUCCESS);
 }
 
@@ -116,7 +115,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		if (pipe_count(ptr) == 0
+		if (pipe_count(ptr) == 0 \
 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX))
 			return (no_pipe_process(cmd, stdio));
 		else if (pipex_engine(cmd, ptr, stdio) == false)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_quote.c                                     :+:      :+:    :+:   */
+/*   tokenizer_expand_quote.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:36 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/20 17:20:50 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/28 19:11:36 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,7 @@ bool	expand_quote(t_token *tokenized)
 			i++;
 		}
 		else
-		{
-			if (!append_char(&new, tokenized->word[i++]))
-			{
-				free(new);
-				return (false);
-			}
-		}
+			append_char(&new, tokenized->word[i++]);
 	}
 	free(tokenized->word);
 	tokenized->word = new;
