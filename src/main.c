@@ -45,7 +45,6 @@ static void	do_minishell(char *line)
 	else
 		end_status(SET, run_process(token, stdio, command_count));
 	ready_signal(SIGINT);
-	printf("status = %d\n", end_status(GET, 0));
 }
 
 int	main(int argc, char **argv, char **envp)

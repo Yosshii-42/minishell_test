@@ -1,6 +1,5 @@
 NAME 	= minishell
 SRCS	= src/main.c \
-		  src/main_gloval_like_function.c \
 		  src/make_env.c \
 		  src/command.c \
 		  src/command_open_file.c \
@@ -12,27 +11,33 @@ SRCS	= src/main.c \
 		  src/process_specific_process.c \
 		  src/utils.c \
 		  src/utils_free.c \
+		  src/utils_gloval_like_function.c \
+		  src/utils_safe_functions.c \
 		  src/signal.c \
 		  src/signal_handler.c \
 		  src/signal_process.c \
-		  src/builtin.c \
+		  src/builtin_main_echo_pwd.c \
 		  src/builtin_cd.c \
-		  src/builtin2.c \
-		  src/lexer.c \
-		  src/lexer_add_kind.c \
+		  src/builtin_export.c \
+		  src/builtin_exit.c \
+		  src/builtin_unset_env.c \
+		  src/tokenizer_lexer.c \
+		  src/tokenizer_lexer_add_kind.c \
 		  src/tokenizer.c \
 		  src/tokenizer_utils.c \
 		  src/tokenizer_error.c \
-		  src/expand_token.c \
-		  src/expand_dollar.c \
-		  src/expand_quote.c
+		  src/tokenizer_expand_token.c \
+		  src/tokenizer_expand_dollar.c \
+		  src/tokenizer_expand_quote.c
 OBJS	= $(SRCS:.c=.o)
-CC		= gcc
+CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline -lhistory
 # FLAGS   += -fsanitize=address
-HEADDIR	= .
+HEADDIR	= ./minishell
 LIBFT	= ./libft/libft.a
+# INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+# LIBDIRS  = -L$(RLDIR)/lib
 # RLDIR   = $(shell brew --prefix readline)
 
 #################################################################

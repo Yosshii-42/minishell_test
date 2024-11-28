@@ -6,59 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/25 23:43:13 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:18:15 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	builtin_unset(t_cmd *cmd, t_env **env)
-{
-	if (!cmd->cmd[1])
-		end_status(SET, EXIT_SUCCESS);
-	while ((*env))
-	{
-		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
-		{
-			if ((*env)->pre)
-				(*env)->pre->next = (*env)->next;
-			else
-			{
-				if ((*env)->next)
-				{
-					(*env)->next->pre = NULL;
-					env = &(*env)->next;
-				}
-			}
-			free((*env)->key);
-			free((*env)->value);
-			free(*env);
-			end_status(SET, EXIT_SUCCESS);
-		}
-		*env = (*env)->next;
-	}
-	end_status(SET, EXIT_SUCCESS);
-}
-
-// void	builtin_env(t_env *env)
-void	builtin_env(void)
-{
-	t_env	*env;
-
-	env = set_env(GET, NULL);
-	while (env)
-	{
-		if (env->value)
-		{
-			ft_printf(1, "%s=", env->key);
-			if (*(env->value))
-				ft_printf(1, "%s", env->value);
-			ft_printf(1, "\n");
-		}
-		env = env->next;
-	}
-	end_status(SET, EXIT_SUCCESS);
-}
 
 static bool	ft_isover(long long sign, long long num, long long next_num)
 {
@@ -103,6 +55,18 @@ static long	*atol_pointer(const char *nptr)
 		return (ptr);
 }
 
+void	print_err_and_set_exit_status(char *argument, long *result)
+{
+	if (result == NULL)
+	{
+		ft_printf(2, "bash: exit: %s", argument);
+		ft_printf(2, ": numeric argument rewuired\n");
+		end_status(SET, EXIT_FAILURE);
+	}
+	else
+		end_status(SET, (*result) % 256);	
+}
+
 void	builtin_exit(t_cmd *cmd)
 {
 	int		count;
@@ -122,17 +86,14 @@ void	builtin_exit(t_cmd *cmd)
 	else
 	{
 		result = atol_pointer(cmd->cmd[1]);
-		if (result == NULL)
-		{
-			ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
-			ft_printf(2, ": numeric argument rewuired\n");
-			end_status(SET, EXIT_FAILURE);
-		}
-		else
-		{
-	printf("result = %ld\n", *result);
-			printf("exit result = %d\n", end_status(GET, 0));
-			end_status(SET, (*result) % 256);
-		}
+		print_err_and_set_exit_status(cmd->cmd[1], result);
+		// if (result == NULL)
+		// {
+		// 	ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
+		// 	ft_printf(2, ": numeric argument rewuired\n");
+		// 	end_status(SET, EXIT_FAILURE);
+		// }
+		// else
+		// 	end_status(SET, (*result) % 256);
 	}
 }

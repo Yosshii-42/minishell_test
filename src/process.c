@@ -23,11 +23,7 @@ static int	wait_process(void)
 		if (waitpid(-1, &status, 0) == -1 && errno == ECHILD)
 			break;
 		if (WIFEXITED(status))
-		{
 			exit_status = WEXITSTATUS(status);
-			if (exit_status == 256 - 2)
-				exit(EXIT_FAILURE);
-		}
 		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			exit_status = WTERMSIG(status) + 128;
 	}
@@ -36,11 +32,33 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-int	parent_process(t_cmd *cmd, t_token *token, int count)
+// void	end_process(int stdio[2])
+// {
+// 	free_token(set_token(GET, NULL));
+// 	if (dup2(stdio[0], STDIN_FILENO) == -1)
+// 		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));
+// 	if (dup2(stdio[1], STDOUT_FILENO) == -1)
+// 		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));
+// 	close(stdio[0]);
+// 	close(stdio[1]);
+// }
+
+// void	parent_process(t_cmd *cmd)
+// {
+// 	if (cmd->status == SYNTAX)
+// 		ft_printf(2, "bash: syntax error\n");
+// 	else if (cmd->pp[0] > 0)
+// 		dup2(cmd->pp[0], STDIN_FILENO);
+// 	close_fds(cmd);
+
+// 	return (EXIT_SUCCESS);
+// }
+// int	parent_process(t_cmd *cmd, t_token *token, int count)
+int	parent_process(t_cmd *cmd, int count)
 {
 	ignore_signal(SIGQUIT);
 	ignore_signal(SIGINT);
-	if (cmd->status == SYNTAX || (count == NO_PIPE && cmd->status == BUILTIN))
+	if (cmd->status == SYNTAX || (count == NO_PIPE && cmd->status == BUILTIN) || !cmd->cmd[0])
 	{
 		if (cmd->writefd > 0)
 			safe_dup2(cmd->writefd, STDOUT_FILENO, PARENT, cmd);
@@ -48,7 +66,7 @@ int	parent_process(t_cmd *cmd, t_token *token, int count)
 		if (cmd->status == SYNTAX)
 			return (ft_printf(2, "bash: syntax error\n"), 2);
 		if (cmd->err_msg)
-			return (builtin_end_process(cmd, token));
+			return (builtin_end_process(cmd));
 		if (do_builtin(cmd) == false)
 		{
 			free_all(cmd);
@@ -70,11 +88,11 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	if (cmd->err_msg || !cmd->cmd)
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
-		safe_dup2(cmd->readfd, STDIN_FILENO, CHILD, cmd);
+		dup2(cmd->readfd, STDIN_FILENO);
 	if (cmd->writefd > 0)
-		safe_dup2(cmd->writefd, STDOUT_FILENO, CHILD, cmd);
+		dup2(cmd->writefd, STDOUT_FILENO);
 	else if (cmd->pp[1] > 0)
-		safe_dup2(cmd->pp[1], STDOUT_FILENO, CHILD, cmd);
+		dup2(cmd->pp[1], STDOUT_FILENO);
 	close_fds(cmd);
 	close(stdio[0]);
 	close(stdio[1]);
@@ -86,7 +104,20 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 		execve_fail_process(cmd);
 }
 
-static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
+// void	syntax_end(t_cmd *cmd, int *stdin)
+// {
+// 	// if (cmd)
+// 	// 	free_cmd(cmd);
+// 	// free_token(token);
+// 	// dup2(*stdin, STDIN_FILENO);
+// 	// close(*stdin);
+// 	if (cmd)
+// 		free_cmd(cmd);
+// 	end_process(stdio);
+// }
+
+// static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
+static bool	pipex_engine(t_cmd *cmd, int stdio[2])
 {
 	int	pid;
 
@@ -94,12 +125,44 @@ static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
 	if (pid == 0)
 		child_process(cmd, stdio);
 	else if (pid > 0)
-		parent_process(cmd, token, PIPE_EXIST);
+		parent_process(cmd, PIPE_EXIST);
 	if (access(FILE_NAME, F_OK))
 		unlink(FILE_NAME);
 	return (true);
 }
 
+// int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
+// int	run_process(t_token *token, int *stdio, int command_count)
+// {
+// 	// pid_t	pid;
+// 	t_cmd	*cmd;
+// 	t_token	*ptr;
+// 	int		command_flag;
+// 	// int		count;
+
+// 	// count = cmd_count(token);
+// 	ptr = token;
+// 	while (command_count--)
+// 	{
+// 		if (!token)
+// 			break ;
+// 		cmd = NULL;
+// 		command_flag = 0;
+// 		cmd = make_cmd(token, cmd, command_flag);
+// 		if (pipe_count(ptr) == 0
+// 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !cmd->cmd[0]))
+// 			return (no_pipe_process(cmd, stdio));
+// 		// else if (pipex_engine(cmd, ptr, stdio) == false)
+// 		else if (pipex_engine(cmd, stdio) == false)
+// 			return (syntax_end(cmd, stdio), end_status(GET, 0));
+// 		// if (cmd->status == SYNTAX)
+// 		// 	return (syntax_end(cmd, ptr, original_stdin), 2);
+// 		token = cmd->token;
+// 		free_cmd(cmd);
+// 	}
+// 	end_process(ptr, original_stdin);
+// 	return (wait_process());
+// }
 int	run_process(t_token *token, int *stdio, int command_count)
 {
 	t_token		*ptr;
@@ -119,7 +182,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		if (pipe_count(ptr) == 0
 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX))
 			return (no_pipe_process(cmd, stdio));
-		else if (pipex_engine(cmd, ptr, stdio) == false)
+		else if (pipex_engine(cmd, stdio) == false)
 			return (syntax_end(cmd, stdio), end_status(GET, 0));
 		if (cmd->status == SYNTAX)
 			return (syntax_end(cmd, stdio), 2);

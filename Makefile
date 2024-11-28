@@ -16,10 +16,11 @@ SRCS	= src/main.c \
 		  src/signal.c \
 		  src/signal_handler.c \
 		  src/signal_process.c \
-		  src/builtin.c \
+		  src/builtin_main_echo_pwd.c \
 		  src/builtin_cd.c \
 		  src/builtin_export.c \
-		  src/builtin2.c \
+		  src/builtin_exit.c \
+		  src/builtin_unset_env.c \
 		  src/tokenizer_lexer.c \
 		  src/tokenizer_lexer_add_kind.c \
 		  src/tokenizer.c \
@@ -32,12 +33,12 @@ OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
+FLAGS   += -fsanitize=address -g
 HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
-INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
-LIBDIRS  = -L$(RLDIR)/lib
-RLDIR   = $(shell brew --prefix readline)
+# INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+# LIBDIRS  = -L$(RLDIR)/lib
+# RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 

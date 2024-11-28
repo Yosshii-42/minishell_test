@@ -94,15 +94,17 @@ void	free_cmd(t_cmd *cmd)
 			free(cmd->pathname);
 			cmd->pathname = NULL;
 		}
-		if (cmd->cmd)
+		if (cmd->cmd && cmd->cmd[0])
 			free_split(cmd->cmd);
-		if (cmd->path)
+		if (cmd->path && cmd->path[0])
 			free_split(cmd->path);
 		if (cmd->err_msg)
 		{
 			free(cmd->err_msg);
 			cmd->err_msg = NULL;
 		}
+		cmd->err_file = NULL;
+		cmd->token = NULL;
 		free(cmd);
 		cmd = NULL;
 	}

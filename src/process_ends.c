@@ -50,7 +50,7 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 		exit(127);
 }
 
-int	builtin_end_process(t_cmd *cmd, t_token *token)
+int	builtin_end_process(t_cmd *cmd)//, t_token *token)
 {
 	char	*find_permission;
 	
@@ -58,8 +58,10 @@ int	builtin_end_process(t_cmd *cmd, t_token *token)
 	ft_printf(2, "%s", cmd->err_msg);
 	find_permission = ft_strnstr(cmd->err_msg, "fPermission", 10);
 	close_fds(cmd);
-	free_cmd(cmd);
-	free_token(token);
+	if (cmd)
+		free_cmd(cmd);
+	if (set_token(GET, NULL))
+		free_token(set_token(GET, NULL));
 	if (find_permission != NULL)
 		return  (126);
 	else

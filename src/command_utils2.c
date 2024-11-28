@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 00:47:39 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/28 18:12:19 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	limitter_warning(int count, char *eof)
 int	count_array(t_token *token)
 {
 	int	count;
+
 	count = 0;
 	while (token)
 	{
@@ -28,7 +29,7 @@ int	count_array(t_token *token)
 			|| token->kind == OPTION)
 			count++;
 		if (token->kind == PIPE)
-			break;
+			break ;
 		token = token->next;
 	}
 	return (count);
@@ -43,7 +44,7 @@ int	count_token(t_token *token)
 	{
 		count++;
 		if (token->kind == PIPE)
-			break;
+			break ;
 		token = token->next;
 	}
 	return (count);
