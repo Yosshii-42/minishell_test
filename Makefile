@@ -32,9 +32,9 @@ SRCS	= src/main.c \
 OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
-LIBS	= -lreadline
-FLAGS   += -fsanitize=address -g
-HEADDIR	= ./minishell.h
+LIBS	= -lreadline -lhistory
+FLAGS   += -fsanitize=address
+HEADDIR	= ./minishell
 LIBFT	= ./libft/libft.a
 # INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
 # LIBDIRS  = -L$(RLDIR)/lib
@@ -43,14 +43,14 @@ LIBFT	= ./libft/libft.a
 #################################################################
 
 %.o:%.c
-	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(FLAGS) -I$(HEADDIR) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft
-	$(CC) $(FLAGS) $(LIBDIRS) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
-	
+	$(CC) $(FLAGS) $(HEADDER) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME) 
+
 
 clean:
 	make fclean -C ./libft

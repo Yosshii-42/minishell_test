@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 19:22:49 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/30 00:08:19 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,32 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 		execve_fail_process(cmd);
 }
 
+void	change_shlvl_exit(void)
+{
+	t_env	*env;
+	char	*str;
+	int		level;
+	char	*tmp;
+	
+	env = set_env(GET, NULL);
+	str = getenv_str("SHLVL");
+	level = atoi(str);
+	level--;
+	str = NULL;
+	str = ft_itoa(level);
+	while (env)
+	{
+		if (ft_memcmp(env->key, "SHLVL", 6) == 0)
+		{
+			tmp = env->value;
+			env->value = str;
+			free(tmp);
+			break ;
+		}
+		env = env->next;
+	}	
+}
+
 int	parent_process(t_cmd *cmd, int count)
 {
 	ignore_signal(SIGQUIT);
@@ -92,15 +118,18 @@ int	parent_process(t_cmd *cmd, int count)
 		return (ft_printf(2, "bash: syntax error\n"), 2);
 	// else if (cmd->err_msg)
 	// 	return (builtin_end_process(cmd));
-	// else if (count == NO_PIPE && cmd->writefd > 0)
-	// {
-	// 	dup2(cmd->writefd, STDOUT_FILENO);
-	// 	close_fds(cmd);
-	// }
+	if (count == NO_PIPE && cmd->writefd > 0)
+	{
+		dup2(cmd->writefd, STDOUT_FILENO);
+		close_fds(cmd);
+	}
 	// else if (!cmd->pathname && cmd->status != BUILTIN)
 	// 	return (EXIT_SUCCESS);
-	else if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
+	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
+	{
+		change_shlvl_exit();		
 		exit((free_all(cmd), end_status(GET, 0)));
+	}
 	else 
 	{
 		if (cmd->pp[0] > 0)
@@ -125,13 +154,39 @@ static void	pipex_engine(t_cmd *cmd, int stdio[2])
 	// return (true);
 }
 
+void	change_shlvl(void)
+{
+	t_env	*env;
+	char	*str;
+	int		level;
+	char	*tmp;
+	
+	env = set_env(GET, NULL);
+	str = getenv_str("SHLVL");
+	level = atoi(str);
+	level++;
+	str = NULL;
+	str = ft_itoa(level);
+	while (env)
+	{
+		if (ft_memcmp(env->key, "SHLVL", 6) == 0)
+		{
+			tmp = env->value;
+			env->value = str;
+			free(tmp);
+			break ;
+		}
+		env = env->next;
+	}
+}
+
 int	run_process(t_token *token, int *stdio, int command_count)
 {
-	t_token		*ptr;
+	// t_token		*ptr;
 	t_cmd		*cmd;
 	int			command_flag;
 
-	ptr = token;
+	// ptr = token;
 	while (command_count--)
 	{
 		if (!token)
@@ -145,6 +200,8 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		// (pipe_count(ptr) == 0 \
 		// 		&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !(cmd->pathname)))
 			return (no_fork_process(cmd, stdio));
+		if (ft_memcmp(cmd->cmd[0], "./minishell", 12) == 0)
+			change_shlvl();
 		pipex_engine(cmd, stdio);// == false
 			// return (free_cmd(cmd), free_token(ptr), end_process(stdio), end_status(GET, 0));
 		// if (cmd->status == SYNTAX)
