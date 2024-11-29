@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:04:16 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/29 18:27:28 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,15 +151,18 @@ int		check_builtin(char *str);
 
 // tokenizer.c
 t_token	*tokenizer(char *input);
+
+// tokenizer_utils1.c
+char	*space_skip(char *input);
+int		count_meta_len(char *line);
 int		count_envname_len(char *token, int i);
 
-// tokenizer_utils.c
+
+// tokenizer_utils2.c
 char	*ft_strjoin_one(char *str, char c);
-int		ft_isspace(char c);
-// char	*ft_strcpy(char *dest, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_isspace(char c);
 bool	is_quote(char c);
-int		check_builtin(char *str);
 
 // tokenizer_error.c
 bool	find_syntax_error(t_token *tokenized);
