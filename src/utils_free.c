@@ -112,8 +112,8 @@ void	free_cmd(t_cmd *cmd)
 
 void	free_all(t_cmd *cmd)
 {
-	if (set_env(GET, NULL))
-		free_env(set_env(GET, NULL));
+	// if (set_env(GET, NULL))
+	// 	free_env(set_env(GET, NULL));
 	free_token(set_token(GET, NULL));
 	free_cmd(cmd);
 	free(set_line(GET, NULL));

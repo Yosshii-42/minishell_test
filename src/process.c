@@ -32,32 +32,6 @@ static int	wait_process(void)
 	return (exit_status);
 }
 
-int	parent_process(t_cmd *cmd, int count)
-{
-	ignore_signal(SIGQUIT);
-	ignore_signal(SIGINT);
-	if (cmd->status == SYNTAX)
-		return (ft_printf(2, "bash: syntax error\n"), 2);
-	else if (cmd->err_msg)
-		return (builtin_end_process(cmd));
-	else if (cmd->writefd > 0)
-	{
-		dup2(cmd->writefd, STDOUT_FILENO);
-		close_fds(cmd);
-	}
-	else if (!cmd->pathname && cmd->status != BUILTIN)
-		return (EXIT_SUCCESS);
-	else if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
-		exit((free_all(cmd), end_status(GET, 0)));
-	else 
-	{
-		if (cmd->pp[0] > 0)
-			dup2(cmd->pp[0], STDIN_FILENO);
-		return (close_fds(cmd), EXIT_SUCCESS);
-	}
-	return (end_status(GET, 0));
-}
-
 char	**make_env_array(void)
 {
 	char	**env_lst;
@@ -89,8 +63,8 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 {
 	char	**envp;
 
-	child_signal();
-	if (cmd->err_msg || !cmd->cmd)
+	// child_signal();
+	if (cmd->err_msg || (!cmd->pathname && cmd->status != BUILTIN))
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
 		dup2(cmd->readfd, STDIN_FILENO);
@@ -103,16 +77,41 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	close(stdio[1]);
 	if (check_builtin(cmd->cmd[0]) >= 0)
 		exit((do_builtin(cmd), end_status(GET, 0)));
-	if (!(cmd->cmd) || cmd->status == SYNTAX)
-		exit(EXIT_SUCCESS);
+	// if (!(cmd->cmd) || cmd->status == SYNTAX)
+	// 	exit(EXIT_SUCCESS);
 	envp = make_env_array();
 	if (execve(cmd->pathname, cmd->cmd, envp) == -1)
 		execve_fail_process(cmd);
 }
 
+int	parent_process(t_cmd *cmd, int count)
+{
+	ignore_signal(SIGQUIT);
+	ignore_signal(SIGINT);
+	if (cmd->status == SYNTAX)
+		return (ft_printf(2, "bash: syntax error\n"), 2);
+	// else if (cmd->err_msg)
+	// 	return (builtin_end_process(cmd));
+	// else if (count == NO_PIPE && cmd->writefd > 0)
+	// {
+	// 	dup2(cmd->writefd, STDOUT_FILENO);
+	// 	close_fds(cmd);
+	// }
+	// else if (!cmd->pathname && cmd->status != BUILTIN)
+	// 	return (EXIT_SUCCESS);
+	else if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
+		exit((free_all(cmd), end_status(GET, 0)));
+	else 
+	{
+		if (cmd->pp[0] > 0)
+			dup2(cmd->pp[0], STDIN_FILENO);
+		return (close_fds(cmd), EXIT_SUCCESS);
+	}
+	return (end_status(GET, 0));
+}
 
 // static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
-static bool	pipex_engine(t_cmd *cmd, int stdio[2])
+static void	pipex_engine(t_cmd *cmd, int stdio[2])
 {
 	int	pid;
 
@@ -123,7 +122,7 @@ static bool	pipex_engine(t_cmd *cmd, int stdio[2])
 		parent_process(cmd, PIPE_EXIST);
 	if (access(FILE_NAME, F_OK))
 		unlink(FILE_NAME);
-	return (true);
+	// return (true);
 }
 
 int	run_process(t_token *token, int *stdio, int command_count)
@@ -141,17 +140,19 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		if (pipe_count(ptr) == 0 \
-				&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !(cmd->pathname)))
-			return (no_pipe_process(cmd, stdio));
-		else if (pipex_engine(cmd, stdio) == false)
-			return (syntax_end(cmd, stdio), end_status(GET, 0));
-		if (cmd->status == SYNTAX)
-			return (syntax_end(cmd, stdio), 2);
+		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
+			|| cmd->status == SYNTAX)
+		// (pipe_count(ptr) == 0 \
+		// 		&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !(cmd->pathname)))
+			return (no_fork_process(cmd, stdio));
+		pipex_engine(cmd, stdio);// == false
+			// return (free_cmd(cmd), free_token(ptr), end_process(stdio), end_status(GET, 0));
+		// if (cmd->status == SYNTAX)
+		// 	return (syntax_end(cmd, stdio), 2);
 		token = cmd->token;
 		free_cmd(cmd);
 	}
-	return (end_process(stdio), wait_process());
+	return (end_process(stdio), free_token(set_token(GET, NULL)), wait_process());
 }
 // int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
 // int	run_process(t_token *token, int *stdio, int command_count)
