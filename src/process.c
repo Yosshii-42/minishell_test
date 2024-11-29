@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/30 01:19:00 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/11/30 01:24:49 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,14 @@ int	parent_process(t_cmd *cmd, int count)
 		return (ft_printf(2, "bash: syntax error\n"), 2);
 	// else if (cmd->err_msg)
 	// 	return (builtin_end_process(cmd));
-	// else if (count == NO_PIPE && cmd->writefd > 0)
-	// {
-	// 	dup2(cmd->writefd, STDOUT_FILENO);
-	// 	close_fds(cmd);
-	// }
+	if (count == NO_PIPE && cmd->writefd > 0)
+	{
+		dup2(cmd->writefd, STDOUT_FILENO);
+		close_fds(cmd);
+	}
 	// else if (!cmd->pathname && cmd->status != BUILTIN)
 	// 	return (EXIT_SUCCESS);
-	else if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
+	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
 		exit((free_all(cmd), end_status(GET, 0)));
 	else 
 	{
