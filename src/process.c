@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 19:22:49 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/30 01:19:00 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,11 +127,11 @@ static void	pipex_engine(t_cmd *cmd, int stdio[2])
 
 int	run_process(t_token *token, int *stdio, int command_count)
 {
-	t_token		*ptr;
+	// t_token		*ptr;
 	t_cmd		*cmd;
 	int			command_flag;
 
-	ptr = token;
+	// ptr = token;
 	while (command_count--)
 	{
 		if (!token)
