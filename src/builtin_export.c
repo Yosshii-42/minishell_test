@@ -12,6 +12,15 @@
 
 #include "../minishell.h"
 
+void	lstadd_front(t_env **start, t_env *new)
+{
+	if (new)
+	{
+		new->next = *start;
+		*start = new;
+	}
+}
+
 static int	lstnew_export(t_env **start, char *env)
 {
 	t_env	*new;
@@ -28,7 +37,7 @@ static int	lstnew_export(t_env **start, char *env)
 	if (ft_strchr(env, '='))
 		new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	new->next = NULL;
-	lstadd_back(start, new);
+	lstadd_front(start, new);
 	return (TRUE);
 }
 
@@ -65,6 +74,7 @@ bool	find_key(char *command, char *key)
 void	builtin_export(t_env **start, t_cmd *cmd)
 {
 	t_env	*env;
+	char	*tmp;
 	int		i;
 
 	if (!cmd->cmd[1])
@@ -77,15 +87,16 @@ void	builtin_export(t_env **start, t_cmd *cmd)
 		{
 			if (find_key(cmd->cmd[i], env->key) == true)
 			{
-				free(env->value);
-				env->value = NULL;
+				tmp = env->value;
 				env->value = ft_strdup(ft_strchr(cmd->cmd[i], '=') + 1);
-				end_status(SET, EXIT_SUCCESS);
+				free(tmp);
+				end_status(SET, EXIT_SUCCESS);				
 				return ;
 			}
 			env = env->next;
 		}
 		lstnew_export(start, cmd->cmd[i]);
+		set_env(SET, *start);
 	}
 	end_status(SET, EXIT_SUCCESS);
 }
