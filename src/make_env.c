@@ -23,14 +23,12 @@ t_env	*lstlast(t_env *lst)
 
 static t_env	*change_last_node(t_env *env)
 {
-	char	*tmp;
 	t_env	*ptr;
 
 	ptr = env;
 	env = lstlast(env);
-	tmp = env->value;
+	free(env->value);
 	env->value = ft_strdup("/usr/bin/env");
-	free(tmp);
 	return (ptr);
 }
 
