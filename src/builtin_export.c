@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-28 07:19:29 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:38:50 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/11/28 07:19:29 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/11/30 01:44:24 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ bool	find_key(char *command, char *key)
 void	builtin_export(t_env **start, t_cmd *cmd)
 {
 	t_env	*env;
-	char	*tmp;
 	int		i;
 
 	if (!cmd->cmd[1])
@@ -85,11 +84,11 @@ void	builtin_export(t_env **start, t_cmd *cmd)
 		env = set_env(GET, NULL);
 		while (env)
 		{
-			if (find_key(cmd->cmd[i], env->key) == true)
+			if (find_key(cmd->cmd[i], env->key) == true 
+				&& ft_strchr(cmd->cmd[1], '='))
 			{
-				tmp = env->value;
+				free(env->value);
 				env->value = ft_strdup(ft_strchr(cmd->cmd[i], '=') + 1);
-				free(tmp);
 				end_status(SET, EXIT_SUCCESS);				
 				return ;
 			}
