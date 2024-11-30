@@ -141,7 +141,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
 		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
-			|| cmd->status == SYNTAX)
+			|| cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN))
 			return (no_fork_process(cmd, stdio));
 		pipex_engine(cmd, stdio);// == false
 		token = cmd->token;
