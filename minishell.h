@@ -68,6 +68,7 @@ typedef enum e_kind
 	WRFILE,
 	WRF_APP,
 	SYNTAX,
+	_NULL
 }t_kind;
 
 typedef enum e_status

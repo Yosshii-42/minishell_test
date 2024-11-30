@@ -92,14 +92,14 @@ int	parent_process(t_cmd *cmd, int count)
 		return (ft_printf(2, "bash: syntax error\n"), 2);
 	// else if (cmd->err_msg)
 	// 	return (builtin_end_process(cmd));
-	// else if (count == NO_PIPE && cmd->writefd > 0)
-	// {
-	// 	dup2(cmd->writefd, STDOUT_FILENO);
-	// 	close_fds(cmd);
-	// }
+	if (count == NO_PIPE && cmd->writefd > 0)
+	{
+		dup2(cmd->writefd, STDOUT_FILENO);
+		close_fds(cmd);
+	}
 	// else if (!cmd->pathname && cmd->status != BUILTIN)
 	// 	return (EXIT_SUCCESS);
-	else if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
+	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
 		exit((free_all(cmd), end_status(GET, 0)));
 	else 
 	{
@@ -140,6 +140,8 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
+		// printf("token = %s\n", token->word);
+		// printf("pathname = %s, cmd = %s, cmd->status = %d\n", cmd->pathname, cmd->cmd[0], cmd->status);
 		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
 			|| cmd->status == SYNTAX)
 		// (pipe_count(ptr) == 0 \
