@@ -23,8 +23,7 @@ void	set_err_message(t_cmd *cmd, char *str, char *err_str)
 		cmd->err_msg = strjoin_with_free("", "Command ' ' not found\n", NO_FREE);
 	else
 	{
-		cmd->err_msg = strjoin_with_free("bash: ", str, NO_FREE);
-		cmd->err_msg = strjoin_with_free(cmd->err_msg, ": ", FREE_S1);
+		cmd->err_msg = strjoin_with_free(str, ": ", NO_FREE);
 		if (cmd->err_msg && (cmd->cmd[0][0] == '.' || cmd->cmd[0][0] == '/'))
 			cmd->err_msg = strjoin_with_free(cmd->err_msg, err_str, FREE_S1);
 		else if (cmd->err_msg)
@@ -82,6 +81,8 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 static bool	make_path_cmd(t_token *token, t_cmd *cmd)
 {
 	cmd = make_command_array(token, cmd);
+	if (!cmd)
+		return (true);
 	if (check_builtin(cmd->cmd[0]) >= 0)
 		return (true);
 	if (cmd->cmd[0])
@@ -101,29 +102,32 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd)
 
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
-	cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
-	init_cmd(cmd);
 	while (token)
 	{
-		if (token->kind == SYNTAX)
-			return (cmd->status = SYNTAX, command_return(cmd, token));
-		if (token->kind == PIPE)
-			make_pipe(cmd);
-		if (token->kind == PIPE && token->next)
-			return (token = token->next, command_return(cmd, token));
-		if (count_array(token) && command_flag == 0)
-		{
-			command_flag++;
-			make_path_cmd(token, cmd);
-		}
-		if (token->kind >= RDFILE && token->kind <= WRF_APP)
-			open_files(cmd, token);
-		if (token->kind == BUILTIN && cmd->status != SYNTAX)
-			cmd->status = BUILTIN;
-		if (token->kind >= COMMAND && token->kind <= WRF_APP)
+		if (!token->word || !token->word[0])
 			token = token->next;
 		else
-			break ;
+		{
+			if (token->kind == SYNTAX)
+				return (cmd->status = SYNTAX, command_return(cmd, token));
+			if (token->kind == PIPE)
+				make_pipe(cmd);
+			if (token->kind == PIPE && token->next)
+				return (token = token->next, command_return(cmd, token));
+			if (count_array(token) && command_flag == 0)
+			{
+				command_flag++;
+				make_path_cmd(token, cmd);
+			}
+			if (token->kind >= RDFILE && token->kind <= WRF_APP)
+				open_files(cmd, token);
+			if (token->kind == BUILTIN && cmd->status != SYNTAX)
+				cmd->status = BUILTIN;
+			if ((token->kind >= COMMAND && token->kind <= WRF_APP))
+				token = token->next;
+			else
+				break ;
+		}
 	}
 	return (command_return(cmd, token));
 }

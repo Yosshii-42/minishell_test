@@ -110,7 +110,6 @@ int	parent_process(t_cmd *cmd, int count)
 	return (end_status(GET, 0));
 }
 
-// static bool	pipex_engine(t_cmd *cmd, t_token *token, int stdio[2])
 static void	pipex_engine(t_cmd *cmd, int stdio[2])
 {
 	int	pid;
@@ -122,7 +121,6 @@ static void	pipex_engine(t_cmd *cmd, int stdio[2])
 		parent_process(cmd, PIPE_EXIST);
 	if (access(FILE_NAME, F_OK))
 		unlink(FILE_NAME);
-	// return (true);
 }
 
 int	run_process(t_token *token, int *stdio, int command_count)
@@ -138,53 +136,16 @@ int	run_process(t_token *token, int *stdio, int command_count)
 			break ;
 		expand_token(token);
 		cmd = NULL;
+		cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
+		init_cmd(cmd);		
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		// printf("token = %s\n", token->word);
-		// printf("pathname = %s, cmd = %s, cmd->status = %d\n", cmd->pathname, cmd->cmd[0], cmd->status);
 		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
 			|| cmd->status == SYNTAX)
-		// (pipe_count(ptr) == 0 \
-		// 		&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !(cmd->pathname)))
 			return (no_fork_process(cmd, stdio));
 		pipex_engine(cmd, stdio);// == false
-			// return (free_cmd(cmd), free_token(ptr), end_process(stdio), end_status(GET, 0));
-		// if (cmd->status == SYNTAX)
-		// 	return (syntax_end(cmd, stdio), 2);
 		token = cmd->token;
 		free_cmd(cmd);
 	}
 	return (end_process(stdio), free_token(set_token(GET, NULL)), wait_process());
 }
-// int	run_process(t_token *token, char **path, char *pwd, int *original_stdin)
-// int	run_process(t_token *token, int *stdio, int command_count)
-// {
-// 	// pid_t	pid;
-// 	t_cmd	*cmd;
-// 	t_token	*ptr;
-// 	int		command_flag;
-// 	// int		count;
-
-// 	// count = cmd_count(token);
-// 	ptr = token;
-// 	while (command_count--)
-// 	{
-// 		if (!token)
-// 			break ;
-// 		cmd = NULL;
-// 		command_flag = 0;
-// 		cmd = make_cmd(token, cmd, command_flag);
-// 		if (pipe_count(ptr) == 0
-// 				&& (cmd->status == BUILTIN || cmd->status == SYNTAX || !cmd->cmd[0]))
-// 			return (no_pipe_process(cmd, stdio));
-// 		// else if (pipex_engine(cmd, ptr, stdio) == false)
-// 		else if (pipex_engine(cmd, stdio) == false)
-// 			return (syntax_end(cmd, stdio), end_status(GET, 0));
-// 		// if (cmd->status == SYNTAX)
-// 		// 	return (syntax_end(cmd, ptr, original_stdin), 2);
-// 		token = cmd->token;
-// 		free_cmd(cmd);
-// 	}
-// 	end_process(ptr, original_stdin);
-// 	return (wait_process());
-// }

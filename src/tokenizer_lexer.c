@@ -19,8 +19,6 @@ static void	add_token_kind(t_token *token)
 	commnad_flag = 0;
 	while (token)
 	{
-		// if (!token->word)
-		// 	token->kind = _NULL;
 		if (*(token->word) == '|')
 		{
 			token = add_kind_pipe(token);
