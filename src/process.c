@@ -140,6 +140,8 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
+		// printf("token = %s\n", token->word);
+		// printf("pathname = %s, cmd = %s, cmd->status = %d\n", cmd->pathname, cmd->cmd[0], cmd->status);
 		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
 			|| cmd->status == SYNTAX)
 		// (pipe_count(ptr) == 0 \
