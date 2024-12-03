@@ -101,7 +101,7 @@ int	parent_process(t_cmd *cmd, int count)
 	// 	return (EXIT_SUCCESS);
 	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
 		exit((free_all(cmd), end_status(GET, 0)));
-	else 
+	else
 	{
 		if (cmd->pp[0] > 0)
 			dup2(cmd->pp[0], STDIN_FILENO);
@@ -125,11 +125,11 @@ static void	pipex_engine(t_cmd *cmd, int stdio[2])
 
 int	run_process(t_token *token, int *stdio, int command_count)
 {
-	// t_token		*ptr;
 	t_cmd		*cmd;
 	int			command_flag;
+	t_token		*ptr;
 
-	// ptr = token;
+	ptr = set_token(GET, NULL);
 	while (command_count--)
 	{
 		if (!token)
@@ -137,15 +137,15 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		expand_token(token);
 		cmd = NULL;
 		cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
-		init_cmd(cmd);		
+		init_cmd(cmd);
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		if ((pipe_count(set_token(GET, NULL)) == 0 && cmd->status == BUILTIN)
-			|| cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN))
+		if (cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN)
+			|| (pipe_count(ptr) == 0 && cmd->status == BUILTIN))
 			return (no_fork_process(cmd, stdio));
 		pipex_engine(cmd, stdio);// == false
 		token = cmd->token;
 		free_cmd(cmd);
 	}
-	return (end_process(stdio), free_token(set_token(GET, NULL)), wait_process());
+	return (end_process(stdio), free_token(ptr), wait_process());
 }

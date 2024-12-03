@@ -32,11 +32,11 @@ int	no_fork_process(t_cmd *cmd, int *stdio)
 {
 	int	status;
 
-    cmd->count = 1;
-    status = parent_process(cmd, NO_PIPE);
-    end_status(SET, status);
+	cmd->count = 1;
+	status = parent_process(cmd, NO_PIPE);
+	end_status(SET, status);
 	free_cmd(cmd);
 	free_token(set_token(GET, NULL));
-    end_process(stdio);
-    return (status);
+	end_process(stdio);
+	return (status);
 }

@@ -78,8 +78,9 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 	return (cmd);
 }
 
-static bool	make_path_cmd(t_token *token, t_cmd *cmd)
+static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 {
+	(*command_flag)++;
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		return (true);
@@ -108,7 +109,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 		if ((!token->word || !token->word[0]))// && token->is_dollar == true)
 			token = token->next;
 		else if ((!token->word || !token->word[0]) && token->kind == COMMAND)
-			break;
+			break ;
 		else
 		{
 			if (token->kind == SYNTAX)
@@ -118,10 +119,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 			if (token->kind == PIPE && token->next)
 				return (token = token->next, command_return(cmd, token));
 			if (count_array(token) && command_flag == 0)
-			{
-				command_flag++;
-				make_path_cmd(token, cmd);
-			}
+				make_path_cmd(token, cmd, &command_flag);
 			if (token->kind >= RDFILE && token->kind <= WRF_APP)
 				open_files(cmd, token);
 			if (token->kind == BUILTIN && cmd->status != SYNTAX)

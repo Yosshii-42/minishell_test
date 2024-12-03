@@ -42,7 +42,7 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 	if (!cmd->pathname)
 		exit((free_cmd(cmd), free_token(set_token(GET, NULL)), EXIT_SUCCESS));
 	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
-	free_cmd(cmd);				
+	free_cmd(cmd);
 	if (find_permission != NULL)
 		exit(126);
 	else
