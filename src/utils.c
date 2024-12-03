@@ -22,9 +22,9 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 		return (NULL);
 	i = -1;
 	j = -1;
-	if (!(*s1))
-		result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
-	else
+	// if (s1[0] == '\0')
+	// 	result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
+	// else
 		result = (char *)safe_malloc
 			(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	while (s1[++i])
@@ -32,9 +32,9 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	while (s2[++j])
 		result[i + j] = s2[j];
 	result[i + j] = '\0';
-	if (select == 1 && *s1)
+	if (select == FREE_S1 || select == FREE_ALL)
 		free(s1);
-	else if (select == 2 && *s2)
+	else if (select == FREE_S2 || select == FREE_ALL)
 		free(s2);
 	return (result);
 }

@@ -31,6 +31,7 @@
 // strjoin_with_free
 # define FREE_S1 1
 # define FREE_S2 2
+# define FREE_ALL 3
 # define NO_FREE 0
 // set & get function
 # define SET 0
@@ -103,6 +104,7 @@ typedef struct s_token
 	t_status		status;
 	bool			is_quoted;
 	bool			is_double_quoted;
+	bool			is_dollar;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -182,7 +184,7 @@ bool	init_cmd(t_cmd *cmd);
 int		count_array(t_token *token);
 int		count_token(t_token *token);
 void	make_pipe(t_cmd *cmd);
-char	*make_pwd_path(char *command, char *pwd);
+char	*make_pwd_path(char *command);
 char	*getenv_str(char *str);
 t_cmd	*command_return(t_cmd *cmd, t_token *token);
 void	set_err_message(t_cmd *cmd, char *str, char *err_str);

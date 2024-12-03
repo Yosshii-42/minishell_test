@@ -20,7 +20,7 @@ void	set_err_message(t_cmd *cmd, char *str, char *err_str)
 	if (cmd->status == SYNTAX)
 		cmd->err_msg = ft_strdup("bash: syntax error\n");
 	else if (!str || !*str)
-		cmd->err_msg = strjoin_with_free("", "Command ' ' not found\n", NO_FREE);
+		cmd->err_msg = ft_strdup("Command ' ' not found\n");
 	else
 	{
 		cmd->err_msg = strjoin_with_free(str, ": ", NO_FREE);
@@ -33,26 +33,26 @@ void	set_err_message(t_cmd *cmd, char *str, char *err_str)
 	}
 }
 
-static char	*make_cmd_and_check_access(t_cmd *cmd, char *pwd)
+static char	*make_cmd_and_check_access(t_cmd *cmd)
 {
 	char	*str;
 	int		i;
 
 	str = NULL;
 	if (!cmd->path)
-		return (make_pwd_path(cmd->cmd[0], pwd));
+		return (make_pwd_path(cmd->cmd[0]));
 	i = -1;
 	while (cmd->path[++i])
 	{
 		str = strjoin_with_free(cmd->path[i], "/", NO_FREE);
-		if (str)
-			str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
+		str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
 		if (!access(str, X_OK))
 			return (str);
 		free(str);
 		str = NULL;
 	}
-	return (strjoin_with_free("x", cmd->cmd[0], NO_FREE));
+	return (NULL);
+	// return (strjoin_with_free("x", cmd->cmd[0], NO_FREE));
 }
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
@@ -88,15 +88,16 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd)
 	if (cmd->cmd[0])
 	{
 		if (cmd->cmd[0][0] == '/')
-			cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
+			cmd->pathname = ft_strdup(cmd->cmd[0]);
 		else if (cmd->cmd[0][0] == '.')
-			cmd->pathname = make_pwd_path(cmd->cmd[0], getenv("PWD"));
+			cmd->pathname = make_pwd_path(cmd->cmd[0]);
 		else
-			cmd->pathname = make_cmd_and_check_access(cmd, getenv("PWD"));
-		if (cmd->pathname)
-			return (true);
+			cmd->pathname = make_cmd_and_check_access(cmd);
+		if (!cmd->pathname && cmd->cmd[0])
+			cmd->pathname = ft_strdup(cmd->cmd[0]);
+		// return (true);
 	}
-	cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
+	// cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 	return (true);
 }
 
@@ -104,8 +105,10 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
 	while (token)
 	{
-		if (!token->word || !token->word[0])
+		if ((!token->word || !token->word[0]))// && token->is_dollar == true)
 			token = token->next;
+		else if ((!token->word || !token->word[0]) && token->kind == COMMAND)
+			break;
 		else
 		{
 			if (token->kind == SYNTAX)

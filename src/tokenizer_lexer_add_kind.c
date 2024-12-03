@@ -70,6 +70,12 @@ t_token	*add_kind_morethan(t_token *token)
 	return (token);
 }
 
+void	set_kind_as_command(t_token *token, int *command_flag)
+{
+	token->kind = COMMAND;
+	(*command_flag)++;
+}
+
 t_token	*add_command_kind(t_token *token, int command_flag)
 {
 	if (token->next && token->next->kind == SYNTAX)
@@ -87,16 +93,9 @@ t_token	*add_command_kind(t_token *token, int command_flag)
 		else if (command_flag > 0)
 			token->kind = OPTION;
 		else
-		{
-			token->kind = COMMAND;
-			command_flag++;
-		}
+			set_kind_as_command(token, &command_flag);
 	}
 	else
-	{
-		token->kind = COMMAND;
-		command_flag++;
-	}
 	if (!token->next)
 		token->status = END;
 	return (token);

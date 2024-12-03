@@ -39,13 +39,14 @@ void	make_pipe(t_cmd *cmd)
 		exit((ft_printf(2, "pipe: %s\n", strerror(errno)), EXIT_FAILURE));
 }
 
-char	*make_pwd_path(char *command, char *pwd)
+char	*make_pwd_path(char *command)
 {
 	char	*str;
+	char	*pwd;
 
+	pwd = getenv("PWD");
 	if (!pwd)
-		return (strjoin_with_free("", command, NO_FREE));
-	str = NULL;
+		pwd = getenv("OLDPWD");
 	str = strjoin_with_free(pwd, "/", NO_FREE);
 	str = strjoin_with_free(str, command, FREE_S1);
 	return (str);
@@ -72,7 +73,10 @@ char	*getenv_str(char *str)
 t_cmd	*command_return(t_cmd *cmd, t_token *token)
 {
 	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
+	// if (!cmd->pathname || access(cmd->pathname , X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0], strerror(errno));
+	else if (!cmd->cmd)
+		set_err_message(cmd, NULL, NULL);
 	cmd->token = token;
 	return (cmd);
 }
