@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 17:00:00 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 17:29:18 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 		return (NULL);
 	i = -1;
 	j = -1;
-	if (!(*s1))
-		result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
-	else
-		result = (char *)safe_malloc
-			(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
+	//if (!(*s1))
+	//	result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
+	//else
+	result = (char *)safe_malloc
+		(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	while (s1[++i])
 		result[i] = s1[i];
 	while (s2[++j])
 		result[i + j] = s2[j];
 	result[i + j] = '\0';
-	if (select == 1 && *s1)
+	if (select == FREE_S1 || select == FREE_ALL)
 		free(s1);
-	else if (select == 2 && *s2)
+	else if (select == FREE_S2 || select == FREE_ALL)
 		free(s2);
 	return (result);
 }

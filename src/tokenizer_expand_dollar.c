@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/28 18:55:54 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 20:19:30 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,75 +14,95 @@
 
 volatile sig_atomic_t	g_exit_status = 0;
 
-static	char	*split_keyname(char *token, int i)
+int	dollar_len(char *token_word)
 {
 	int	len;
 
-	len = count_envname_len(token, i);
-	return (ft_substr(token, i, len));
+	len = 0;
+	while (token_word[len])
+	{
+		if (!(token_word[len] == '\'' || token_word[len] == '\"'))
+			len++;
+		else if (token_word[len] == '\'' || token_word[len] == '\"')
+			break ;
+	}
+	return (len);
 }
 
-static	void	update_quote_status(char *quote, char c)
-{
-	if (*quote == 0)
-		*quote = c;
-	else if (*quote == c)
-		*quote = 0;
-}
-
-static	char	*resolve_env_value(char	*env_key)
+static	char	*find_env_key(char	*token_word)
 {
 	t_env	*env;
+	int		len;
 
+	len = dollar_len(token_word);
 	env = set_env(GET, NULL);
 	while (env)
 	{
-		if (ft_memcmp(env_key, env->key, ft_strlen(env_key) + 1) == 0)
-			return (ft_strdup(env->value));
+		if (ft_strncmp(env->key, token_word, len) == 0)
+			return (env->value);
 		env = env->next;
 	}
-	return (ft_strdup(""));
+	return (NULL);
 }
 
-bool	handle_dollar(t_token *tokenized, int *i)
+
+static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 {
 	char	*env_key;
-	char	*tmp;
+	int		len;
 
-	(*i)++;
-	env_key = split_keyname(tokenized->word, *i);
-	tmp = tokenized->word;
-	if (ft_strncmp(env_key, "?", 1) == 0)
+	len = 0;
+	if (*token_word == '?')
 	{
-		tokenized->word = strjoin_with_free(ft_itoa(end_status(GET, 0)), \
-			&tokenized->word[++(*i)], FREE_S1);
-		return (free(env_key), true);
+		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
+		return (*i += 1, token->is_dollar = true, new);
 	}
-	tokenized->word = resolve_env_value(env_key);
-	return (free(tmp), free(env_key), true);
-}
-
-bool	expand_dollar(t_token *tokenized)
-{
-	int		i;
-	char	quote;
-	char	*new;
-
-	i = 0;
-	quote = 0;
-	new = ft_strdup("");
-	while (tokenized->word[i])
+	else
 	{
-		if (is_quote(tokenized->word[i]))
-			update_quote_status(&quote, tokenized->word[i]);
-		if (quote != '\'' && tokenized->word[i] == '$')
-			handle_dollar(tokenized, &i);
+		env_key = find_env_key(token_word);
+		len = dollar_len(token_word);
+		if (!env_key)
+			return (*i += dollar_len(token_word), token->is_dollar = true, new);
 		else
 		{
-			append_char(&new, tokenized->word[i]);
-			i++;
+			new = strjoin_with_free(new, env_key, FREE_S1);
+			return (*i += len, token->is_dollar = true, new);
 		}
 	}
-	free(new);
-	return (true);
+	return (0);
+}
+
+static void	init_variables(int *i, int *single_flag, int *double_flag)
+{
+	*i = 0;
+	*single_flag = 0;
+	*double_flag = 0;
+}
+
+char	*expand_dollar(char *tokenized, t_token *token)
+{
+	int		i;
+	char	*new;
+	int		single_flag;
+	int		double_flag;
+
+	init_variables(&i, &single_flag, &double_flag);
+	new = ft_strdup("");
+	while (tokenized[i])
+	{
+		if (tokenized[i] == '\"')
+			double_flag++;
+		if (tokenized[i] == '\'' && double_flag % 2 == 0)
+			single_flag++;
+		if (single_flag % 2 == 0 && tokenized[i] == '$')
+		{
+			if (tokenized[++i])
+				new = handle_dollar(&tokenized[i], new, &i, token);
+			else
+				return (free(tokenized), ft_strjoin_one(new, '$'));
+		}
+		else
+			new = ft_strjoin_one(new, tokenized[i++]);
+	}
+	return (free(tokenized), new);
 }

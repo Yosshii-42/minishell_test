@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:35:00 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/28 17:21:59 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 20:15:05 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ static void	add_token_kind(t_token *token)
 		else if (check_builtin(token->word) >= 0)
 			token->kind = BUILTIN;
 		else
+		{
 			token = add_command_kind(token, commnad_flag);
+			add_command_kind(token, commnad_flag);
+		}
 		if (token->kind == BUILTIN || token->kind == COMMAND)
 			commnad_flag++;
 		token = token->next;
@@ -46,14 +49,16 @@ t_token	*lexer(char *line)
 		return (NULL);
 	token = NULL;
 	token = tokenizer(line);
-	if (!token)
-		return (NULL);
-	if (!find_syntax_error(token))
-	{
-		free_token(token);
-		end_status(SET, 1);
-		return (NULL);
-	}		
+	set_token(SET, token);
 	add_token_kind(token);
-	return (token);
+	if (!find_syntax_error(token))
+		return (free_token(token), end_status(SET, 1), NULL);
+	while (token)
+	{
+		if (ft_strchr(token->word, '$'))
+			token->word = expand_dollar(token->word, token);
+		token = token->next;
+	}
+	//expand_quote(set_token(GET, NULL));
+	return (set_token(GET, NULL));
 }

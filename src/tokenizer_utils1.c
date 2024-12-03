@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 18:24:10 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/29 18:27:08 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/01 16:05:22 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,25 @@ char	*space_skip(char *input)
 	return (input);
 }
 
+int	count_word_len(char *input, t_token *new)
+{
+	int	len;
+
+	len = 0;
+	while (*(input + len) && !ft_isspace(*(input + len)) && \
+		!ft_strchr(SPECIAL_TOKEN, *(input + len)))
+	{
+		if (*(input + len) == '\'')
+			new->is_quoted = true;
+		else if (*(input + len) =='\"')
+			new->is_double_quoted = true;
+		else if (*(input + len) == '$')
+			new->is_dollar = true;
+		len++;
+	}
+	return (len);
+}
+
 int	count_meta_len(char *line)
 {
 	if (line[0] == '<' && line[1] == '<')
@@ -28,16 +47,24 @@ int	count_meta_len(char *line)
 	return (1);
 }
 
-int	count_envname_len(char *token, int i)
+int	count_envname_len(char *input, t_token *new, int start)
 {
 	int	len;
 
+	(void)start;
 	len = 0;
-	if (!token[i])
+	if (!(*input))
 		return (0);
-	if (token[i] == '?')
-		return (1);
-	while (ft_isalnum(token[i + len]) || token[i + len] == '_')
+	//if (input[i] == '?')
+	//	return (1);
+	//while (ft_isalnum(token[i + len]) || token[i + len] == '_')
+	while (ft_isspace(*(input+ len) == false))
+	{
+		if (*(input + len) == '\'')
+			new->is_quoted = true;
+		else if (*(input + len) =='\"')
+			new->is_double_quoted = true;
 		len++;
+	}
 	return (len);
 }

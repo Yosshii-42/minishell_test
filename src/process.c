@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 19:22:49 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 17:05:21 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,12 @@ int	run_process(t_token *token, int *stdio, int command_count)
 	int			command_flag;
 
 	ptr = token;
+	//printf("aaatoken = %s\n", token->word);
 	while (command_count--)
 	{
 		if (!token)
 			break ;
-		expand_token(token);
+		//expand_token(token);
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
