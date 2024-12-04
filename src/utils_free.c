@@ -72,8 +72,14 @@ void	free_split(char **split)
 	int	i;
 
 	i = -1;
-	if (!split || !split[0])
+	// if (!split || !split[0])
+	// 	return ;
+	if (!split[0])
+	{
+		free(split);
+		split = NULL;
 		return ;
+	}
 	while (split[++i])
 	{
 		free(split[i]);
@@ -94,9 +100,9 @@ void	free_cmd(t_cmd *cmd)
 			free(cmd->pathname);
 			cmd->pathname = NULL;
 		}
-		if (cmd->cmd && cmd->cmd[0])
+		if (cmd->cmd)
 			free_split(cmd->cmd);
-		if (cmd->path && cmd->path[0])
+		if (cmd->path)
 			free_split(cmd->path);
 		if (cmd->err_msg)
 		{

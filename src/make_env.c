@@ -12,15 +12,6 @@
 
 #include "../minishell.h"
 
-t_env	*lstlast(t_env *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
 static t_env	*change_last_node(t_env *env)
 {
 	t_env	*ptr;
@@ -30,6 +21,15 @@ static t_env	*change_last_node(t_env *env)
 	free(env->value);
 	env->value = ft_strdup("/usr/bin/env");
 	return (ptr);
+}
+
+t_env	*lstlast(t_env *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }
 
 void	lstadd_back(t_env **start, t_env *new)
@@ -48,7 +48,7 @@ void	lstadd_back(t_env **start, t_env *new)
 	new->pre = ptr;
 }
 
-int	lstnew(t_env **start, char *env)
+static int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;

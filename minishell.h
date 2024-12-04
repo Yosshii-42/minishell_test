@@ -42,7 +42,7 @@
 # define EXIT_CHILD_DUP_ERR -2
 // # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
-# define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
+# define FILE_NAME "./libft/.2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
 // シグナル状態の定義
@@ -132,15 +132,44 @@ typedef struct s_package
 	t_token	*token;
 }t_package;
 
+// signal
+void	reset_signal(int signum);
+void	ignore_signal(int signum);
+void	ready_signal(int signum);
+void	init_signal(void);
+void	destroy_signal(void);
+
+// signal_handler
+int		event(void);
+void	perror_prestr(void);
+void	fatal_error_exit(char *err_msg);
+void	signal_handler(int signum);
+
+// signal_process
+void	default_signal(int signum);
+void	child_signal(void);
+
 // gloval like function
 int		end_status(int type, int end_status);
 char	*set_line(int type, char *new_line);
 t_env	*set_env(int type, t_env *new_env);
 t_token	*set_token(int type, t_token *new_token);
 
+// safe functions
+void	*safe_malloc(size_t count, size_t size);
+int		safe_dup(int fd);
+void	safe_dup2(int fd, int new_fd, int who, t_cmd *cmd);
+void	safe_close(int *fd, int who, t_cmd *cmd);
+
+// free functions
+void	free_env(t_env *env);
+void	free_token(t_token *token);
+void	free_split(char **split);
+void	free_cmd(t_cmd *cmd);
+void	free_all(t_cmd *cmd);
+
 // env
 t_env	*make_env(int argc, char **argv, char **envp);
-int		lstnew(t_env **start, char *env);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
@@ -181,17 +210,25 @@ bool	expand_quote(t_token *tokenized);
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
 bool	init_cmd(t_cmd *cmd);
+char	*make_pwd_path(char *command);
+void	set_err_message(t_cmd *cmd, char *str, char *err_str);
+void	open_files(t_cmd *cmd, t_token *token);
+void	make_pipe(t_cmd *cmd);
+
+// command utils
 int		count_array(t_token *token);
 int		count_token(t_token *token);
-void	make_pipe(t_cmd *cmd);
-char	*make_pwd_path(char *command);
 char	*getenv_str(char *str);
 t_cmd	*command_return(t_cmd *cmd, t_token *token);
-void	set_err_message(t_cmd *cmd, char *str, char *err_str);
 void	limitter_warning(int count, char *eof);
 
-// open_files
-void	open_files(t_cmd *cmd, t_token *token);
+// builtin command
+bool	do_builtin(t_cmd *cmd);
+void	builtin_cd(t_cmd *cmd, t_env *env);
+void	builtin_unset(t_cmd *cmd, t_env **env);
+void	builtin_env(void);
+void	builtin_exit(t_cmd *cmd);
+void	builtin_export(t_env **env, t_cmd *cmd);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);
@@ -211,45 +248,8 @@ int		pipe_count(t_token *token);
 int		make_fork(pid_t *pid);
 void	close_fds(t_cmd *cmd);
 
-// free functions
-void	free_env(t_env *env);
-void	free_token(t_token *token);
-void	free_split(char **split);
-void	free_cmd(t_cmd *cmd);
-void	free_all(t_cmd *cmd);
-
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
-
-void	*safe_malloc(size_t count, size_t size);
-int		safe_dup(int fd);
-void	safe_dup2(int fd, int new_fd, int who, t_cmd *cmd);
-void	safe_close(int *fd, int who, t_cmd *cmd);
-
-// signal
-void	reset_signal(int signum);
-void	ignore_signal(int signum);
-void	ready_signal(int signum);
-void	init_signal(void);
-void	destroy_signal(void);
-
-// signal_handler
-int		event(void);
-void	perror_prestr(void);
-void	fatal_error_exit(char *err_msg);
-void	signal_handler(int signum);
-
-// signal_process
-void	default_signal(int signum);
-void	child_signal(void);
-
-// builtin
-bool	do_builtin(t_cmd *cmd);
-void	builtin_cd(t_cmd *cmd, t_env *env);
-void	builtin_unset(t_cmd *cmd, t_env **env);
-void	builtin_env(void);
-void	builtin_exit(t_cmd *cmd);
-void	builtin_export(t_env **env, t_cmd *cmd);
 
 #endif

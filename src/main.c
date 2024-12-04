@@ -66,6 +66,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		set_line(SET, line);
 		do_minishell(line);
+		printf("status = %d\n", end_status(GET, 0));
 		free(line);
 	}
 	free_env(set_env(GET, NULL));
