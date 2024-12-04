@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/04 19:55:38 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 03:35:13 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,21 +230,11 @@ void	safe_dup2(int fd, int new_fd, int who, t_cmd *cmd);
 void	safe_close(int *fd, int who, t_cmd *cmd);
 
 // signal
-void	reset_signal(int signum);
-void	ignore_signal(int signum);
-void	ready_signal(int signum);
-void	init_signal(void);
-void	destroy_signal(void);
-
-// signal_handler
 int		event(void);
-void	perror_prestr(void);
-void	fatal_error_exit(char *err_msg);
-void	signal_handler(int signum);
-
-// signal_process
-void	default_signal(int signum);
-void	child_signal(void);
+void	core_dump_signal(int status);
+void	exec_child_signal(void);
+void	sig_handler(int signum);
+void	init_signal(void);
 
 // builtin
 bool	do_builtin(t_cmd *cmd);
