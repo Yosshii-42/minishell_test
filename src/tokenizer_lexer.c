@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:35:00 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/03 20:15:05 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 22:55:00 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ t_token	*lexer(char *line)
 			token->word = expand_dollar(token->word, token);
 		token = token->next;
 	}
-	//expand_quote(set_token(GET, NULL));
+	token = set_token(GET, NULL);
+	while (token)
+	{
+		if (ft_strchr(token->word, '\'') || ft_strchr(token->word, '\"'))
+			token->word = expand_quote(token->word, token);
+		token = token->next;
+	}
 	return (set_token(GET, NULL));
 }

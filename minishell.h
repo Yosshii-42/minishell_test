@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/03 19:59:32 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 18:10:03 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ char	*expand_dollar(char *tokenized, t_token *token);
 //int		handle_dollar(char *token_word, char *new);
 
 // expand_quote.c
-bool	expand_quote(t_token *tokenized);
+char	*expand_quote(char *tokenized, t_token *token);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);

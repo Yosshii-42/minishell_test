@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 20:39:15 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/03 17:14:07 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 18:38:46 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static	bool	check_quote_error(char *word)
 				i++;
 			if (word[i] != quote)
 			{
-				//ft_printf(2, "syntax error: unmatched quote `%c`\n", quote);
+				ft_printf(2, "syntax error: unmatched quote `%c`\n", quote);
 				return (false);
 				//free(set_line(GET, NULL));
 				//return (free_token(set_token(GET, NULL)), 2);
