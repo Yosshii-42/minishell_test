@@ -6,6 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/03 17:05:21 by hurabe           ###   ########.fr       */
 /*   Updated: 2024/11/30 01:24:49 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -136,7 +137,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 	{
 		if (!token)
 			break ;
-		expand_token(token);
+		//expand_token(token);
 		cmd = NULL;
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);

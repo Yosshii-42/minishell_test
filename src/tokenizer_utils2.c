@@ -1,44 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_expand_token.c                           :+:      :+:    :+:   */
+/*   tokenizer_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 23:44:28 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/28 17:25:01 by hurabe           ###   ########.fr       */
+/*   Created: 2024/11/19 19:41:10 by hurabe            #+#    #+#             */
+/*   Updated: 2024/12/04 19:32:59 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool	append_char(char **str, char c)
+char	*ft_strjoin_one(char *str, char c)
 {
-	char	*new;
 	char	join[2];
 
 	join[0] = c;
 	join[1] = '\0';
-	new = ft_strjoin(*str, join);
-	if (!new)
-		return (false);
-	free(*str);
-	*str = new;
-	return (true);
+	return (strjoin_with_free(str, join, FREE_S1));
 }
 
-bool	expand_token(t_token *tokenized)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	while (tokenized)
-	{
-		if (tokenized->kind == COMMAND || tokenized->kind == OPTION)
-		{
-			if (!expand_dollar(tokenized))
-				return (false);
-			if (!expand_quote(tokenized))
-				return (false);
-		}
-	tokenized = tokenized->next;
-	}
-	return (true);
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	ft_isspace(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n');
+}
+
+bool	is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
 }
