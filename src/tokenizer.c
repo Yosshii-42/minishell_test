@@ -6,25 +6,25 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/01 17:07:41 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 19:39:34 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	init_token(t_token *token)
-{
-	token->word = NULL;
-	token->kind = -1;
-	token->status = -1;
-	token->is_dollar = false;
-	token->is_quoted = false;
-	token->is_double_quoted = false;
-	token->next = NULL;
-	token->pre = NULL;
-}
+//void	init_token(t_token *token)
+//{
+//	token->word = NULL;
+//	token->kind = -1;
+//	token->status = -1;
+//	token->is_dollar = false;
+//	token->is_quoted = false;
+//	token->is_double_quoted = false;
+//	token->next = NULL;
+//	token->pre = NULL;
+//}
 
-t_token	*token_lstlast(t_token *head)
+static	t_token	*token_lstlast(t_token *head)
 {
 	t_token	*ptr;
 
@@ -36,8 +36,7 @@ t_token	*token_lstlast(t_token *head)
 	return (ptr);
 }
 
-
-void	token_lstadd_back(t_token **head, t_token *new)
+static	void	token_lstadd_back(t_token **head, t_token *new)
 {
 	t_token	*ptr;
 
@@ -60,7 +59,6 @@ void	append_token(char *input, int token_len, t_token **head, t_token *new)
 	token_lstadd_back(head, new);
 }
 
-// トークナイズ処理
 t_token	*tokenizer(char *input)
 {
 	t_token	*head;

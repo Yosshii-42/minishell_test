@@ -27,7 +27,6 @@ SRCS	= src/main.c \
 		  src/tokenizer_utils1.c \
 		  src/tokenizer_utils2.c \
 		  src/tokenizer_error.c \
-		  src/tokenizer_expand_token.c \
 		  src/tokenizer_expand_dollar.c \
 		  src/tokenizer_expand_quote.c
 OBJS	= $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/03 20:19:30 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 19:30:44 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 volatile sig_atomic_t	g_exit_status = 0;
 
-int	dollar_len(char *token_word)
+static int	dollar_len(char *token_word)
 {
 	int	len;
 
@@ -45,7 +45,6 @@ static	char	*find_env_key(char	*token_word)
 	return (NULL);
 }
 
-
 static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 {
 	char	*env_key;
@@ -70,13 +69,6 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 		}
 	}
 	return (0);
-}
-
-static void	init_variables(int *i, int *single_flag, int *double_flag)
-{
-	*i = 0;
-	*single_flag = 0;
-	*double_flag = 0;
 }
 
 char	*expand_dollar(char *tokenized, t_token *token)

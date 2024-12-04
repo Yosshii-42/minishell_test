@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:58 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/03 20:33:07 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 19:49:31 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ t_token	*add_kind_morethan(t_token *token)
 }
 
 t_token	*add_command_kind(t_token *token, int command_flag)
-//void	add_command_kind(t_token *token, int command_flag)
 {
 	if (token->next && token->next->kind == SYNTAX)
 		token->kind = SYNTAX;

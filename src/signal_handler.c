@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:17 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/29 18:11:25 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 20:16:26 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	fatal_error_exit(char *err_msg)
 void	signal_handler(int signum)
 {
 	(void)signum;
-	ft_printf(2, "DEBUG: g_sig_status=%d\n", g_sig_status);
+	//ft_printf(2, "DEBUG: g_sig_status=%d\n", g_sig_status);
 	if (g_sig_status == HEREDOC)
 	{
 		g_sig_status = SIG_INT;
