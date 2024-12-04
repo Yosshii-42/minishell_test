@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 04:02:35 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 04:15:46 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	exec_child_signal(void)
 void	sig_handler(int signum)
 {
 	(void)signum;
-	g_sig_status = SIG_INT;
+	g_sig_status = SIGINT;
 	rl_replace_line("", 0);
 	rl_done = 1;
 }
