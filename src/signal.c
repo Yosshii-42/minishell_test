@@ -6,13 +6,11 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 03:32:45 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 04:02:35 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-extern volatile sig_atomic_t	g_sig_status;
 
 int	event(void)
 {

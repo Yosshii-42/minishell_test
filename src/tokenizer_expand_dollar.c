@@ -6,13 +6,11 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/04 19:30:44 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 04:04:17 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-volatile sig_atomic_t	g_exit_status = 0;
 
 static int	dollar_len(char *token_word)
 {
