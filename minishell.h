@@ -68,6 +68,7 @@ typedef enum e_kind
 	WRFILE,
 	WRF_APP,
 	SYNTAX,
+	_NULL
 }t_kind;
 
 typedef enum e_status
@@ -199,7 +200,7 @@ void	syntax_end(t_cmd *cmd, int stdio[2]);
 void	end_process(int stdio[2]);
 void	child_exit_process(t_cmd *cmd, int stdio[2]);
 int		builtin_end_process(t_cmd *cmd);//, t_token *token);
-int		no_pipe_process(t_cmd *cmd, int *stdio);
+int		no_fork_process(t_cmd *cmd, int *stdio);
 void	execve_fail_process(t_cmd *cmd);
 
 // process utils

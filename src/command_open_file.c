@@ -86,7 +86,7 @@ static bool	open_write_file(t_cmd *cmd, t_token *token)
 	else if (token->kind == WRFILE)
 	{
 		cmd->writefd = open(token->word, O_CREAT | O_RDWR | O_TRUNC, 0644);
-		if (cmd->writefd < 0 && cmd->readfd < 0)
+		if (cmd->writefd < 0 && !cmd->err_msg)
 			cmd->err_msg = set_file_err(token->word, strerror(errno));
 		else
 			end_status(SET, EXIT_SUCCESS);
