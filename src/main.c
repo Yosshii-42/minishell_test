@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 19:25:31 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/03 17:23:27 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static void	do_minishell(char *line)
 	dup_stdio(stdio);
 	token = NULL;
 	token = lexer(line);
-	set_token(SET, token);
+	if (!token)
+		return ;
 	command_count = cmd_count(token);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_process();

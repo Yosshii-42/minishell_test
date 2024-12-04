@@ -6,36 +6,60 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:36 by hurabe            #+#    #+#             */
-/*   Updated: 2024/11/28 19:11:36 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/04 19:31:23 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool	expand_quote(t_token *tokenized)
+static char	*single_roop(char *new, char *tokenized, int *i, int *single_flag)
+{
+	(*single_flag)++;
+	(*i)++;
+	while (tokenized[*i] && tokenized[*i] != '\'')
+	{
+		new = ft_strjoin_one(new, tokenized[*i]);
+		(*i)++;
+	}
+	if (tokenized[*i] == '\'')
+		(*single_flag)++;
+	return (new);
+}	
+
+static char	*double_roop(char *new, char *tokenized, int *i, int *double_flag)
+{
+	(*double_flag)++;
+	(*i)++;
+	while (tokenized[*i] && tokenized[*i] != '\"')
+	{
+		new = ft_strjoin_one(new, tokenized[*i]);
+		(*i)++;
+	}
+	if (tokenized[*i] == '\"')
+		(*double_flag)++;
+	return (new);
+}
+
+char	*expand_quote(char *tokenized, t_token *token)
 {
 	int		i;
-	char	quote;
+	int		single_flag;
+	int		double_flag;
 	char	*new;
 
-	i = 0;
-	quote = 0;
+	init_variables(&i, &single_flag, &double_flag);
 	new = ft_strdup("");
-	if (!new)
-		return (false);
-	while (tokenized->word[i])
+	while (tokenized[i])
 	{
-		if (is_quote(tokenized->word[i]) && quote == 0)
-			quote = tokenized->word[i++];
-		else if (tokenized->word[i] == quote)
-		{
-			quote = 0;
-			i++;
-		}
-		else
-			append_char(&new, tokenized->word[i++]);
+		if ((single_flag + double_flag) % 2 == 0 && tokenized[i] == '\'')
+			new = single_roop(new, tokenized, &i, &single_flag);
+		else if ((single_flag + double_flag) % 2 == 0 && tokenized[i] == '\"')
+			new = double_roop(new, tokenized, &i, &double_flag);
+		else if (!(tokenized[i] == '\'' || tokenized[i] == '\"'))
+			new = ft_strjoin_one(new, tokenized[i]);
+		i++;
 	}
-	free(tokenized->word);
-	tokenized->word = new;
-	return (true);
+	free(token->word);
+	token->word = new;
+	return (new);
 }
