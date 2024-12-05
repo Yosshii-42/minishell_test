@@ -48,13 +48,10 @@ void	builtin_echo(t_cmd *cmd)
 		end_status(SET, EXIT_SUCCESS);
 	i = 0;
 	n_flag = 0;
-	while (cmd->cmd[++i])
-	{
-		if (!ft_memcmp(cmd->cmd[1], "-n", 3))
-			echo_n_option(cmd);
-		else
-			echo_without_option(cmd);
-	}
+	if (!ft_memcmp(cmd->cmd[1], "-n", 3))
+		echo_n_option(cmd);
+	else
+		echo_without_option(cmd);
 	end_status(SET, EXIT_SUCCESS);
 }
 
