@@ -80,6 +80,8 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 
 static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 {
+
+	printf("token = %s\n", token->word);
 	(*command_flag)++;
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
@@ -106,9 +108,9 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
 	while (token)
 	{
-		if ((!token->word || !token->word[0]) && token->is_dollar == true)
+		if ((!token->word || !token->word[0])&& token->is_dollar == true)
 			token = token->next;
-		else if ((!token->word || !token->word[0]) && token->kind == COMMAND)
+		if ((!token->word || !token->word[0]) && token->kind == COMMAND)
 			break ;
 		else
 		{

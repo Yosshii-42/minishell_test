@@ -99,7 +99,6 @@ typedef struct s_token
 	bool			is_dollar;
 	bool			is_quoted;
 	bool			is_double_quoted;
-	bool			is_dollar;
 	struct s_token	*next;
 	struct s_token	*pre;
 }t_token;
@@ -127,23 +126,6 @@ typedef struct s_package
 	t_token	*token;
 }t_package;
 
-// signal
-void	reset_signal(int signum);
-void	ignore_signal(int signum);
-void	ready_signal(int signum);
-void	init_signal(void);
-void	destroy_signal(void);
-
-// signal_handler
-int		event(void);
-void	perror_prestr(void);
-void	fatal_error_exit(char *err_msg);
-void	signal_handler(int signum);
-
-// signal_process
-void	default_signal(int signum);
-void	child_signal(void);
-
 // gloval like function
 int		end_status(int type, int end_status);
 char	*set_line(int type, char *new_line);
@@ -165,6 +147,7 @@ void	free_all(t_cmd *cmd);
 
 // env
 t_env	*make_env(int argc, char **argv, char **envp);
+int		lstnew(t_env **start, char *env);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
@@ -248,5 +231,28 @@ void	close_fds(t_cmd *cmd);
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
+
+// signal
+int		event(void);
+void	core_dump_signal(int status);
+void	heredoc_signal(void);
+void	exec_child_signal(void);
+void	init_signal(void);
+
+// signal_handler
+void	heredoc_handler(int signum);
+void	sig_handler(int signum);
+// void	reset_signal(int signum);
+// void	ignore_signal(int signum);
+// void	ready_signal(int signum);
+// void	destroy_signal(void);
+
+// void	perror_prestr(void);
+// void	fatal_error_exit(char *err_msg);
+// void	signal_handler(int signum);
+
+// // signal_process
+// void	default_signal(int signum);
+// void	child_signal(void);
 
 #endif

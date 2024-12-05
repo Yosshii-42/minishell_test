@@ -12,37 +12,24 @@
 
 #include "../minishell.h"
 
-static t_env	*change_last_node(t_env *env)
-{
-	t_env	*ptr;
+// static t_env	*change_last_node(t_env *env)
+// {
+// 	t_env	*ptr;
 
-	ptr = env;
-	env = lstlast(env);
-	free(env->value);
-	env->value = ft_strdup("/usr/bin/env");
-	return (ptr);
-}
+// 	ptr = env;
+// 	env = lstlast(env);
+// 	free(env->value);
+// 	env->value = ft_strdup("/usr/bin/env");
+// 	return (ptr);
+// }
 
-static t_env	*lstlast(t_env *lst)
+t_env	*lstlast(t_env *lst)
 {
 	if (!lst)
 		return (NULL);
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
-}
-
-static t_env	*change_last_node(t_env *env)
-{
-	char	*tmp;
-	t_env	*ptr;
-
-	ptr = env;
-	env = lstlast(env);
-	tmp = env->value;
-	env->value = ft_strdup("/usr/bin/env");
-	free(tmp);
-	return (ptr);
 }
 
 void	lstadd_back(t_env **start, t_env *new)
@@ -61,7 +48,7 @@ void	lstadd_back(t_env **start, t_env *new)
 	new->pre = ptr;
 }
 
-static int	lstnew(t_env **start, char *env)
+int	lstnew(t_env **start, char *env)
 {
 	t_env	*new;
 	int		len;
@@ -83,20 +70,17 @@ static int	lstnew(t_env **start, char *env)
 	return (TRUE);
 }
 
-t_env	*set_env(int argc, char **argv, char **envp, int *status)
+t_env	*make_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
 	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
-	*status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])
-	{
-		if (!lstnew(&start, envp[i]))
-			return (free_env(start), NULL);
-	}
+		lstnew(&start, envp[i]);
+	//start = change_last_node(start);
 	return (start);
 }

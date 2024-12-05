@@ -140,20 +140,11 @@ int	run_process(t_token *token, int *stdio, int command_count)
 	{
 		if (!token)
 			break ;
-		//expand_token(token);
 		cmd = NULL;
 		cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
 		init_cmd(cmd);
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
-		// if (!cmd->pathname)
-		// 	printf("pathname = NULL\n");
-		// if (!cmd->cmd)
-		// 	printf("cmd->cmd = NULL\n");
-		// if (cmd->cmd && !cmd->cmd[0])
-		// 	printf("cmd->cmd[0] = NULL\n");
-		// if (cmd->cmd && cmd->cmd[0] && !cmd->cmd[0][0])
-		// 	printf("cmd->cmd[0][0] = \'\\0\'\n");
 		if (cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN)
 			|| (pipe_count(ptr) == 0 && cmd->status == BUILTIN))
 			return (no_fork_process(cmd, stdio));

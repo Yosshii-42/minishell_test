@@ -15,7 +15,6 @@
 static void	add_token_kind(t_token *token)
 {
 	int	commnad_flag;
-
 	commnad_flag = 0;
 	while (token)
 	{
@@ -31,10 +30,7 @@ static void	add_token_kind(t_token *token)
 		else if (check_builtin(token->word) >= 0)
 			token->kind = BUILTIN;
 		else
-		{
 			token = add_command_kind(token, commnad_flag);
-			add_command_kind(token, commnad_flag);
-		}
 		if (token->kind == BUILTIN || token->kind == COMMAND)
 			commnad_flag++;
 		token = token->next;

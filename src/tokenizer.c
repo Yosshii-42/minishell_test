@@ -12,17 +12,17 @@
 
 #include "../minishell.h"
 
-//void	init_token(t_token *token)
-//{
-//	token->word = NULL;
-//	token->kind = -1;
-//	token->status = -1;
-//	token->is_dollar = false;
-//	token->is_quoted = false;
-//	token->is_double_quoted = false;
-//	token->next = NULL;
-//	token->pre = NULL;
-//}
+void	init_token(t_token *token)
+{
+	token->word = NULL;
+	token->kind = -1;
+	token->status = -1;
+	token->is_dollar = false;
+	token->is_quoted = false;
+	token->is_double_quoted = false;
+	token->next = NULL;
+	token->pre = NULL;
+}
 
 static	t_token	*token_lstlast(t_token *head)
 {
@@ -71,6 +71,7 @@ t_token	*tokenizer(char *input)
 	{
 	new = NULL;
 	new = (t_token *)safe_malloc(1, sizeof(t_token));
+	init_token(new);
 		if (ft_strchr(SPECIAL_TOKEN, *input))
 		{
 			token_len = count_meta_len(input);

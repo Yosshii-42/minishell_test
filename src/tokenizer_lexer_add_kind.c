@@ -96,6 +96,7 @@ t_token	*add_command_kind(t_token *token, int command_flag)
 			set_kind_as_command(token, &command_flag);
 	}
 	else
+		set_kind_as_command(token, &command_flag);
 	if (!token->next)
 		token->status = END;
 	return (token);
