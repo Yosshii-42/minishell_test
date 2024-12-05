@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:04:16 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 09:07:22 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,6 @@
 # define FILE_NAME "./libft/.2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
-// シグナル状態の定義
-# define READLINE 1
-# define HEREDOC 2
-# define IN_CMD 3
-# define SIG_INT 4
-# define ERROR_PRESTR "minishell: "
 
 extern volatile sig_atomic_t	g_sig_status;
 
@@ -102,6 +96,7 @@ typedef struct s_token
 	char			*word;
 	t_kind			kind;
 	t_status		status;
+	bool			is_dollar;
 	bool			is_quoted;
 	bool			is_double_quoted;
 	bool			is_dollar;
@@ -173,39 +168,41 @@ t_env	*make_env(int argc, char **argv, char **envp);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
 
-// lexer.c
+// tokenizer_lexer.c
 t_token	*lexer(char *line);
+
+// tokenizer.c
+t_token	*tokenizer(char *input);
+void	append_token(char *input, int token_len, t_token **head, t_token *new);
+
+// tokenizer_error.c
+bool	find_syntax_error(t_token *tokenized);
+
+// tokenizer_expand_dollar.c
+char	*expand_dollar(char *tokenized, t_token *token);
+
+// tokenizer_expand_quote.c
+char	*expand_quote(char *tokenized, t_token *token);
+
+// tokenizer_lexer_add_kind.c
 t_token	*add_kind_pipe(t_token *token);
 t_token	*add_kind_lessthan(t_token *token);
 t_token	*add_kind_morethan(t_token *token);
 t_token	*add_command_kind(t_token *token, int command_flag);
 int		check_builtin(char *str);
 
-// tokenizer.c
-t_token	*tokenizer(char *input);
-int		count_envname_len(char *token, int i);
+// tokenizer_utils1.c
+char	*space_skip(char *input);
+int		count_word_len(char *input, t_token *new);
+int		count_meta_len(char *line);
+int		count_envname_len(char *token, t_token *new, int start);
+void	init_variables(int *i, int *single_flag, int *double_flag);
 
-// tokenizer_utils.c
+// tokenizer_utils2.c
 char	*ft_strjoin_one(char *str, char c);
-int		ft_isspace(char c);
-// char	*ft_strcpy(char *dest, const char *src);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_isspace(char c);
 bool	is_quote(char c);
-int		check_builtin(char *str);
-
-// tokenizer_error.c
-bool	find_syntax_error(t_token *tokenized);
-
-// expand_token.c
-bool	expand_token(t_token *tokenized);
-bool	append_char(char **str, char c);
-
-// expand_dollar.c
-bool	expand_dollar(t_token *tokenized);
-bool	handle_dollar(t_token *tokenized, int *i);
-
-// expand_quote.c
-bool	expand_quote(t_token *tokenized);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);

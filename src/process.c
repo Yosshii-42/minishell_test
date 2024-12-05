@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/30 01:24:49 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/05 08:25:29 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	wait_process(void)
 	status = 0;
 	while (1)
 	{
+		
 		if (waitpid(-1, &status, 0) == -1 && errno == ECHILD)
 			break ;
 		if (WIFEXITED(status))
@@ -29,6 +30,13 @@ static int	wait_process(void)
 	}
 	if (exit_status > 255)
 		return (EXIT_FAILURE);
+	if (exit_status != 130)
+		core_dump_signal(exit_status);
+	else
+	{
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		rl_on_new_line();
+	}
 	return (exit_status);
 }
 
@@ -63,7 +71,7 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 {
 	char	**envp;
 
-	// child_signal();
+	exec_child_signal();
 	if (cmd->err_msg || (!cmd->pathname && cmd->status != BUILTIN))
 		child_exit_process(cmd, stdio);
 	if (cmd->readfd > 0)
@@ -86,8 +94,6 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 
 int	parent_process(t_cmd *cmd, int count)
 {
-	ignore_signal(SIGQUIT);
-	ignore_signal(SIGINT);
 	if (cmd->status == SYNTAX)
 		return (ft_printf(2, "bash: syntax error\n"), 2);
 	// else if (cmd->err_msg)
@@ -134,7 +140,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 	{
 		if (!token)
 			break ;
-		expand_token(token);
+		//expand_token(token);
 		cmd = NULL;
 		cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
 		init_cmd(cmd);

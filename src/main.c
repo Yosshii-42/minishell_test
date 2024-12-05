@@ -6,13 +6,13 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:51 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 19:25:31 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 03:18:57 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-volatile sig_atomic_t	g_sig_status = READLINE;
+volatile sig_atomic_t	g_sig_status;
 
 static void	dup_stdio(int *stdio)
 {
@@ -38,13 +38,13 @@ static void	do_minishell(char *line)
 	dup_stdio(stdio);
 	token = NULL;
 	token = lexer(line);
-	set_token(SET, token);
+	if (!token)
+		return ;
 	command_count = cmd_count(token);
 	if (!ft_memcmp(line, "clear", 6))
 		clear_process();
 	else
 		end_status(SET, run_process(token, stdio, command_count));
-	ready_signal(SIGINT);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -58,6 +58,8 @@ int	main(int argc, char **argv, char **envp)
 		exit(EXIT_FAILURE);
 	env = set_env(SET, env);
 	rl_outstream = stdout;
+	g_sig_status = 0;
+	rl_event_hook = event;
 	while (1)
 	{
 		init_signal();

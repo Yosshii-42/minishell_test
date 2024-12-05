@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_env.c                                         :+:      :+:    :+:   */
+/*   set_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:07:28 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/11/05 20:30:43 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,26 @@ static t_env	*change_last_node(t_env *env)
 	return (ptr);
 }
 
-t_env	*lstlast(t_env *lst)
+static t_env	*lstlast(t_env *lst)
 {
 	if (!lst)
 		return (NULL);
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
+}
+
+static t_env	*change_last_node(t_env *env)
+{
+	char	*tmp;
+	t_env	*ptr;
+
+	ptr = env;
+	env = lstlast(env);
+	tmp = env->value;
+	env->value = ft_strdup("/usr/bin/env");
+	free(tmp);
+	return (ptr);
 }
 
 void	lstadd_back(t_env **start, t_env *new)
@@ -53,29 +66,37 @@ static int	lstnew(t_env **start, char *env)
 	t_env	*new;
 	int		len;
 
-	new = (t_env *)safe_malloc(1, sizeof(t_env));
+	new = (t_env *)malloc(sizeof(t_env));
+	if (!new)
+		return (FALSE);
 	len = 0;
 	len = strchr_len(env, '=');
-	new->key = (char *)safe_malloc(len + 1, sizeof(char));
+	new->key = (char *)malloc((len + 1) * sizeof(char));
+	if (!new->key)
+		return (free(new), FALSE);
 	ft_strlcpy(new->key, env, len + 1);
-	if (ft_strchr(env, '='))
-		new->value = ft_strdup((ft_strchr(env, '=') + 1));
+	new->value = ft_strdup((ft_strchr(env, '=') + 1));
+	if (!new->value)
+		return (free(new->key), free(new), FALSE);
 	new->next = NULL;
 	lstadd_back(start, new);
 	return (TRUE);
 }
 
-t_env	*make_env(int argc, char **argv, char **envp)
+t_env	*set_env(int argc, char **argv, char **envp, int *status)
 {
 	t_env	*start;
 	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
+	*status = 0;
 	i = -1;
 	start = NULL;
 	while (envp[++i])
-		lstnew(&start, envp[i]);
-	start = change_last_node(start);
+	{
+		if (!lstnew(&start, envp[i]))
+			return (free_env(start), NULL);
+	}
 	return (start);
 }
