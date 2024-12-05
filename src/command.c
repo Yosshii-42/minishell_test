@@ -106,7 +106,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
 	while (token)
 	{
-		if ((!token->word || !token->word[0]))//&& token->is_dollar == true)
+		if ((!token->word || !token->word[0]) && token->is_dollar == true)
 			token = token->next;
 		else if ((!token->word || !token->word[0]) && token->kind == COMMAND)
 			break ;

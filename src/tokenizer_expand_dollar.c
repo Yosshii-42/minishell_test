@@ -19,9 +19,11 @@ static int	dollar_len(char *token_word)
 	len = 0;
 	while (token_word[len])
 	{
-		if (!(token_word[len] == '\'' || token_word[len] == '\"' || token_word[len] == '$'))
+		if (!(token_word[len] == '\'' || token_word[len] == '\"'
+			|| token_word[len] == '$'))
 			len++;
-		else if (token_word[len] == '\'' || token_word[len] == '\"' || token_word[len] == '$')
+		else if (token_word[len] == '\'' || token_word[len] == '\"'
+			|| token_word[len] == '$')
 			break ;
 	}
 	return (len);

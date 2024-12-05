@@ -45,7 +45,11 @@ void	builtin_echo(t_cmd *cmd)
 	int	n_flag;
 
 	if (!cmd->cmd[1])
+	{
 		end_status(SET, EXIT_SUCCESS);
+		ft_printf(1, "\n");
+		return ;
+	}
 	i = 0;
 	n_flag = 0;
 	if (!ft_memcmp(cmd->cmd[1], "-n", 3))
