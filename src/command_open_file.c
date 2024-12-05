@@ -41,7 +41,6 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 		str = get_next_line(0);
 		if (!str)
 			return (ft_printf(1, "\n"), close(fd), true);
-			//return (limitter_warning(cmd->count + 1, eof), close(fd), true);
 		(cmd->count)++;
 		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
 			return (free(str), close(fd), true);

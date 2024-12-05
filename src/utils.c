@@ -22,9 +22,6 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 		return (NULL);
 	i = -1;
 	j = -1;
-	// if (s1[0] == '\0')
-	// 	result = (char *)safe_malloc(ft_strlen(s2) + 1, sizeof(char));
-	// else
 	result = (char *)safe_malloc
 		(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	while (s1[++i])

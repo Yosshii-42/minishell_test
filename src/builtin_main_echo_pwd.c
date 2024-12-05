@@ -31,11 +31,19 @@ static void	echo_n_option(t_cmd *cmd)
 	int	i;
 
 	i = 1;
-	while (cmd->cmd[++i])
+	while (cmd->cmd[i])
+	{
+		if (!ft_strncmp(cmd->cmd[i], "-n", 2))
+			i++;
+		else
+			break ;
+	}
+	while (cmd->cmd[i])
 	{
 		ft_printf(1, "%s", cmd->cmd[i]);
 		if (cmd->cmd[i + 1])
 			ft_printf(1, " ");
+		i++;
 	}
 }
 
@@ -45,10 +53,14 @@ void	builtin_echo(t_cmd *cmd)
 	int	n_flag;
 
 	if (!cmd->cmd[1])
+	{
 		end_status(SET, EXIT_SUCCESS);
+		ft_printf(1, "\n");
+		return ;
+	}
 	i = 0;
 	n_flag = 0;
-	if (!ft_memcmp(cmd->cmd[1], "-n", 3))
+	if (!ft_strncmp(cmd->cmd[1], "-n", 2))
 		echo_n_option(cmd);
 	else
 		echo_without_option(cmd);

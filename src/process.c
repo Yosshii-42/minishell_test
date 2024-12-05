@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:50:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 08:25:29 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 19:43:32 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static int	wait_process(void)
 	status = 0;
 	while (1)
 	{
-		
 		if (waitpid(-1, &status, 0) == -1 && errno == ECHILD)
 			break ;
 		if (WIFEXITED(status))
@@ -38,33 +37,6 @@ static int	wait_process(void)
 		rl_on_new_line();
 	}
 	return (exit_status);
-}
-
-char	**make_env_array(void)
-{
-	char	**env_lst;
-	t_env	*env;
-	int		count;
-
-	env = set_env(GET, NULL);
-	count = 0;
-	while (env)
-	{
-		count++;
-		env = env->next;
-	}
-	env_lst = (char **)safe_malloc(count + 1, sizeof(char *));
-	env = set_env(GET, NULL);
-	count = 0;
-	while (env)
-	{
-		env_lst[count] = strjoin_with_free(env->key, "=", NO_FREE);
-		env_lst[count] = strjoin_with_free(env_lst[count], env->value, FREE_S1);
-		env = env->next;
-		count++;
-	}
-	env_lst[count] = NULL;
-	return (env_lst);
 }
 
 static void	child_process(t_cmd *cmd, int stdio[2])
@@ -85,8 +57,6 @@ static void	child_process(t_cmd *cmd, int stdio[2])
 	close(stdio[1]);
 	if (check_builtin(cmd->cmd[0]) >= 0)
 		exit((do_builtin(cmd), end_status(GET, 0)));
-	// if (!(cmd->cmd) || cmd->status == SYNTAX)
-	// 	exit(EXIT_SUCCESS);
 	envp = make_env_array();
 	if (execve(cmd->pathname, cmd->cmd, envp) == -1)
 		execve_fail_process(cmd);
@@ -96,15 +66,13 @@ int	parent_process(t_cmd *cmd, int count)
 {
 	if (cmd->status == SYNTAX)
 		return (ft_printf(2, "bash: syntax error\n"), 2);
-	// else if (cmd->err_msg)
-	// 	return (builtin_end_process(cmd));
 	if (count == NO_PIPE && cmd->writefd > 0)
 	{
 		dup2(cmd->writefd, STDOUT_FILENO);
 		close_fds(cmd);
 	}
-	// else if (!cmd->pathname && cmd->status != BUILTIN)
-	// 	return (EXIT_SUCCESS);
+	else if (count == NO_PIPE && cmd->err_msg)
+		return (ft_printf(2, "%s", cmd->err_msg), close_fds(cmd), EXIT_SUCCESS);
 	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
 		exit((free_all(cmd), end_status(GET, 0)));
 	else
@@ -148,7 +116,7 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		if (cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN)
 			|| (pipe_count(ptr) == 0 && cmd->status == BUILTIN))
 			return (no_fork_process(cmd, stdio));
-		pipex_engine(cmd, stdio);// == false
+		pipex_engine(cmd, stdio);
 		token = cmd->token;
 		free_cmd(cmd);
 	}
