@@ -47,12 +47,14 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 {
 	char	*env_key;
 	int		len;
+	char	*tmp;
 
 	len = 0;
 	if (*token_word == '?')
 	{
-		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
-		return (*i += 1, token->is_dollar = true, new);
+		tmp = ft_itoa(end_status(GET, 0));
+		new = strjoin_with_free(new, tmp, FREE_S1);
+		return (*i += 1, token->is_dollar = true, free(tmp), new);
 	}
 	else
 	{

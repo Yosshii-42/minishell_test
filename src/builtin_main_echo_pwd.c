@@ -21,8 +21,10 @@ void	builtin_echo(t_cmd *cmd)
 	i = 0;
 	while (cmd->cmd[++i])
 	{
-		if (!ft_memcmp(cmd->cmd[1], "-n", 3))
+		if (!ft_memcmp(cmd->cmd[1], "-n", 3) && cmd->cmd[i + 1])
 			i++;
+		else
+			break ;
 		if (cmd->cmd[i])
 			ft_printf(1, "%s", cmd->cmd[i]);
 		if (cmd->cmd[i + 1])
