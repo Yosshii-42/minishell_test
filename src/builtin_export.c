@@ -84,12 +84,12 @@ void	builtin_export(t_env **start, t_cmd *cmd)
 		env = set_env(GET, NULL);
 		while (env)
 		{
-			if (find_key(cmd->cmd[i], env->key) == true 
+			if (find_key(cmd->cmd[i], env->key) == true
 				&& ft_strchr(cmd->cmd[1], '='))
 			{
 				free(env->value);
 				env->value = ft_strdup(ft_strchr(cmd->cmd[i], '=') + 1);
-				end_status(SET, EXIT_SUCCESS);				
+				end_status(SET, EXIT_SUCCESS);
 				return ;
 			}
 			env = env->next;

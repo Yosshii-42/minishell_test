@@ -150,13 +150,14 @@ t_env	*make_env(int argc, char **argv, char **envp);
 int		lstnew(t_env **start, char *env);
 t_env	*lstlast(t_env *lst);
 void	lstadd_back(t_env **start, t_env *new);
+char	**make_env_array(void);
 
 // tokenizer_lexer.c
 t_token	*lexer(char *line);
 
 // tokenizer.c
 t_token	*tokenizer(char *input);
-void	append_token(char *input, int token_len, t_token **head, t_token *new);
+void	append_token(char **input, int token_len, t_token **head, t_token *new);
 
 // tokenizer_error.c
 bool	find_syntax_error(t_token *tokenized);
@@ -186,6 +187,7 @@ char	*ft_strjoin_one(char *str, char c);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_isspace(char c);
 bool	is_quote(char c);
+void	set_kind_as_command(t_token *token, int *command_flag);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
@@ -242,17 +244,5 @@ void	init_signal(void);
 // signal_handler
 void	heredoc_handler(int signum);
 void	sig_handler(int signum);
-// void	reset_signal(int signum);
-// void	ignore_signal(int signum);
-// void	ready_signal(int signum);
-// void	destroy_signal(void);
-
-// void	perror_prestr(void);
-// void	fatal_error_exit(char *err_msg);
-// void	signal_handler(int signum);
-
-// // signal_process
-// void	default_signal(int signum);
-// void	child_signal(void);
 
 #endif

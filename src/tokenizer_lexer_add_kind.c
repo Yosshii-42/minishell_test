@@ -70,12 +70,6 @@ t_token	*add_kind_morethan(t_token *token)
 	return (token);
 }
 
-void	set_kind_as_command(t_token *token, int *command_flag)
-{
-	token->kind = COMMAND;
-	(*command_flag)++;
-}
-
 t_token	*add_command_kind(t_token *token, int command_flag)
 {
 	if (token->next && token->next->kind == SYNTAX)

@@ -15,6 +15,7 @@
 static void	add_token_kind(t_token *token)
 {
 	int	commnad_flag;
+
 	commnad_flag = 0;
 	while (token)
 	{

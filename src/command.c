@@ -52,7 +52,6 @@ static char	*make_cmd_and_check_access(t_cmd *cmd)
 		str = NULL;
 	}
 	return (NULL);
-	// return (strjoin_with_free("x", cmd->cmd[0], NO_FREE));
 }
 
 static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
@@ -81,6 +80,8 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 {
 	(*command_flag)++;
+	if (!token->word || !token->word[0])
+		return (true);
 	cmd = make_command_array(token, cmd);
 	if (!cmd)
 		return (true);
@@ -96,9 +97,7 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 			cmd->pathname = make_cmd_and_check_access(cmd);
 		if (!cmd->pathname && cmd->cmd[0])
 			cmd->pathname = ft_strdup(cmd->cmd[0]);
-		// return (true);
 	}
-	// cmd->pathname = strjoin_with_free("", cmd->cmd[0], NO_FREE);
 	return (true);
 }
 
@@ -108,8 +107,6 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 	{
 		if ((!token->word || !token->word[0]) && token->is_dollar == true)
 			token = token->next;
-		else if ((!token->word || !token->word[0]) && token->kind == COMMAND)
-			break ;
 		else
 		{
 			if (token->kind == SYNTAX)

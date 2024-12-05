@@ -40,3 +40,9 @@ bool	is_quote(char c)
 {
 	return (c == '\'' || c == '\"');
 }
+
+void	set_kind_as_command(t_token *token, int *command_flag)
+{
+	token->kind = COMMAND;
+	(*command_flag)++;
+}

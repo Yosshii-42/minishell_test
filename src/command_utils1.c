@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:11:02 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:40:37 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ char	*getenv_str(char *str)
 t_cmd	*command_return(t_cmd *cmd, t_token *token)
 {
 	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
-	// if (!cmd->pathname || access(cmd->pathname , X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0], strerror(errno));
-	else if (!cmd->cmd)
+	else if ((!cmd->cmd || !cmd->cmd[0])
+		&& (cmd->readfd == -1 && cmd->writefd == -1))
 		set_err_message(cmd, NULL, NULL);
 	cmd->token = token;
 	return (cmd);
