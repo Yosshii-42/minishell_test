@@ -30,7 +30,6 @@ void	delete_node(t_env *env, t_env **head)
 	}
 	else if (env->pre && env->next == NULL)
 		env->pre->next = NULL;
-	
 	free(tmp->key);
 	free(tmp->value);
 	free(tmp);

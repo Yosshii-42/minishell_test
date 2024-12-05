@@ -12,17 +12,6 @@
 
 #include "../minishell.h"
 
-// static t_env	*change_last_node(t_env *env)
-// {
-// 	t_env	*ptr;
-
-// 	ptr = env;
-// 	env = lstlast(env);
-// 	free(env->value);
-// 	env->value = ft_strdup("/usr/bin/env");
-// 	return (ptr);
-// }
-
 t_env	*lstlast(t_env *lst)
 {
 	if (!lst)
@@ -81,6 +70,5 @@ t_env	*make_env(int argc, char **argv, char **envp)
 	start = NULL;
 	while (envp[++i])
 		lstnew(&start, envp[i]);
-	//start = change_last_node(start);
 	return (start);
 }

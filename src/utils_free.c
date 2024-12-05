@@ -73,8 +73,6 @@ void	free_split(char **split)
 	int	i;
 
 	i = -1;
-	// if (!split || !split[0])
-	// 	return ;
 	if (!split[0])
 	{
 		free(split);

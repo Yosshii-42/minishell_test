@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin2.c                                         :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:18:15 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:39:37 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	print_err_and_set_exit_status(char *argument, long *result)
 		end_status(SET, EXIT_FAILURE);
 	}
 	else
-		end_status(SET, (*result) % 256);	
+		end_status(SET, (*result) % 256);
 }
 
 void	builtin_exit(t_cmd *cmd)
@@ -87,13 +87,5 @@ void	builtin_exit(t_cmd *cmd)
 	{
 		result = atol_pointer(cmd->cmd[1]);
 		print_err_and_set_exit_status(cmd->cmd[1], result);
-		// if (result == NULL)
-		// {
-		// 	ft_printf(2, "bash: exit: %s", cmd->cmd[1]);
-		// 	ft_printf(2, ": numeric argument rewuired\n");
-		// 	end_status(SET, EXIT_FAILURE);
-		// }
-		// else
-		// 	end_status(SET, (*result) % 256);
 	}
 }

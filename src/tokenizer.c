@@ -52,11 +52,12 @@ static	void	token_lstadd_back(t_token **head, t_token *new)
 	new->pre = ptr;
 }
 
-void	append_token(char *input, int token_len, t_token **head, t_token *new)
+void	append_token(char **input, int token_len, t_token **head, t_token *new)
 {
 	new->next = NULL;
-	new->word = ft_substr(input, 0, token_len);
+	new->word = ft_substr(*input, 0, token_len);
 	token_lstadd_back(head, new);
+	*input += token_len;
 }
 
 t_token	*tokenizer(char *input)
@@ -69,20 +70,18 @@ t_token	*tokenizer(char *input)
 	input = space_skip(input);
 	while (*input)
 	{
-	new = NULL;
-	new = (t_token *)safe_malloc(1, sizeof(t_token));
-	init_token(new);
+		new = NULL;
+		new = (t_token *)safe_malloc(1, sizeof(t_token));
+		init_token(new);
 		if (ft_strchr(SPECIAL_TOKEN, *input))
 		{
 			token_len = count_meta_len(input);
-			append_token(input, token_len, &head, new);
-			input += token_len;
+			append_token(&input, token_len, &head, new);
 		}
 		else
 		{
 			token_len = count_word_len(input, new);
-			append_token(input, token_len, &head, new);
-			input += token_len;
+			append_token(&input, token_len, &head, new);
 		}
 		input = space_skip(input);
 	}

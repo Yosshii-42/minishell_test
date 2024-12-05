@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:08:10 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 19:41:48 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	end_process(int stdio[2])
 {
-	// free_token(set_token(GET, NULL));
 	if (dup2(stdio[0], STDIN_FILENO) == -1)
 		exit((ft_printf(2, "dup2: %s\n", strerror(errno)), EXIT_FAILURE));
 	if (dup2(stdio[1], STDOUT_FILENO) == -1)
