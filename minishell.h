@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/04 19:55:38 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 09:07:22 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,6 @@
 # define FILE_NAME "2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
-// シグナル状態の定義
-# define READLINE 1
-# define HEREDOC 2
-# define IN_CMD 3
-# define SIG_INT 4
-# define ERROR_PRESTR "minishell: "
 
 extern volatile sig_atomic_t	g_sig_status;
 
@@ -230,21 +224,15 @@ void	safe_dup2(int fd, int new_fd, int who, t_cmd *cmd);
 void	safe_close(int *fd, int who, t_cmd *cmd);
 
 // signal
-void	reset_signal(int signum);
-void	ignore_signal(int signum);
-void	ready_signal(int signum);
+int		event(void);
+void	core_dump_signal(int status);
+void	heredoc_signal(void);
+void	exec_child_signal(void);
 void	init_signal(void);
-void	destroy_signal(void);
 
 // signal_handler
-int		event(void);
-void	perror_prestr(void);
-void	fatal_error_exit(char *err_msg);
-void	signal_handler(int signum);
-
-// signal_process
-void	default_signal(int signum);
-void	child_signal(void);
+void	heredoc_handler(int signum);
+void	sig_handler(int signum);
 
 // builtin
 bool	do_builtin(t_cmd *cmd);

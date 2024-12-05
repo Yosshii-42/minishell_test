@@ -15,7 +15,6 @@ SRCS	= src/main.c \
 		  src/utils_safe_functions.c \
 		  src/signal.c \
 		  src/signal_handler.c \
-		  src/signal_process.c \
 		  src/builtin_main_echo_pwd.c \
 		  src/builtin_cd.c \
 		  src/builtin_export.c \

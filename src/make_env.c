@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/03 17:38:56 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 15:24:30 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ t_env	*lstlast(t_env *lst)
 	return (lst);
 }
 
-static t_env	*change_last_node(t_env *env)
-{
-	char	*tmp;
-	t_env	*ptr;
+//static t_env	*change_last_node(t_env *env)
+//{
+//	char	*tmp;
+//	t_env	*ptr;
 
-	ptr = env;
-	env = lstlast(env);
-	tmp = env->value;
-	env->value = ft_strdup("/usr/bin/env");
-	free(tmp);
-	return (ptr);
-}
+//	ptr = env;
+//	env = lstlast(env);
+//	tmp = env->value;
+//	env->value = ft_strdup("/usr/bin/env");
+//	free(tmp);
+//	return (ptr);
+//}
 
 void	lstadd_back(t_env **start, t_env *new)
 {
@@ -78,6 +78,6 @@ t_env	*make_env(int argc, char **argv, char **envp)
 	start = NULL;
 	while (envp[++i])
 		lstnew(&start, envp[i]);
-	start = change_last_node(start);
+	//start = change_last_node(start);
 	return (start);
 }
