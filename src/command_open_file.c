@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_open_file.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 06:49:07 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 00:44:55 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/05 14:53:16 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	char	*str;
 	int		fd;
 
+	heredoc_signal();
 	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0644);
 	if (fd < 0)
 		return (false);
@@ -39,7 +40,8 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 		ft_printf(1, "> ");
 		str = get_next_line(0);
 		if (!str)
-			return (limitter_warning(cmd->count + 1, eof), close(fd), true);
+			return (ft_printf(1, "\n"), close(fd), true);
+			//return (limitter_warning(cmd->count + 1, eof), close(fd), true);
 		(cmd->count)++;
 		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
 			return (free(str), close(fd), true);

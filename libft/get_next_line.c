@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 12:46:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/26 22:59:08 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/05 08:41:17 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,39 @@ static char	*ft_strjoin_gnl(char *s1, char c, int len)
 	return (string);
 }
 
-void	buf_zero(char *buf, char *ptr, int *read_byte)
+//void	buf_zero(char *buf, char *ptr, int *read_byte)
+static	void	buf_zero(char *buf, char **ptr, int *read_byte)
 {
 	int	i;
 
 	i = -1;
 	while (++i < BUFFER_SIZE)
 		buf[i] = 0;
-	*ptr = 0;
-	ptr = NULL;
+	*ptr = NULL;
+	//*ptr = 0;
+	//ptr = NULL;
 	*read_byte = 0;
 }
 
 static char	ft_getchar(int fd)
 {
 	static char	buf[BUFFER_SIZE];
-	static char	*ptr;
+	//static char	*ptr;
+	static char *ptr = NULL;
 	static int	read_byte;
 
 	if (read_byte == 0)
 	{
 		read_byte = read(fd, buf, BUFFER_SIZE);
 		if (read_byte < 0)
-			return (buf_zero(buf, ptr, &read_byte), FAILE);
+			return (buf_zero(buf, &ptr, &read_byte), FAILE); 
+			//return (buf_zero(buf, ptr, &read_byte), FAILE);
 		ptr = buf;
 	}
 	if (--read_byte >= 0)
 		return ((char)*(ptr++));
-	return (buf_zero(buf, ptr, &read_byte), EOF);
+	return (buf_zero(buf, &ptr, &read_byte), EOF);
+	//return (buf_zero(buf, ptr, &read_byte), EOF);
 }
 
 char	*get_next_line(int fd)

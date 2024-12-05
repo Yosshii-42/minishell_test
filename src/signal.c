@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 04:15:46 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 09:09:56 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,18 @@ void	core_dump_signal(int status)
 	}
 }
 
+void	heredoc_signal(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = heredoc_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
 void	exec_child_signal(void)
 {
 	struct sigaction	sa;
@@ -37,14 +49,6 @@ void	exec_child_signal(void)
 	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
-}
-
-void	sig_handler(int signum)
-{
-	(void)signum;
-	g_sig_status = SIGINT;
-	rl_replace_line("", 0);
-	rl_done = 1;
 }
 
 void	init_signal(void)

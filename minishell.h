@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 04:08:47 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 09:07:22 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,9 +226,13 @@ void	safe_close(int *fd, int who, t_cmd *cmd);
 // signal
 int		event(void);
 void	core_dump_signal(int status);
+void	heredoc_signal(void);
 void	exec_child_signal(void);
-void	sig_handler(int signum);
 void	init_signal(void);
+
+// signal_handler
+void	heredoc_handler(int signum);
+void	sig_handler(int signum);
 
 // builtin
 bool	do_builtin(t_cmd *cmd);
