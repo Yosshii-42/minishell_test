@@ -80,8 +80,6 @@ static t_cmd	*make_command_array(t_token *token, t_cmd *cmd)
 
 static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 {
-
-	printf("token = %s\n", token->word);
 	(*command_flag)++;
 	cmd = make_command_array(token, cmd);
 	if (!cmd)

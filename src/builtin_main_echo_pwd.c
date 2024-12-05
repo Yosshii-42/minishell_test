@@ -12,25 +12,48 @@
 
 #include "../minishell.h"
 
+static void	echo_without_option(t_cmd *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd->cmd[++i])
+	{
+		ft_printf(1, "%s", cmd->cmd[i]);
+		if (cmd->cmd[i + 1])
+			ft_printf(1, " ");
+	}
+	ft_printf(1, "\n");
+}
+
+static void	echo_n_option(t_cmd *cmd)
+{
+	int	i;
+
+	i = 1;
+	while (cmd->cmd[++i])
+	{
+		ft_printf(1, "%s", cmd->cmd[i]);
+		if (cmd->cmd[i + 1])
+			ft_printf(1, " ");
+	}
+}
+
 void	builtin_echo(t_cmd *cmd)
 {
 	int	i;
+	int	n_flag;
 
 	if (!cmd->cmd[1])
 		end_status(SET, EXIT_SUCCESS);
 	i = 0;
+	n_flag = 0;
 	while (cmd->cmd[++i])
 	{
-		if (!ft_memcmp(cmd->cmd[1], "-n", 3) && cmd->cmd[i + 1])
-			i++;
+		if (!ft_memcmp(cmd->cmd[1], "-n", 3))
+			echo_n_option(cmd);
 		else
-			break ;
-		if (cmd->cmd[i])
-			ft_printf(1, "%s", cmd->cmd[i]);
-		if (cmd->cmd[i + 1])
-			ft_printf(1, " ");
-		else if (ft_memcmp(cmd->cmd[1], "-n", 3))
-			ft_printf(1, "\n");
+			echo_without_option(cmd);
 	}
 	end_status(SET, EXIT_SUCCESS);
 }
