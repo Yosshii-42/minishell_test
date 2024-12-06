@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:03 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 23:27:17 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 00:33:57 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,35 @@ static void	echo_without_option(t_cmd *cmd)
 	ft_printf(1, "\n");
 }
 
-static void	echo_n_option(t_cmd *cmd)
+bool	is_all_n(char *option)
 {
 	int	i;
 
 	i = 1;
+	while(option[i])
+	{
+		if (option[i] == 'n')
+			i++;
+		else
+			return (false);
+	}
+	return (true);
+}
+
+static void	echo_n_option(t_cmd *cmd)
+{
+	int	i;
+	int	all_n_flag;
+
+	i = 1;
+	all_n_flag = 0;
 	while (cmd->cmd[i])
 	{
-		if (!ft_strncmp(cmd->cmd[i], "-n", 2))
+		if (!ft_strncmp(cmd->cmd[i], "-n", 2) && is_all_n(cmd->cmd[i]) == true)
+		{
+			all_n_flag++;
 			i++;
+		}
 		else
 			break ;
 	}
@@ -45,6 +65,8 @@ static void	echo_n_option(t_cmd *cmd)
 			ft_printf(1, " ");
 		i++;
 	}
+	if (all_n_flag == 0)
+	ft_printf(1, "\n");
 }
 
 void	builtin_echo(t_cmd *cmd)
