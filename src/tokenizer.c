@@ -52,61 +52,92 @@ static	void	token_lstadd_back(t_token **head, t_token *new)
 	new->pre = ptr;
 }
 
-void	append_quote_token(char *input, t_token *new, int *i)
+char	*append_quote_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	quote;
 	char	*tmp;
+	char	*sub_str;
 
 	len = 0;
 	quote = *input;
 	if (input[len + 1])
 		len++;
 	else
-		return ;
+		return (new->word);
 	while (input[len] && input[len] != quote)
 		len++;
 	len++;
-	tmp = strjoin_with_free(new->word, ft_substr(input, 0, len), FREE_ALL);
-	new->word = tmp;
-		*i += len;
+	sub_str = ft_substr(input, 0, len);
+	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
+	free(sub_str);
+		*i += len - 1;
 	new->is_quoted = true;
+	return (tmp);
 }
 
-void	append_spcial_token(char *input, t_token *new, int *i)
+char	*append_spcial_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	special_char;
 	char	*tmp;
+	char	*sub_str;
 
 	len = 0;
 	special_char = *input;
 	if (input[len + 1])
 		len++;
 	else
-		return ;
+		return (new->word);
 	while (input[len] && input[len] == special_char)
 		len++;
-	tmp = strjoin_with_free(new->word, ft_substr(input, 0, len), FREE_ALL);
-	new->word = tmp;
+	sub_str = ft_substr(input, 0, len);
+	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
+	free(sub_str);
 	*i += len;
+	return (tmp);
 }
 
-void	append_normal_token(char *input, t_token *new, int *i)
+char	*append_normal_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	*tmp;
+	char	*sub_str;
 
 	len = 0;
-	if (input[len + 1])
+	while (input[len] && ft_strchr(SPECIAL_CHAR, input[len]) == 0
+		&& !ft_isspace(input[len]))
 		len++;
-	else
-		return ;
-	while (input[len] && ft_strchr(SPECIAL_CHAR, input[len]) == 0 && !ft_isspace(input[len]))
-		len++;
-	tmp = strjoin_with_free(new->word, ft_substr(input, 0, len), FREE_ALL);
-	new->word = tmp;
+	sub_str = ft_substr(input, 0, len);
+	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
+	free(sub_str);
 	*i += len;
+	return (tmp);
+}
+
+char	*append_roop(char *input, int *i, t_token *new)
+{
+	int	j;
+
+	j = 0;
+	while (input[j])
+	{
+		if (ft_strchr(SPECIAL_TOKEN, input[j]))
+		{
+			new->word = append_spcial_token(&input[j], new, &j);
+			break ;
+		}
+		else if (input[j] == '\'' || input[j] == '\"')
+			new->word = append_quote_token(&input[j], new, &j);
+		else
+			new->word = append_normal_token(&input[j], new, &j);
+		if (!input[j] || (input[j] && ft_isspace(input[j])))
+			break ;
+		else
+			j++;
+	}
+	*i += j;
+	return (new->word);
 }
 
 t_token	*tokenizer(char *input)
@@ -124,20 +155,7 @@ t_token	*tokenizer(char *input)
 		init_token(new);
 		while (input[i] && ft_isspace(input[i]))
 			i++;
-		while (input[i])
-		{
-			if (input[i] && ft_strchr(SPECIAL_TOKEN, input[i]))
-			{
-				append_spcial_token(&input[i], new, &i);
-				break ;
-			}
-			else if (input[i] && (input[i] == '\'' || input[i] == '\"'))
-				append_quote_token(&input[i], new, &i);
-			else if (input[i])
-				append_normal_token(&input[i], new, &i);
-			if (input[i] && ft_isspace(input[i]))
-				break ;
-		}
+		new->word = append_roop(&input[i], &i, new);
 		token_lstadd_back(&head, new);
 	}
 	return (head);
