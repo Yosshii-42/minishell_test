@@ -73,7 +73,7 @@ char	*getenv_str(char *str)
 t_cmd	*command_return(t_cmd *cmd, t_token *token)
 {
 	t_token	*ptr;
-	
+
 	ptr = set_token(GET, NULL);
 	if (count_token(ptr) == 1 && ptr->is_dollar == true && !ptr->word[0])
 		return (cmd);
