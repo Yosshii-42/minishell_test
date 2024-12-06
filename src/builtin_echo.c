@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 01:18:04 by tsururukako       #+#    #+#             */
-/*   Updated: 2024/12/07 01:19:12 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:38:16 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	echo_n_option(t_cmd *cmd)
 		i++;
 	}
 	if (all_n_flag == 0)
-	ft_printf(1, "\n");
+	    ft_printf(1, "\n");
 }
 
 void	builtin_echo(t_cmd *cmd)
