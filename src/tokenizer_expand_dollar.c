@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_expand_dollar.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/05 04:04:17 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 23:39:46 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 {
 	char	*env_key;
 	int		len;
-	char	*tmp;
+	// char	*tmp;
 
 	len = 0;
 	if (*token_word == '?')
 	{
-		tmp = ft_itoa(end_status(GET, 0));
-		new = strjoin_with_free(new, tmp, FREE_S1);
-		return (*i += 1, token->is_dollar = true, free(tmp), new);
+		// tmp = ft_itoa(end_status(GET, 0));
+		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
+		return (*i += 1, token->is_dollar = true, new);
 	}
 	else
 	{

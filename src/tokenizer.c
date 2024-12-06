@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/06 02:36:11 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 00:17:19 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,92 +52,72 @@ static	void	token_lstadd_back(t_token **head, t_token *new)
 	new->pre = ptr;
 }
 
-char	*append_quote_token(char *input, t_token *new, int *i)
+void	append_quote_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	quote;
-	char	*tmp;
-	char	*sub_str;
 
-	len = 0;
+	len = 1;
 	quote = *input;
-	if (input[len + 1])
-		len++;
-	else
-		return (new->word);
 	while (input[len] && input[len] != quote)
 		len++;
 	len++;
-	sub_str = ft_substr(input, 0, len);
-	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
-	free(sub_str);
-		*i += len - 1;
+	new->word = strjoin_with_free(new->word, ft_substr(input, 0, len),
+		FREE_ALL);
+	*i += len - 1;
 	new->is_quoted = true;
-	return (tmp);
 }
 
-char	*append_spcial_token(char *input, t_token *new, int *i)
+void	append_spcial_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	special_char;
-	char	*tmp;
-	char	*sub_str;
 
 	len = 0;
 	special_char = *input;
-	if (input[len + 1])
-		len++;
-	else
-		return (new->word);
 	while (input[len] && input[len] == special_char)
 		len++;
-	sub_str = ft_substr(input, 0, len);
-	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
-	free(sub_str);
-	*i += len;
-	return (tmp);
+	new->word = strjoin_with_free(new->word, ft_substr(input, 0, len),
+		FREE_ALL);
+	*i += len - 1;
 }
 
-char	*append_normal_token(char *input, t_token *new, int *i)
+void	append_normal_token(char *input, t_token *new, int *i)
 {
 	int		len;
-	char	*tmp;
-	char	*sub_str;
 
 	len = 0;
 	while (input[len] && ft_strchr(SPECIAL_CHAR, input[len]) == 0
 		&& !ft_isspace(input[len]))
 		len++;
-	sub_str = ft_substr(input, 0, len);
-	tmp = strjoin_with_free(new->word, sub_str, FREE_S1);
-	free(sub_str);
-	*i += len;
-	return (tmp);
+	new->word = strjoin_with_free(new->word, ft_substr(input, 0, len),
+		FREE_ALL);
+	*i += len - 1;
 }
 
-char	*append_roop(char *input, int *i, t_token *new)
+void	append_roop(char *input, int *i, t_token *new)
 {
 	int	j;
-
 	j = 0;
 	while (input[j])
 	{
 		if (ft_strchr(SPECIAL_TOKEN, input[j]))
 		{
-			new->word = append_spcial_token(&input[j], new, &j);
+			append_spcial_token(&input[j], new, &j);
+			j++;
 			break ;
 		}
 		else if (input[j] == '\'' || input[j] == '\"')
-			new->word = append_quote_token(&input[j], new, &j);
+			append_quote_token(&input[j], new, &j);
 		else
-			new->word = append_normal_token(&input[j], new, &j);
-		if (!input[j] || (input[j] && ft_isspace(input[j])))
+			append_normal_token(&input[j], new, &j);
+		j++;
+		if (!input[j] || (input[j] && (ft_isspace(input[j])
+			|| ft_strchr(SPECIAL_TOKEN, input[j])
+			|| input[j] == '\'' || input[j] == '\"')))
 			break ;
-		else
-			j++;
 	}
 	*i += j;
-	return (new->word);
 }
 
 t_token	*tokenizer(char *input)
@@ -155,8 +135,10 @@ t_token	*tokenizer(char *input)
 		init_token(new);
 		while (input[i] && ft_isspace(input[i]))
 			i++;
-		new->word = append_roop(&input[i], &i, new);
+		append_roop(&input[i], &i, new);
 		token_lstadd_back(&head, new);
+		if (!input[i])
+			break ;
 	}
 	return (head);
 }
