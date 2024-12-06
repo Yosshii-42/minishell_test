@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_expand_quote.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:36 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/05 15:24:50 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/05 23:16:58 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*expand_quote(char *tokenized, t_token *token)
 			while (tokenized[i] && tokenized[i] != '\'')
 				new = ft_strjoin_one(new, tokenized[i++]);
 		}
-		if (tokenized[i] == '\"')
+		else if (tokenized[i] == '\"')
 		{
 			i++;
 			while (tokenized[i] && tokenized[i] != '\"')

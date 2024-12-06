@@ -3,52 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 20:39:15 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/04 19:28:02 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 02:26:36 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static	bool	check_quote_error(char *word)
+bool	single_roop(char *word, int *i)
 {
-	int		i;
-	char	quote;
+	int	count_single;
+	int	count_double;
 
-	i = 0;
-	while (word[i])
+	count_single = 1;
+	count_double = 0;
+	(*i)++;
+	while (word[*i])
 	{
-		if (word[i] == '\'' || word[i] == '"')
+		if (word[*i] == '\'')
 		{
-			quote = word[i++];
-			while (word[i] && word[i] != quote)
-				i++;
-			if (word[i] != quote)
-			{
-				ft_printf(2, "syntax error: unmatched quote `%c`\n", quote);
-				return (false);
-			}
-			i++;
+			count_single++;
+			break ;
 		}
-		else
-			i++;
+		if (word[*i] == '\"')
+			count_double++;
+		(*i)++;
 	}
+	if (count_single == 1 || count_double % 2 == 1)
+		return (false);
 	return (true);
 }
 
-bool	find_syntax_error(t_token *tokenized)
+bool	double_roop(char *word, int *i)
 {
-	t_kind	prev_kind;
+	int	count_single;
+	int	count_double;
 
-	prev_kind = PIPE;
-	while (tokenized)
+	count_single = 0;
+	count_double = 1;
+	(*i)++;
+	while (word[*i])
 	{
-		if (!check_quote_error(tokenized->word))
-			return (false);
-		prev_kind = tokenized->kind;
-		tokenized = tokenized->next;
+		if (word[*i] == '\"')
+		{
+			count_double++;
+			break ;
+		}
+		if (word[*i] == '\'')
+			count_single++;
+		(*i)++;
+	}
+	if (count_single % 2 == 1 || count_double == 1)
+		return (false);
+	return (true);
+}
+
+bool	find_syntax_error(char *input)// *tokenized)
+{
+	int	i;
+	i = 0;
+	while (input[i])
+	{
+		while (input[i] && ft_isspace(input[i]))
+			i++;
+		if (input[i] == '\'')
+		{
+			if (single_roop(input, &i) == false)
+			{
+				ft_printf(2, "syntax error: unmatched quote `\'`\n");
+				return (false);	
+			}
+		}
+		if (input[i] == '\"')
+		{
+			if (double_roop(input, &i) == false)
+			{
+				ft_printf(2, "syntax error: unmatched quote `\"`\n");
+				return (false);	
+			}
+		}
+		i++;
 	}
 	return (true);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_lexer.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:35:00 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/05 03:45:00 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 02:43:52 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,27 @@ static void	add_token_kind(t_token *token)
 t_token	*lexer(char *line)
 {
 	t_token	*token;
+	t_token	*ptr;
 
-	if (!(*line))
-		return (NULL);
+	if (!find_syntax_error(line))
+		return (end_status(SET, 1), NULL);
 	token = NULL;
 	token = tokenizer(line);
 	set_token(SET, token);
+	ptr = token;
+	while (ptr)
+	{
+		if (ft_strchr(ptr->word, '$'))
+			ptr->word = expand_dollar(ptr->word, ptr);
+		ptr = ptr->next;
+	}
+	ptr = token;
+	while (ptr)
+	{
+		if (ft_strchr(ptr->word, '\'') || ft_strchr(ptr->word, '\"'))
+			ptr->word = expand_quote(ptr->word, ptr);
+		ptr = ptr->next;
+	}
 	add_token_kind(token);
-	if (!find_syntax_error(token))
-		return (free_token(token), end_status(SET, 1), NULL);
-	while (token)
-	{
-		if (ft_strchr(token->word, '$'))
-			token->word = expand_dollar(token->word, token);
-		token = token->next;
-	}
-	token = set_token(GET, NULL);
-	while (token)
-	{
-		if (ft_strchr(token->word, '\'') || ft_strchr(token->word, '\"'))
-			token->word = expand_quote(token->word, token);
-		token = token->next;
-	}
-	return (set_token(GET, NULL));
+	return (token);
 }
