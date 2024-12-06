@@ -6,53 +6,53 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/07 00:17:19 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:16:12 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+ 
+// void	init_token(t_token *token)
+// {
+// 	token->word = ft_strdup("");
+// 	token->kind = -1;
+// 	token->status = -1;
+// 	token->is_dollar = false;
+// 	token->is_quoted = false;
+// 	token->is_double_quoted = false;
+// 	token->next = NULL;
+// 	token->pre = NULL;
+// }
 
-void	init_token(t_token *token)
-{
-	token->word = ft_strdup("");
-	token->kind = -1;
-	token->status = -1;
-	token->is_dollar = false;
-	token->is_quoted = false;
-	token->is_double_quoted = false;
-	token->next = NULL;
-	token->pre = NULL;
-}
+// static	t_token	*token_lstlast(t_token *head)
+// {
+// 	t_token	*ptr;
 
-static	t_token	*token_lstlast(t_token *head)
-{
-	t_token	*ptr;
+// 	ptr = head;
+// 	if (!ptr)
+// 		return (NULL);
+// 	while (ptr->next)
+// 		ptr = ptr->next;
+// 	return (ptr);
+// }
 
-	ptr = head;
-	if (!ptr)
-		return (NULL);
-	while (ptr->next)
-		ptr = ptr->next;
-	return (ptr);
-}
+// static	void	token_lstadd_back(t_token **head, t_token *new)
+// {
+// 	t_token	*ptr;
 
-static	void	token_lstadd_back(t_token **head, t_token *new)
-{
-	t_token	*ptr;
+// 	ptr = NULL;
+// 	if (!*head)
+// 	{
+// 		*head = new;
+// 		new->pre = NULL;
+// 		return ;
+// 	}	
+// 	ptr = token_lstlast(*head);
+// 	ptr->next = new;
+// 	new->pre = ptr;
+// }
 
-	ptr = NULL;
-	if (!*head)
-	{
-		*head = new;
-		new->pre = NULL;
-		return ;
-	}	
-	ptr = token_lstlast(*head);
-	ptr->next = new;
-	new->pre = ptr;
-}
-
-void	append_quote_token(char *input, t_token *new, int *i)
+static void	append_quote_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	quote;
@@ -68,7 +68,7 @@ void	append_quote_token(char *input, t_token *new, int *i)
 	new->is_quoted = true;
 }
 
-void	append_spcial_token(char *input, t_token *new, int *i)
+static void	append_spcial_token(char *input, t_token *new, int *i)
 {
 	int		len;
 	char	special_char;
@@ -82,7 +82,7 @@ void	append_spcial_token(char *input, t_token *new, int *i)
 	*i += len - 1;
 }
 
-void	append_normal_token(char *input, t_token *new, int *i)
+static void	append_normal_token(char *input, t_token *new, int *i)
 {
 	int		len;
 
@@ -95,7 +95,7 @@ void	append_normal_token(char *input, t_token *new, int *i)
 	*i += len - 1;
 }
 
-void	append_roop(char *input, int *i, t_token *new)
+static void	append_roop(char *input, int *i, t_token *new)
 {
 	int	j;
 	j = 0;
@@ -113,8 +113,7 @@ void	append_roop(char *input, int *i, t_token *new)
 			append_normal_token(&input[j], new, &j);
 		j++;
 		if (!input[j] || (input[j] && (ft_isspace(input[j])
-			|| ft_strchr(SPECIAL_TOKEN, input[j])
-			|| input[j] == '\'' || input[j] == '\"')))
+			|| ft_strchr(SPECIAL_CHAR, input[j]))))
 			break ;
 	}
 	*i += j;

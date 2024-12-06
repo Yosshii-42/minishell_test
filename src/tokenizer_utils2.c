@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 19:41:10 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/04 19:32:59 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/07 01:04:52 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,20 @@ int	ft_isspace(char c)
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
-bool	is_quote(char c)
-{
-	return (c == '\'' || c == '\"');
-}
+// bool	is_quote(char c)
+// {
+// 	return (c == '\'' || c == '\"');
+// }
 
 void	set_kind_as_command(t_token *token, int *command_flag)
 {
 	token->kind = COMMAND;
 	(*command_flag)++;
+}
+
+void	init_variables(int *i, int *single_flag, int *double_flag)
+{
+	*i = 0;
+	*single_flag = 0;
+	*double_flag = 0;
 }
