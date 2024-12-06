@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:10:05 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:00:02 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 {
 	while (token)
 	{
-		if ((!token->word || !token->word[0]) && token->is_dollar == true)
+		if (!token->word[0] && token->is_dollar == true)
 			token = token->next;
 		else
 		{
