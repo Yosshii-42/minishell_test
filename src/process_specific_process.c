@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   process_specific_process.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 06:38:46 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:09:07 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/07 00:47:33 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	execve_fail_process(t_cmd *cmd)
-{
-	if (cmd->cmd[0][0] == '.')
-	{
-		ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(ENOENT));
-		free_cmd(cmd);
-		exit (127);
-	}
-	else
-	{
-		ft_printf(2, "bash: %s: %s\n", cmd->pathname, strerror(EISDIR));
-		free_cmd(cmd);
-		exit (126);
-	}
-}
 
 int	no_fork_process(t_cmd *cmd, int *stdio)
 {

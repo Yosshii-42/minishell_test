@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/06 01:39:50 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:20:07 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,18 +155,9 @@ char	**make_env_array(void);
 
 // tokenizer_lexer.c
 t_token	*lexer(char *line);
-
-// tokenizer.c
-t_token	*tokenizer(char *input);
-void	append_token(char **input, int token_len, t_token **head, t_token *new);
-
-// tokenizer_error.c
 bool	find_syntax_error(char *input);
-
-// tokenizer_expand_dollar.c
+t_token	*tokenizer(char *input);
 char	*expand_dollar(char *tokenized, t_token *token);
-
-// tokenizer_expand_quote.c
 char	*expand_quote(char *tokenized, t_token *token);
 
 // tokenizer_lexer_add_kind.c
@@ -177,17 +168,15 @@ t_token	*add_command_kind(t_token *token, int command_flag);
 int		check_builtin(char *str);
 
 // tokenizer_utils1.c
-char	*space_skip(char *input);
-int		count_word_len(char *input, t_token *new);
-int		count_meta_len(char *line);
-int		count_envname_len(char *token, t_token *new, int start);
-void	init_variables(int *i, int *single_flag, int *double_flag);
+void	init_token(t_token *token);
+t_token	*token_lstlast(t_token *head);
+void	token_lstadd_back(t_token **head, t_token *new);
 
 // tokenizer_utils2.c
+void	init_variables(int *i, int *single_flag, int *double_flag);
 char	*ft_strjoin_one(char *str, char c);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_isspace(char c);
-bool	is_quote(char c);
 void	set_kind_as_command(t_token *token, int *command_flag);
 
 // command
@@ -207,6 +196,7 @@ void	limitter_warning(int count, char *eof);
 
 // builtin command
 bool	do_builtin(t_cmd *cmd);
+void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, t_env *env);
 void	builtin_unset(t_cmd *cmd, t_env **env);
 void	builtin_env(void);

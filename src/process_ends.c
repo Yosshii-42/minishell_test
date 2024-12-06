@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_ends.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 19:41:48 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/07 00:48:07 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,22 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 		exit(126);
 	else
 		exit(127);
+}
+
+void	execve_fail_process(t_cmd *cmd)
+{
+	if (cmd->cmd[0][0] == '.')
+	{
+		ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(ENOENT));
+		free_cmd(cmd);
+		exit (127);
+	}
+	else
+	{
+		ft_printf(2, "bash: %s: %s\n", cmd->pathname, strerror(EISDIR));
+		free_cmd(cmd);
+		exit (126);
+	}
 }
 
 int	builtin_end_process(t_cmd *cmd)
