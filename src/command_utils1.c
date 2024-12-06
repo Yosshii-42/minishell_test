@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 19:40:37 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:04:45 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ char	*getenv_str(char *str)
 
 t_cmd	*command_return(t_cmd *cmd, t_token *token)
 {
+	t_token	*ptr;
+	
+	ptr = set_token(GET, NULL);
+	if (count_token(ptr) == 1 && ptr->is_dollar == true && !ptr->word[0])
+		return (cmd);
 	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
 		set_err_message(cmd, cmd->cmd[0], strerror(errno));
 	else if ((!cmd->cmd || !cmd->cmd[0])

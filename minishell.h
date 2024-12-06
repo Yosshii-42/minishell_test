@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 09:07:22 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 01:39:50 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 # define EXIT_CHILD_DUP_ERR -2
 // # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
+# define SPECIAL_CHAR "<>|\'\""
 # define FILE_NAME "./libft/.2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
@@ -160,7 +161,7 @@ t_token	*tokenizer(char *input);
 void	append_token(char **input, int token_len, t_token **head, t_token *new);
 
 // tokenizer_error.c
-bool	find_syntax_error(t_token *tokenized);
+bool	find_syntax_error(char *input);
 
 // tokenizer_expand_dollar.c
 char	*expand_dollar(char *tokenized, t_token *token);

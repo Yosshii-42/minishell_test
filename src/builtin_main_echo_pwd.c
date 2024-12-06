@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   builtin_main_echo_pwd.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:03 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/28 18:17:03 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/05 23:27:17 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,12 @@ static void	echo_n_option(t_cmd *cmd)
 
 void	builtin_echo(t_cmd *cmd)
 {
-	int	i;
-	int	n_flag;
-
 	if (!cmd->cmd[1])
 	{
 		end_status(SET, EXIT_SUCCESS);
 		ft_printf(1, "\n");
 		return ;
 	}
-	i = 0;
-	n_flag = 0;
 	if (!ft_strncmp(cmd->cmd[1], "-n", 2))
 		echo_n_option(cmd);
 	else
