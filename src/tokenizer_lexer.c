@@ -19,14 +19,14 @@ static void	add_token_kind(t_token *token)
 	commnad_flag = 0;
 	while (token)
 	{
-		if (*(token->word) == '|')
+		if (*(token->word) == '|' && ft_strlen(token->word) <= 1)
 		{
 			token = add_kind_pipe(token);
 			commnad_flag = 0;
 		}
-		else if (*(token->word) == '<')
+		else if (*(token->word) == '<' && ft_strlen(token->word) <= 2)
 			token = add_kind_lessthan(token);
-		else if (*(token->word) == '>')
+		else if (*(token->word) == '>' && ft_strlen(token->word) <= 2)
 			token = add_kind_morethan(token);
 		else if (check_builtin(token->word) >= 0)
 			token->kind = BUILTIN;

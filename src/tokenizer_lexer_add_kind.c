@@ -14,6 +14,8 @@
 
 t_token	*add_kind_pipe(t_token *token)
 {
+	if (token->is_quoted == true)
+		return (token->kind = COMMAND, token);
 	if (!token->pre && !token->next)
 		return (token->kind = SYNTAX, token);
 	if (!token->pre || ft_strlen(token->word) > 1)
@@ -31,6 +33,8 @@ t_token	*add_kind_pipe(t_token *token)
 
 t_token	*add_kind_lessthan(t_token *token)
 {
+	if (token->is_quoted == true)
+		return (token->kind = COMMAND, token);
 	if (!token->next)
 		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
@@ -52,6 +56,8 @@ t_token	*add_kind_lessthan(t_token *token)
 
 t_token	*add_kind_morethan(t_token *token)
 {
+	if (token->is_quoted == true)
+		return (token->kind = COMMAND, token);
 	if (!token->next)
 		return (token->kind = SYNTAX, token);
 	if (ft_strlen(token->word) > 2)
