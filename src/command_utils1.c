@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/06 14:04:45 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:30:34 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	init_cmd(t_cmd *cmd)
 	if (getenv_str("PATH"))
 		cmd->path = ft_split(getenv_str("PATH"), ':');
 	cmd->err_msg = NULL;
-	cmd->err_file = NULL;
+	// cmd->err_file = NULL;
 	cmd->err_no = -1;
 	cmd->token = NULL;
 	cmd->status = -1;

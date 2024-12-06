@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 01:20:07 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:29:03 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ typedef enum e_kind
 
 typedef enum e_status
 {
-	CAT,
 	END
 }t_status;
 
