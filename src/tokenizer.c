@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 19:28:45 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/07 01:16:12 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-07 06:06:34 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-07 06:06:34 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
