@@ -37,7 +37,6 @@ t_token	*add_kind_lessthan(t_token *token)
 		return (token->kind = COMMAND, token);
 	if (!token->next)
 		return (token->kind = SYNTAX, token);
-	printf("token->kind = %d\n", token->kind);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
 	else if (token->pre && (*(token->pre->word) == '<'
