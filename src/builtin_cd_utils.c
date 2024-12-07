@@ -6,13 +6,13 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 22:04:13 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/06 22:06:56 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 22:20:24 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	count_arguments(char **args)
+int	count_arguments(char **args)
 {
 	int	count;
 
@@ -24,5 +24,7 @@ static int	count_arguments(char **args)
 
 char	*skip_spaces(char *str)
 {
-	while (*str && ft_isspace(*))
+	while (*str && ft_isspace(*str))
+		str++;
+	return (str);
 }

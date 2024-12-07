@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/06 01:39:50 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/06 22:29:15 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,10 @@ void	builtin_unset(t_cmd *cmd, t_env **env);
 void	builtin_env(void);
 void	builtin_exit(t_cmd *cmd);
 void	builtin_export(t_env **env, t_cmd *cmd);
+
+// builtin_cd_utils.c
+int		count_arguments(char **args);
+char	*skip_spaces(char *str);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);

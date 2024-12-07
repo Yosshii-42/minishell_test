@@ -6,25 +6,15 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:15:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/06 21:38:37 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/07 15:01:21 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	count_arguments(char **args)
-{
-	int	count;
-
-	count = 0;
-	while (args[count])
-		count++;
-	return (count);
-}
-
 static	char	*resolve_cd_path(t_cmd *cmd)
 {
-	//char	*target_path;
+	char	*target_path;
 
 	if (!cmd->cmd[1])
 		//target_path = getenv_str("HOME");
@@ -33,11 +23,15 @@ static	char	*resolve_cd_path(t_cmd *cmd)
 	{
 		//printf("test");
 		//target_path = getenv_str("PWD");
+		ft_printf(2, "DEBUG: cd . -> getenv_str(\"PWD\")\n");
 		return (getenv_str("PWD"));
 	}
 	if (ft_memcmp(cmd->cmd[1], "-", 2) == 0)
 		//target_path = getenv_str("OLDPWD");
 		return (getenv_str("OLDPWD"));
+	target_path = skip_spaces(cmd->cmd[1]);
+	if (!*target_path)
+		return (getenv_str("HOME"));
 	if (cmd->cmd[1][0] == '\0')
 		return (end_status(SET, EXIT_SUCCESS), NULL);
 	else
@@ -94,6 +88,7 @@ void	builtin_cd(t_cmd *cmd, t_env *env)
 	int		count;
 	char	*target_path;
 	char	cwd[PATH_MAX];
+	char	oldpwd[PATH_MAX];
 
 	count = count_arguments(cmd->cmd);
 	if (count > 2)
@@ -102,14 +97,23 @@ void	builtin_cd(t_cmd *cmd, t_env *env)
 		end_status(SET, EXIT_FAILURE);
 		return ;
 	}
+	if (!getcwd(oldpwd, PATH_MAX))
+	{
+		ft_printf(2, "bash: cd: error retrieving current directory\n");
+		end_status(SET, EXIT_FAILURE);
+		return ;
+	}
 	target_path = resolve_cd_path(cmd);
 	if (!target_path)
 		return ;
 	if (!change_directory(target_path, cwd))
 		return ;
-	update_env_var(env, "PWD", cwd);
-	update_env_var(env, "OLDPWD", getenv_str("PWD"));
+	update_env_var(env, "OLDPWD", oldpwd);
+	update_env_var(env, "PWD", cwd); 
+	//update_env_var(env, "PWD", cwd);
+	//update_env_var(env, "OLDPWD", getenv_str("PWD"));
 	end_status(SET, EXIT_SUCCESS);
+	ft_printf(2, "DEBUG: cwd=%s, oldpwd=%s\n", cwd, oldpwd);
 }
 
 //static void	update_env_var(t_env *env, char *key, char *value)
