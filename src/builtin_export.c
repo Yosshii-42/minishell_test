@@ -6,40 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 07:19:29 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/30 01:44:24 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 21:56:22 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	lstadd_front(t_env **start, t_env *new)
-{
-	if (new)
-	{
-		new->next = *start;
-		*start = new;
-	}
-}
-
-static int	lstnew_export(t_env **start, char *env)
-{
-	t_env	*new;
-	int		len;
-
-	new = (t_env *)safe_malloc(1, sizeof(t_env));
-	len = 0;
-	if (ft_strchr(env, '='))
-		len = strchr_len(env, '=');
-	else
-		len = ft_strlen(env);
-	new->key = (char *)safe_malloc(len + 1, sizeof(char));
-	ft_strlcpy(new->key, env, len + 1);
-	if (ft_strchr(env, '='))
-		new->value = ft_strdup((ft_strchr(env, '=') + 1));
-	new->next = NULL;
-	lstadd_front(start, new);
-	return (TRUE);
-}
 
 static void	print_export(void)
 {
@@ -71,31 +42,62 @@ bool	find_key(char *command, char *key)
 	return (false);
 }
 
-void	builtin_export(t_env **start, t_cmd *cmd)
+static bool	check_cmd(char *command)
+{
+	if (*command >= '0' && *command <= '9')
+		return (false);
+	while (*command && *command != '=')
+	{
+		if (ft_strchr(INVALID_CHAR, *command))
+			return (false);
+		command++;
+	}
+	return (true);
+}
+
+void	export_process(t_env **start, char *str)
 {
 	t_env	*env;
+
+	env = set_env(GET, NULL);
+	while (env)
+	{
+		if (find_key(str, env->key) == true
+			&& ft_strchr(str, '='))
+		{
+			free(env->value);
+			env->value = ft_strdup(ft_strchr(str, '=') + 1);
+			end_status(SET, EXIT_SUCCESS);
+			return ;
+		}
+		env = env->next;
+	}
+	lstnew_export(start, str);
+	set_env(SET, *start);
+}
+
+void	builtin_export(t_env **start, t_cmd *cmd)
+{
 	int		i;
+	int		flag;
 
 	if (!cmd->cmd[1])
 		print_export();
 	i = 0;
+	flag = 0;
 	while (cmd->cmd[++i])
 	{
-		env = set_env(GET, NULL);
-		while (env)
+		if (check_cmd(cmd->cmd[i]) == false)
 		{
-			if (find_key(cmd->cmd[i], env->key) == true
-				&& ft_strchr(cmd->cmd[1], '='))
-			{
-				free(env->value);
-				env->value = ft_strdup(ft_strchr(cmd->cmd[i], '=') + 1);
-				end_status(SET, EXIT_SUCCESS);
-				return ;
-			}
-			env = env->next;
+			ft_printf(2, "bash: export: %s: ", cmd->cmd[i]);
+			ft_printf(2, "not a valid identifier\n");
+			flag++;
 		}
-		lstnew_export(start, cmd->cmd[i]);
-		set_env(SET, *start);
+		else
+			export_process(start, cmd->cmd[i]);
 	}
-	end_status(SET, EXIT_SUCCESS);
+	if (flag)
+		end_status(SET, EXIT_FAILURE);
+	else
+		end_status(SET, EXIT_SUCCESS);
 }
