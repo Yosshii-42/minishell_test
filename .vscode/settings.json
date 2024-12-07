@@ -22,6 +22,8 @@
       "files.associations": {
         "random": "c",
         "minishell.h": "c",
-        "get_next_line.h": "c"
+        "get_next_line.h": "c",
+        "chrono": "c",
+        "algorithm": "c"
       }
 }
