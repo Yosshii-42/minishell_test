@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/25 10:49:39 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/06 14:00:02 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-07 06:06:50 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-07 06:06:50 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:40 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/03 17:29:18 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/06 23:23:57 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*strjoin_with_free(char *s1, char *s2, int select)
 	result[i + j] = '\0';
 	if (select == FREE_S1 || select == FREE_ALL)
 		free(s1);
-	else if (select == FREE_S2 || select == FREE_ALL)
+	if (select == FREE_S2 || select == FREE_ALL)
 		free(s2);
 	return (result);
 }

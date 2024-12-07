@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 06:49:30 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 01:08:16 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 01:30:37 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	free_cmd(t_cmd *cmd)
 			free(cmd->err_msg);
 			cmd->err_msg = NULL;
 		}
-		cmd->err_file = NULL;
+		// cmd->err_file = NULL;
 		cmd->token = NULL;
 		free(cmd);
 		cmd = NULL;

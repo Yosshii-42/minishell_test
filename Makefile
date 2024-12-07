@@ -15,7 +15,8 @@ SRCS	= src/main.c \
 		  src/utils_safe_functions.c \
 		  src/signal.c \
 		  src/signal_handler.c \
-		  src/builtin_main_echo_pwd.c \
+		  src/builtin_main_pwd.c \
+		  src/builtin_echo.c \
 		  src/builtin_cd.c \
 		  src/builtin_cd_utils.c \
 		  src/builtin_export.c \
@@ -33,12 +34,12 @@ OBJS	= $(SRCS:.c=.o)
 CC		= cc
 FLAGS	= -Wall -Wextra -Werror
 LIBS	= -lreadline
-# FLAGS   += -fsanitize=address -g
+FLAGS   += -fsanitize=address -g
 HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
-# INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
-# LIBDIRS  = -L$(RLDIR)/lib
-# RLDIR   = $(shell brew --prefix readline)
+INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+LIBDIRS  = -L$(RLDIR)/lib
+RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 
