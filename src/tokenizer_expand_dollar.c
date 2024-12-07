@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/06 23:39:46 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 16:04:41 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,10 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 {
 	char	*env_key;
 	int		len;
-	// char	*tmp;
 
 	len = 0;
 	if (*token_word == '?')
 	{
-		// tmp = ft_itoa(end_status(GET, 0));
 		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
 		return (*i += 1, token->is_dollar = true, new);
 	}
