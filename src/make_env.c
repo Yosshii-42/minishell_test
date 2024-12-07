@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 20:04:26 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 22:10:54 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	lstnew(t_env **start, char *env)
 t_env	*set_no_envp(t_env **start, int i)
 {
 	static char *env_key[] = {"PWD", "SHLVL", "_", NULL};
-	static char *env_value[] = {NULL, "3", "/usr/bin/env", NULL};
+	static char *env_value[] = {NULL, "2", "/usr/bin/env", NULL};
 	char		*pwd;
 	t_env		*new;
 
