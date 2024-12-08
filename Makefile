@@ -38,9 +38,9 @@ LIBS	= -lreadline
 FLAGS   += -fsanitize=address -g
 HEADDIR	= ./minishell.h
 LIBFT	= ./libft/libft.a
-INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
-LIBDIRS  = -L$(RLDIR)/lib
-RLDIR   = $(shell brew --prefix readline)
+# INCLUDES = -I$(RLDIR)/include -I$(HEADDIR)
+# LIBDIRS  = -L$(RLDIR)/lib
+# RLDIR   = $(shell brew --prefix readline)
 
 #################################################################
 

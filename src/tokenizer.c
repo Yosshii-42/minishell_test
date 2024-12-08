@@ -74,7 +74,7 @@ static void	append_roop(char *input, int *i, t_token *new)
 			append_normal_token(&input[j], new, &j);
 		j++;
 		if (!input[j] || (input[j] && (ft_isspace(input[j])
-					|| ft_strchr(SPECIAL_CHAR, input[j]))))
+					|| ft_strchr(SPECIAL_TOKEN, input[j]))))
 			break ;
 	}
 	*i += j;

@@ -101,16 +101,18 @@ int	run_process(t_token *token, int *stdio, int command_count)
 {
 	t_cmd		*cmd;
 	int			command_flag;
+	int			pipe_flag;
 	t_token		*ptr;
 
 	ptr = set_token(GET, NULL);
+	pipe_flag = command_count;
 	while (command_count--)
 	{
 		if (!token)
 			break ;
 		cmd = NULL;
 		cmd = (t_cmd *)safe_malloc(1, sizeof(t_cmd));
-		init_cmd(cmd);
+		init_cmd(cmd, pipe_flag);
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
 		if (cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN)

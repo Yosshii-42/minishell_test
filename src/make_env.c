@@ -58,14 +58,15 @@ int	lstnew(t_env **start, char *env)
 t_env	*set_no_envp(t_env **start, int i)
 {
 	static char *env_key[] = {"PWD", "SHLVL", "_", NULL};
-	static char *env_value[] = {NULL, "2", "/usr/bin/env", NULL};
+	static char *env_value[] = {NULL, "1", "/usr/bin/env", NULL};
 	char		*pwd;
 	t_env		*new;
 
-	pwd = NULL;
-	if (!getcwd(pwd, PATH_MAX))
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
 		return (perror("getcwd"), NULL);
 	env_value[0] = ft_strdup((char *)pwd);
+	free(pwd);
 	while (env_key[++i])
 	{
 		new = NULL;
@@ -89,7 +90,7 @@ t_env	*make_env(int argc, char **argv, char **envp)
 		exit(EXIT_FAILURE);
 	i = -1;
 	start = NULL;
-	if (!envp)
+	if (!(*envp))
 		return (set_no_envp(&start, i));
 	while (envp[++i])
 		lstnew(&start, envp[i]);

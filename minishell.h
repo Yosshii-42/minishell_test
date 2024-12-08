@@ -118,7 +118,7 @@ typedef struct s_cmd
 	int				err_no;
 	struct s_token	*token;
 	t_kind			status;
-	int				flag;
+	int				pipe_flag;
 }t_cmd;
 
 typedef struct s_package
@@ -181,7 +181,7 @@ void	set_kind_as_command(t_token *token, int *command_flag);
 
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
-bool	init_cmd(t_cmd *cmd);
+bool	init_cmd(t_cmd *cmd, int pipe_flag);
 char	*make_pwd_path(char *command);
 void	set_err_message(t_cmd *cmd, char *str, char *err_str);
 void	open_files(t_cmd *cmd, t_token *token);
