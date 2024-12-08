@@ -14,6 +14,8 @@
 
 void	free_env(t_env *env)
 {
+	t_env	*tmp;
+
 	while (env)
 	{
 		if (env->key)
@@ -28,14 +30,16 @@ void	free_env(t_env *env)
 		}
 		if (env->next)
 		{
+			tmp = env;
 			env = env->next;
-			free(env->pre);
+			// free(env->pre);
+			free(tmp);
 		}
 		else
 		{
 			free(env);
 			env = NULL;
-			break ;
+			// break ;
 		}
 	}
 }

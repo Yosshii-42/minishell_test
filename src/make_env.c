@@ -29,12 +29,12 @@ void	lstadd_back(t_env **start, t_env *new)
 	if (!*start)
 	{
 		*start = new;
-		new->pre = NULL;
+		// new->pre = NULL;
 		return ;
 	}	
 	ptr = lstlast(*start);
 	ptr->next = new;
-	new->pre = ptr;
+	// new->pre = ptr;
 }
 
 int	lstnew(t_env **start, char *env)

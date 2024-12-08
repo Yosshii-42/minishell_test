@@ -83,7 +83,6 @@ void	export_process(t_env **start, char *str)
 
 void	builtin_export(t_env **start, t_cmd *cmd)
 {
-	printf("command = %s\n", cmd->cmd[1]);
 	int		i;
 	int		flag;
 

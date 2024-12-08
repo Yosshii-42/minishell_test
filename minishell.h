@@ -121,12 +121,6 @@ typedef struct s_cmd
 	int				pipe_flag;
 }t_cmd;
 
-typedef struct s_package
-{
-	t_env	*env;
-	t_token	*token;
-}t_package;
-
 // gloval like function
 int		end_status(int type, int end_status);
 char	*set_line(int type, char *new_line);
@@ -198,7 +192,7 @@ void	limitter_warning(int count, char *eof);
 bool	do_builtin(t_cmd *cmd);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, t_env *env);
-void	builtin_unset(t_cmd *cmd, t_env **env);
+void	builtin_unset(t_cmd *cmd);//, t_env **env);
 void	builtin_env(void);
 void	builtin_exit(t_cmd *cmd);
 void	builtin_export(t_env **env, t_cmd *cmd);

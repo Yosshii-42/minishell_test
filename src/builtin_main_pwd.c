@@ -45,7 +45,8 @@ bool	do_builtin(t_cmd *cmd)
 	else if (type == EXPORT)
 		return (builtin_export(&env, cmd), true);
 	else if (type == UNSET)
-		return (builtin_unset(cmd, &env), true);
+		// return (builtin_unset(cmd, &env), true);
+		return (builtin_unset(cmd), true);//, &env), true);
 	else if (type == ENV)
 		return (builtin_env(), true);
 	else if (type == EXIT)

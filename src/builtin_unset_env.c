@@ -35,21 +35,30 @@ void	delete_node(t_env *env, t_env **head)
 	free(tmp);
 }
 
-void	builtin_unset(t_cmd *cmd, t_env **env)
+void	builtin_unset(t_cmd *cmd)//, t_env **env)
 {
+	int		i;
+	t_env	**ptr;
+
 	if (!cmd->cmd[1])
 	{
 		end_status(SET, EXIT_SUCCESS);
 		return ;
 	}
-	while ((*env))
+	i = 0;
+	ptr = NULL;
+	while (cmd->cmd[++i])
 	{
-		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
+		*ptr = set_env(GET, NULL);
+		while ((*ptr))
 		{
-			delete_node(*env, env);
-			break ;
+			if (!ft_memcmp((*ptr)->key, cmd->cmd[i], ft_strlen((*ptr)->key + 1)))
+			{
+				delete_node(*ptr, ptr);
+				break ;
+			}
+			*ptr = (*ptr)->next;
 		}
-		*env = (*env)->next;
 	}
 	end_status(SET, EXIT_SUCCESS);
 }
