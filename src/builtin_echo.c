@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 01:18:04 by tsururukako       #+#    #+#             */
-/*   Updated: 2024/12/07 01:38:16 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 16:01:59 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static bool	is_all_n(char *option)
 	int	i;
 
 	i = 1;
-	while(option[i])
+	while (option[i])
 	{
 		if (option[i] == 'n')
 			i++;
@@ -66,7 +66,7 @@ static void	echo_n_option(t_cmd *cmd)
 		i++;
 	}
 	if (all_n_flag == 0)
-	    ft_printf(1, "\n");
+		ft_printf(1, "\n");
 }
 
 void	builtin_echo(t_cmd *cmd)

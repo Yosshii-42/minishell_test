@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:49:58 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 02:38:29 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/07 19:30:10 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_token	*add_kind_lessthan(t_token *token)
 		return (token->kind = COMMAND, token);
 	if (!token->next)
 		return (token->kind = SYNTAX, token);
-	printf("token->kind = %d\n", token->kind);
 	if (ft_strlen(token->word) > 2)
 		return (token->kind = SYNTAX, token);
 	else if (token->pre && (*(token->pre->word) == '<'
