@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 10:15:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/08 17:05:12 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/08 18:32:32 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,20 @@ static	char	*resolve_cd_path(t_cmd *cmd)
 	if (!cmd->cmd[1])
 		return (getenv_str("HOME"));
 	if (cmd->cmd[1][0] == '\0')
-		return (getenv_str("PWD"));
-	if (ft_memcmp(cmd->cmd[1], "-", 2) == 0)
 	{
-		ft_printf(2, "bash: cd: -: not supported\n");
 		end_status(SET, EXIT_FAILURE);
 		return (NULL);
 	}
 	target_path = skip_spaces(cmd->cmd[1]);
-	if (!*target_path)
+	if (*target_path == '\0')
 	{
 		ft_printf(2, "bash: cd: %s: No such file or directory\n", cmd->cmd[1]);
+		end_status(SET, EXIT_FAILURE);
+		return (NULL);
+	}
+	if (ft_memcmp(cmd->cmd[1], "-", 2) == 0)
+	{
+		ft_printf(2, "bash: cd: -: not supported\n");
 		end_status(SET, EXIT_FAILURE);
 		return (NULL);
 	}
@@ -58,7 +61,6 @@ static	char	*resolve_cd_path(t_cmd *cmd)
 
 static	bool	change_directory(const char *target_path, char *cwd)
 {
-	printf("test = %s\n", target_path);
 	if (chdir(target_path) == -1)
 	{
 		ft_printf(2, "bash: cd: %s: %s\n", target_path, strerror(errno));
