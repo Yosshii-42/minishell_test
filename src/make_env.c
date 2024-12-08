@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 22:10:54 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/08 10:53:44 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_env	*set_no_envp(t_env **start, int i)
 t_env	*make_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
+	t_env	*tmp;
 	int		i;
 
 	if (argc == 0 || !argv[0])
@@ -92,5 +93,16 @@ t_env	*make_env(int argc, char **argv, char **envp)
 		return (set_no_envp(&start, i));
 	while (envp[++i])
 		lstnew(&start, envp[i]);
+	tmp = start;
+	while (tmp)
+	{
+		if (ft_memcmp(tmp->key, "_" ,2) == 0)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup("/usr/bin/env");
+		}
+		tmp = tmp->next;
+	}
+
 	return (start);
 }
