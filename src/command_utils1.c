@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-bool	init_cmd(t_cmd *cmd)
+bool	init_cmd(t_cmd *cmd, int pipe_flag)
 {
 	cmd->readfd = -1;
 	cmd->writefd = -1;
@@ -28,7 +28,7 @@ bool	init_cmd(t_cmd *cmd)
 	cmd->err_no = -1;
 	cmd->token = NULL;
 	cmd->status = -1;
-	cmd->flag = 0;
+	cmd->pipe_flag = pipe_flag;
 	return (true);
 }
 

@@ -35,10 +35,14 @@ static long	*atol_pointer(const char *nptr)
 
 	num = 0;
 	sign = 1;
+	while (*nptr && ft_isspace(*nptr) == true)
+		nptr++;
 	if (*nptr == '-')
 		sign = -1;
 	if (*nptr == '+' || *nptr == '-')
 		nptr++;
+	if (!ft_isdigit(*nptr))
+		return (NULL);
 	while (ft_isdigit(*nptr))
 	{
 		if (sign == 1 && ft_isover(sign, num, (long)(*nptr - '0')))
@@ -47,12 +51,16 @@ static long	*atol_pointer(const char *nptr)
 			return (NULL);
 		num = num * 10 + *nptr++ - '0';
 	}
+	while (*nptr)
+	{
+		if (*nptr == ' ' || *nptr == '\t')
+			nptr++;
+		else
+			return (NULL);
+	}
 	num = sign * num;
 	ptr = (long *)&num;
-	if (*nptr && !ft_isdigit(*nptr))
-		return (NULL);
-	else
-		return (ptr);
+	return (ptr);
 }
 
 void	print_err_and_set_exit_status(char *argument, long *result)
@@ -67,25 +75,43 @@ void	print_err_and_set_exit_status(char *argument, long *result)
 		end_status(SET, (*result) % 256);
 }
 
+void	numeric_error(char *argument, int pipe_flag)
+{
+	if (pipe_flag == 1)
+		ft_printf(1, "exit\n");
+	ft_printf(2, "bash: exit: %s", argument);
+	ft_printf(2, ": numeric argument rewuired\n");
+	end_status(SET, 2);
+}
+
+void	too_many_error(int pipe_flag)
+{
+	if (pipe_flag == 1)
+		ft_printf(1, "exit\n");
+	ft_printf(2, "bash: exit: too many arguments\n");
+	end_status(SET, 1);
+}
+
 void	builtin_exit(t_cmd *cmd)
 {
 	int		count;
 	long	*result;
 
-	count = 0;
-	while (cmd->cmd[count])
-		count++;
-	result = NULL;
+	count = -1;
+	while (cmd->cmd[++count])
+		;
 	if (count == 1)
+	{
 		end_status(SET, EXIT_SUCCESS);
-	else if (count >= 3)
-	{
-		ft_printf(2, "exit\nbash: exit: too many arguments\n");
-		end_status(SET, 2);
+		return ;
 	}
+	result = atol_pointer(cmd->cmd[1]);
+	if (count == 2 && !result)
+		numeric_error(cmd->cmd[1], cmd->pipe_flag);
+	else if (count == 2)
+		end_status(SET, *result);
+	else if (count >= 3 && result)
+		too_many_error(cmd->pipe_flag);
 	else
-	{
-		result = atol_pointer(cmd->cmd[1]);
-		print_err_and_set_exit_status(cmd->cmd[1], result);
-	}
+		numeric_error(cmd->cmd[1], cmd->pipe_flag);
 }

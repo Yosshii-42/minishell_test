@@ -54,8 +54,8 @@ int	main(int argc, char **argv, char **envp)
 
 	env = NULL;
 	env = make_env(argc, argv, envp);
-	if (!env)
-		exit(EXIT_FAILURE);
+	// if (!env)
+	// 	exit(EXIT_FAILURE);
 	env = set_env(SET, env);
 	rl_outstream = stdout;
 	g_sig_status = 0;
