@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_env.c                                          :+:      :+:    :+:   */
+/*   make_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/05 20:30:43 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/08 10:53:44 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,33 +42,67 @@ int	lstnew(t_env **start, char *env)
 	t_env	*new;
 	int		len;
 
-	new = (t_env *)malloc(sizeof(t_env));
-	if (!new)
-		return (FALSE);
+	new = (t_env *)safe_malloc(1, sizeof(t_env));
 	len = 0;
 	len = strchr_len(env, '=');
-	new->key = (char *)malloc((len + 1) * sizeof(char));
+	new->key = (char *)safe_malloc(len + 1, sizeof(char));
 	if (!new->key)
 		return (free(new), FALSE);
 	ft_strlcpy(new->key, env, len + 1);
 	new->value = ft_strdup((ft_strchr(env, '=') + 1));
-	if (!new->value)
-		return (free(new->key), free(new), FALSE);
 	new->next = NULL;
 	lstadd_back(start, new);
 	return (TRUE);
 }
 
+t_env	*set_no_envp(t_env **start, int i)
+{
+	static char *env_key[] = {"PWD", "SHLVL", "_", NULL};
+	static char *env_value[] = {NULL, "2", "/usr/bin/env", NULL};
+	char		*pwd;
+	t_env		*new;
+
+	pwd = NULL;
+	if (!getcwd(pwd, PATH_MAX))
+		return (perror("getcwd"), NULL);
+	env_value[0] = ft_strdup((char *)pwd);
+	while (env_key[++i])
+	{
+		new = NULL;
+		new = (t_env *)safe_malloc(1, sizeof(t_env));
+		new->key = ft_strdup(env_key[i]);
+		new->value = ft_strdup(env_value[i]);
+		new->next = NULL;
+		lstadd_back(start, new);
+	}
+	free(env_value[0]);
+	return (*start);
+}
+
 t_env	*make_env(int argc, char **argv, char **envp)
 {
 	t_env	*start;
+	t_env	*tmp;
 	int		i;
 
 	if (argc == 0 || !argv[0])
 		exit(EXIT_FAILURE);
 	i = -1;
 	start = NULL;
+	if (!envp)
+		return (set_no_envp(&start, i));
 	while (envp[++i])
 		lstnew(&start, envp[i]);
+	tmp = start;
+	while (tmp)
+	{
+		if (ft_memcmp(tmp->key, "_" ,2) == 0)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup("/usr/bin/env");
+		}
+		tmp = tmp->next;
+	}
+
 	return (start);
 }

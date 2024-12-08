@@ -71,6 +71,6 @@ int	main(int argc, char **argv, char **envp)
 		free(line);
 	}
 	free_env(set_env(GET, NULL));
-	clear_history();
+	rl_clear_history();
 	exit(EXIT_SUCCESS);
 }

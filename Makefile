@@ -20,6 +20,7 @@ SRCS	= src/main.c \
 		  src/builtin_cd.c \
 		  src/builtin_cd_utils.c \
 		  src/builtin_export.c \
+		  src/builtin_export_utils.c \
 		  src/builtin_exit.c \
 		  src/builtin_unset_env.c \
 		  src/tokenizer_lexer.c \

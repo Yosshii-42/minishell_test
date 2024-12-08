@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-12-07 06:06:50 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-07 06:06:50 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/12/07 06:06:50 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/08 00:57:07 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag)
 			token = token->next;
 		else
 		{
-			if (token->kind == SYNTAX)
+			if (token->kind == SYNTAX || (token->kind == PIPE && !token->next))
 				return (cmd->status = SYNTAX, command_return(cmd, token));
 			if (token->kind == PIPE)
 				make_pipe(cmd);

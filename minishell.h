@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 15:11:30 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/07 21:55:08 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 // # define SPECIAL_CHAR "~`#&*()[]{};!?"
 # define SPECIAL_TOKEN "<>|"
 # define SPECIAL_CHAR "<>|\'\""
+# define INVALID_CHAR " \t.-!@#$%^&*()+{}[];:\'\",<>?/\\|~"
 # define FILE_NAME "./libft/.2qryY0jwPY2AXF0VxD2CTIX3uv03Bi"
 # define PIPE_EXIST	1
 # define NO_PIPE 0
@@ -205,6 +206,10 @@ void	builtin_export(t_env **env, t_cmd *cmd);
 // builtin_cd_utils.c
 int		count_arguments(char **args);
 char	*skip_spaces(char *str);
+
+// bultin_export_utils
+int		lstnew_export(t_env **start, char *env);
+void	lstadd_front(t_env **start, t_env *new);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);
