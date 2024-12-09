@@ -12,57 +12,6 @@
 
 #include "../minishell.h"
 
-static bool	ft_isover(long long sign, long long num, long long next_num)
-{
-	if (num < LLONG_MAX / 10)
-		return (false);
-	if (num > LLONG_MAX / 10)
-		return (true);
-	if (sign == 1 && next_num > LLONG_MAX % 10)
-		return (true);
-	else if (sign == -1 && next_num > (LLONG_MIN % 10) * (-1))
-		return (true);
-	else
-		return (false);
-}
-
-// atoi_pointer return long num or NULL
-static long	*atol_pointer(const char *nptr)
-{
-	long long	num;
-	long		*ptr;
-	long long	sign;
-
-	num = 0;
-	sign = 1;
-	while (*nptr && ft_isspace(*nptr) == true)
-		nptr++;
-	if (*nptr == '-')
-		sign = -1;
-	if (*nptr == '+' || *nptr == '-')
-		nptr++;
-	if (!ft_isdigit(*nptr))
-		return (NULL);
-	while (ft_isdigit(*nptr))
-	{
-		if (sign == 1 && ft_isover(sign, num, (long)(*nptr - '0')))
-			return (NULL);
-		else if (sign == -1 && ft_isover(sign, num, (long)(*nptr - '0')))
-			return (NULL);
-		num = num * 10 + *nptr++ - '0';
-	}
-	while (*nptr)
-	{
-		if (*nptr == ' ' || *nptr == '\t')
-			nptr++;
-		else
-			return (NULL);
-	}
-	num = sign * num;
-	ptr = (long *)&num;
-	return (ptr);
-}
-
 void	print_err_and_set_exit_status(char *argument, long *result)
 {
 	if (result == NULL)
