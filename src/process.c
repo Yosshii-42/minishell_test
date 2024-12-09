@@ -25,15 +25,18 @@ static int	wait_process(void)
 		if (WIFEXITED(status))
 			exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
+		{
 			exit_status = WTERMSIG(status) + 128;
+			if (exit_status != 130)
+				core_dump_signal(exit_status);
+			else
+				ft_putstr_fd("\n", STDOUT_FILENO);
+		}
 	}
 	if (exit_status > 255)
 		return (EXIT_FAILURE);
-	if (exit_status != 130)
-		core_dump_signal(exit_status);
 	else
 	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
 	}
 	return (exit_status);

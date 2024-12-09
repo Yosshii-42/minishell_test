@@ -205,6 +205,9 @@ char	*skip_spaces(char *str);
 int		lstnew_export(t_env **start, char *env);
 // void	lstadd_front(t_env **start, t_env *new);
 
+// builtin_exit_utils
+long    *atol_pointer(char *nptr);
+
 // process
 int		run_process(t_token *token, int *stdio, int command_count);
 int		parent_process(t_cmd *cmd, int count);//t_token *token, int count);

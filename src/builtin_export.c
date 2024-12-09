@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 07:19:29 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/08 10:45:35 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/09 20:06:38 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	print_export(void)
 	while (env)
 	{
 		if (ft_memcmp(env->key, "_", 2) == 0)
-			env=env->next;
+			env = env->next;
 		if (env)
 		{
 			ft_printf(1, "declare -x %s", env->key);

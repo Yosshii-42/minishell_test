@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:09 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/08 10:53:44 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/09 20:08:09 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int	lstnew(t_env **start, char *env)
 
 t_env	*set_no_envp(t_env **start, int i)
 {
-	static char *env_key[] = {"PWD", "SHLVL", "_", NULL};
-	static char *env_value[] = {NULL, "1", "/usr/bin/env", NULL};
+	static char	*env_key[] = {"PWD", "SHLVL", "_", NULL};
+	static char	*env_value[] = {NULL, "1", "/usr/bin/env", NULL};
 	char		*pwd;
 	t_env		*new;
 
@@ -95,13 +95,12 @@ t_env	*make_env(int argc, char **argv, char **envp)
 	tmp = start;
 	while (tmp)
 	{
-		if (ft_memcmp(tmp->key, "_" ,2) == 0)
+		if (ft_memcmp(tmp->key, "_", 2) == 0)
 		{
 			free(tmp->value);
 			tmp->value = ft_strdup("/usr/bin/env");
 		}
 		tmp = tmp->next;
 	}
-
 	return (start);
 }
