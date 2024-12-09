@@ -6,21 +6,11 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 07:19:29 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 21:56:53 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/10 01:45:25 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void	lstadd_front(t_env **start, t_env *new)
-// {
-
-// 	if (new)
-// 	{
-// 		new->next = *start;
-// 		*start = new;
-// 	}
-// }
 
 int	lstnew_export(t_env **start, char *env)
 {
