@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 21:55:08 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/10 01:24:17 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,8 @@ void	set_kind_as_command(t_token *token, int *command_flag);
 // command
 t_cmd	*make_cmd(t_token *token, t_cmd *cmd, int command_flag);
 bool	init_cmd(t_cmd *cmd, int pipe_flag);
-char	*make_pwd_path(char *command);
+// char	*make_pwd_path(char *command);
+char	*make_pwd_path(t_cmd *cmd);
 void	set_err_message(t_cmd *cmd, char *str, char *err_str);
 void	open_files(t_cmd *cmd, t_token *token);
 void	make_pipe(t_cmd *cmd);
@@ -192,7 +193,7 @@ void	limitter_warning(int count, char *eof);
 bool	do_builtin(t_cmd *cmd);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, t_env *env);
-void	builtin_unset(t_cmd *cmd, t_env **env);
+void	builtin_unset(t_cmd *cmd);
 void	builtin_env(void);
 bool	builtin_exit(t_cmd *cmd);
 void	builtin_export(t_env **env, t_cmd *cmd);

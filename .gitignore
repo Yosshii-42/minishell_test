@@ -17,3 +17,5 @@ exit42
 out_err
 print_args
 test.sh
+error.log
+minishell_tester/

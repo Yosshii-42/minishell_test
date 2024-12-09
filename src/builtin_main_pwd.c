@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 01:23:40 by tsururukako       #+#    #+#             */
-/*   Updated: 2024/12/07 19:20:13 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/10 01:24:29 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	do_builtin(t_cmd *cmd)
 	else if (type == EXPORT)
 		return (builtin_export(&env, cmd), true);
 	else if (type == UNSET)
-		return (builtin_unset(cmd, &env), true);
+		return (builtin_unset(cmd), true);
 	else if (type == ENV)
 		return (builtin_env(), true);
 	else if (type == EXIT && builtin_exit(cmd))

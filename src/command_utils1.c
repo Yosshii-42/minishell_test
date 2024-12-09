@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 16:05:55 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/09 23:23:22 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,28 @@ void	make_pipe(t_cmd *cmd)
 		exit((ft_printf(2, "pipe: %s\n", strerror(errno)), EXIT_FAILURE));
 }
 
-char	*make_pwd_path(char *command)
+// char	*make_pwd_path(char *command)
+char	*make_pwd_path(t_cmd *cmd)
 {
 	char	*str;
 	char	*pwd;
 
+	if (!cmd->cmd[0][1])
+	{
+		cmd->err_msg = ft_strdup("bash: .: filename argument required\n");
+		return (ft_strdup(cmd->cmd[0]));	
+	}
+	if (cmd->cmd[0][1] && cmd->cmd[0][1] == '.')
+	{
+		cmd->err_msg = ft_strdup("bash: ..: command not found\n");
+		return (ft_strdup(cmd->cmd[0]));
+	}
 	pwd = getenv("PWD");
 	if (!pwd)
 		pwd = getenv("OLDPWD");
 	str = strjoin_with_free(pwd, "/", NO_FREE);
-	str = strjoin_with_free(str, command, FREE_S1);
+	// str = strjoin_with_free(str, command, FREE_S1);
+	str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
 	return (str);
 }
 

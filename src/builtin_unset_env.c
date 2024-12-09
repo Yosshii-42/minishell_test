@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset_env.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 19:42:05 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/10 01:24:05 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,56 +28,40 @@ void	free_env_node(t_env *env)
 	env = NULL;
 }
 
-void	delete_node(t_env *env, t_env *next_env)
+static void	search_and_delete(char *arg, t_env *env, t_env *delete)
 {
-	free_env_node(env->next);
-	env->next = next_env;
+	while (env->next)
+	{
+		if (ft_memcmp(arg, delete->key, ft_strlen(delete->key) + 1) == 0)
+		{
+			env->next = delete->next;
+			free_env_node(delete);
+			break ;
+		}
+		env = env->next;
+		delete = env->next;
+	}
 }
 
-void	builtin_unset(t_cmd *cmd, t_env **env)
-{
+void	builtin_unset(t_cmd *cmd)
+{	
 	int		i;
 	t_env	*ptr;
-	// t_env	*tmp;
-	t_env	*next_env;
+	t_env	*head;
 
-	if (!cmd->cmd[1])
-	{
-		end_status(SET, EXIT_SUCCESS);
-		return ;
-	}
 	i = 0;
-	ptr = *env;
 	while (cmd->cmd[++i])
 	{
-		ptr = *env;
-		if (ptr == *env && !ft_memcmp(ptr->key, cmd->cmd[i], ft_strlen(ptr->key) + 1))
+		head = set_env(GET, NULL);
+		ptr = head->next;
+		if (ft_memcmp(cmd->cmd[i], head->key, ft_strlen(head->key) + 1) == 0)
 		{
-			set_env(SET, ptr->next);
-			free_env_node(ptr);
-			ptr = set_env(GET, NULL);
+			free_env_node(head);
+			set_env(SET, ptr);
+			return ;
 		}
 		else
-		{
-			while (ptr)
-			{
-				if (ptr->next)
-				{
-					next_env = ptr->next;
-					if (!ft_memcmp(next_env->key, cmd->cmd[i], ft_strlen(next_env->key + 1)))
-					{
-						printf("cmd[%d] = %s, env->next->key = %s\n", i, cmd->cmd[i], next_env->key);
-						// tmp = ptr->next->next;
-						delete_node(ptr, ptr->next->next);
-						// ptr = tmp;
-						break ;
-					}
-					ptr = ptr->next;
-				}
-			}
-			// else
-			ptr = ptr->next;
-		}
+			search_and_delete(cmd->cmd[i], head, ptr);	
 	}
 	end_status(SET, EXIT_SUCCESS);
 }

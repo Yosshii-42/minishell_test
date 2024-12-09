@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 19:39:37 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/09 23:01:22 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_err_and_set_exit_status(char *argument, long *result)
 	if (result == NULL)
 	{
 		ft_printf(2, "bash: exit: %s", argument);
-		ft_printf(2, ": numeric argument rewuired\n");
+		ft_printf(2, ": numeric argument required\n");
 		end_status(SET, EXIT_FAILURE);
 	}
 	else
@@ -27,7 +27,7 @@ void	print_err_and_set_exit_status(char *argument, long *result)
 void	numeric_error(char *argument)
 {
 	ft_printf(2, "bash: exit: %s", argument);
-	ft_printf(2, ": numeric argument rewuired\n");
+	ft_printf(2, ": numeric argument required\n");
 	end_status(SET, 2);
 }
 
