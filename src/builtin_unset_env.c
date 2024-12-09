@@ -12,44 +12,72 @@
 
 #include "../minishell.h"
 
-void	delete_node(t_env *env, t_env **head)
+void	free_env_node(t_env *env)
 {
-	t_env	*tmp;
+	if (env->key)
+	{
+		free(env->key);
+		env->key = NULL;
+	}
+	if (env->value)
+	{
+		free(env->value);
+		env->value = NULL;
+	}
+	free(env);
+	env = NULL;
+}
 
-	tmp = env;
-	if (env->pre && env->next)
-	{
-		env->pre->next = env->next;
-		env->next->pre = env->pre;
-	}
-	else if (env->pre == NULL && env->next)
-	{
-		env->next->pre = NULL;
-		*head = env->next;
-		set_env(SET, *head);
-	}
-	else if (env->pre && env->next == NULL)
-		env->pre->next = NULL;
-	free(tmp->key);
-	free(tmp->value);
-	free(tmp);
+void	delete_node(t_env *env, t_env *next_env)
+{
+	free_env_node(env->next);
+	env->next = next_env;
 }
 
 void	builtin_unset(t_cmd *cmd, t_env **env)
 {
+	int		i;
+	t_env	*ptr;
+	// t_env	*tmp;
+	t_env	*next_env;
+
 	if (!cmd->cmd[1])
 	{
 		end_status(SET, EXIT_SUCCESS);
 		return ;
 	}
-	while ((*env))
+	i = 0;
+	ptr = *env;
+	while (cmd->cmd[++i])
 	{
-		if (!ft_memcmp((*env)->key, cmd->cmd[1], ft_strlen(cmd->cmd[1]) + 1))
+		ptr = *env;
+		if (ptr == *env && !ft_memcmp(ptr->key, cmd->cmd[i], ft_strlen(ptr->key) + 1))
 		{
-			delete_node(*env, env);
-			break ;
+			set_env(SET, ptr->next);
+			free_env_node(ptr);
+			ptr = set_env(GET, NULL);
 		}
-		*env = (*env)->next;
+		else
+		{
+			while (ptr)
+			{
+				if (ptr->next)
+				{
+					next_env = ptr->next;
+					if (!ft_memcmp(next_env->key, cmd->cmd[i], ft_strlen(next_env->key + 1)))
+					{
+						printf("cmd[%d] = %s, env->next->key = %s\n", i, cmd->cmd[i], next_env->key);
+						// tmp = ptr->next->next;
+						delete_node(ptr, ptr->next->next);
+						// ptr = tmp;
+						break ;
+					}
+					ptr = ptr->next;
+				}
+			}
+			// else
+			ptr = ptr->next;
+		}
 	}
 	end_status(SET, EXIT_SUCCESS);
 }

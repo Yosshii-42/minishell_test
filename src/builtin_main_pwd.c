@@ -48,7 +48,12 @@ bool	do_builtin(t_cmd *cmd)
 		return (builtin_unset(cmd, &env), true);
 	else if (type == ENV)
 		return (builtin_env(), true);
-	else if (type == EXIT)
-		return (builtin_exit(cmd), false);
+	else if (type == EXIT && builtin_exit(cmd))
+	{
+		if (cmd->pipe_flag == 1)
+			return (ft_printf(2, "exit\n"), false);
+		else
+			return (true);
+	}
 	return (true);
 }

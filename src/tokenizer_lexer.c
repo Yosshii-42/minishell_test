@@ -38,12 +38,24 @@ static void	add_token_kind(t_token *token)
 	}
 }
 
+bool	find_not_suport(char *line)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] == '$' && line[i + 1] && line[i + 1] == '$')
+			return (ft_printf(2, "$$: not suported\n"), false);
+	}
+	return  (true);
+}
+
 t_token	*lexer(char *line)
 {
 	t_token	*token;
 	t_token	*ptr;
-
-	if (!find_syntax_error(line))
+	if (!find_syntax_error(line)|| !find_not_suport(line))
 		return (end_status(SET, 1), NULL);
 	token = NULL;
 	token = tokenizer(line);
