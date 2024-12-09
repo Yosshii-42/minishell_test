@@ -12,14 +12,15 @@
 
 #include "../minishell.h"
 
-void	lstadd_front(t_env **start, t_env *new)
-{
-	if (new)
-	{
-		new->next = *start;
-		*start = new;
-	}
-}
+// void	lstadd_front(t_env **start, t_env *new)
+// {
+
+// 	if (new)
+// 	{
+// 		new->next = *start;
+// 		*start = new;
+// 	}
+// }
 
 int	lstnew_export(t_env **start, char *env)
 {
@@ -37,6 +38,6 @@ int	lstnew_export(t_env **start, char *env)
 	if (ft_strchr(env, '='))
 		new->value = ft_strdup((ft_strchr(env, '=') + 1));
 	new->next = NULL;
-	lstadd_front(start, new);
+	lstadd_back(start, new);
 	return (TRUE);
 }

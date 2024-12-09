@@ -192,9 +192,9 @@ void	limitter_warning(int count, char *eof);
 bool	do_builtin(t_cmd *cmd);
 void	builtin_echo(t_cmd *cmd);
 void	builtin_cd(t_cmd *cmd, t_env *env);
-void	builtin_unset(t_cmd *cmd);//, t_env **env);
+void	builtin_unset(t_cmd *cmd, t_env **env);
 void	builtin_env(void);
-void	builtin_exit(t_cmd *cmd);
+bool	builtin_exit(t_cmd *cmd);
 void	builtin_export(t_env **env, t_cmd *cmd);
 
 // builtin_cd_utils.c
@@ -203,7 +203,7 @@ char	*skip_spaces(char *str);
 
 // bultin_export_utils
 int		lstnew_export(t_env **start, char *env);
-void	lstadd_front(t_env **start, t_env *new);
+// void	lstadd_front(t_env **start, t_env *new);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);

@@ -56,20 +56,20 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
 		return (*i += 1, token->is_dollar = true, new);
 	}
-	else if (*token_word == '$')
-	{
-		while (*token_word && *token_word == '$')
-		{
-			len++;
-			if  (*(token_word + len) && *(token_word + len) == '$')
-			{
-				new = strjoin_with_free(new, "$", FREE_S1);
-			}
-			else
-				break ;
-		}
-		return (*i += len, new);
-	}
+	// else if (*token_word == '$')
+	// {
+	// 	while (*token_word && *token_word == '$')
+	// 	{
+	// 		len++;
+	// 		if  (*(token_word + len) && *(token_word + len) == '$')
+	// 		{
+	// 			new = strjoin_with_free(new, "$", FREE_S1);
+	// 		}
+	// 		else
+	// 			break ;
+	// 	}
+	// 	return (*i += len, new);
+	// }
 	else
 	{
 		env_key = find_env_key(token_word);

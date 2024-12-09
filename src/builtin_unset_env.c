@@ -12,33 +12,34 @@
 
 #include "../minishell.h"
 
-void	delete_node(t_env *env, t_env **head)
+void	free_env_node(t_env *env)
 {
-	t_env	*tmp;
-
-	tmp = env;
-	if (env->pre && env->next)
+	if (env->key)
 	{
-		env->pre->next = env->next;
-		env->next->pre = env->pre;
+		free(env->key);
+		env->key = NULL;
 	}
-	else if (env->pre == NULL && env->next)
+	if (env->value)
 	{
-		env->next->pre = NULL;
-		*head = env->next;
-		set_env(SET, *head);
+		free(env->value);
+		env->value = NULL;
 	}
-	else if (env->pre && env->next == NULL)
-		env->pre->next = NULL;
-	free(tmp->key);
-	free(tmp->value);
-	free(tmp);
+	free(env);
+	env = NULL;
 }
 
-void	builtin_unset(t_cmd *cmd)//, t_env **env)
+void	delete_node(t_env *env, t_env *next_env)
+{
+	free_env_node(env->next);
+	env->next = next_env;
+}
+
+void	builtin_unset(t_cmd *cmd, t_env **env)
 {
 	int		i;
-	t_env	**ptr;
+	t_env	*ptr;
+	// t_env	*tmp;
+	t_env	*next_env;
 
 	if (!cmd->cmd[1])
 	{
@@ -46,18 +47,36 @@ void	builtin_unset(t_cmd *cmd)//, t_env **env)
 		return ;
 	}
 	i = 0;
-	ptr = NULL;
+	ptr = *env;
 	while (cmd->cmd[++i])
 	{
-		*ptr = set_env(GET, NULL);
-		while ((*ptr))
+		ptr = *env;
+		if (ptr == *env && !ft_memcmp(ptr->key, cmd->cmd[i], ft_strlen(ptr->key) + 1))
 		{
-			if (!ft_memcmp((*ptr)->key, cmd->cmd[i], ft_strlen((*ptr)->key + 1)))
+			set_env(SET, ptr->next);
+			free_env_node(ptr);
+			ptr = set_env(GET, NULL);
+		}
+		else
+		{
+			while (ptr)
 			{
-				delete_node(*ptr, ptr);
-				break ;
+				if (ptr->next)
+				{
+					next_env = ptr->next;
+					if (!ft_memcmp(next_env->key, cmd->cmd[i], ft_strlen(next_env->key + 1)))
+					{
+						printf("cmd[%d] = %s, env->next->key = %s\n", i, cmd->cmd[i], next_env->key);
+						// tmp = ptr->next->next;
+						delete_node(ptr, ptr->next->next);
+						// ptr = tmp;
+						break ;
+					}
+					ptr = ptr->next;
+				}
 			}
-			*ptr = (*ptr)->next;
+			// else
+			ptr = ptr->next;
 		}
 	}
 	end_status(SET, EXIT_SUCCESS);

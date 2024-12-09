@@ -75,24 +75,21 @@ void	print_err_and_set_exit_status(char *argument, long *result)
 		end_status(SET, (*result) % 256);
 }
 
-void	numeric_error(char *argument, int pipe_flag)
+void	numeric_error(char *argument)
 {
-	if (pipe_flag == 1)
-		ft_printf(1, "exit\n");
 	ft_printf(2, "bash: exit: %s", argument);
 	ft_printf(2, ": numeric argument rewuired\n");
 	end_status(SET, 2);
 }
 
-void	too_many_error(int pipe_flag)
+void	too_many_error(t_cmd *cmd)
 {
-	if (pipe_flag == 1)
-		ft_printf(1, "exit\n");
 	ft_printf(2, "bash: exit: too many arguments\n");
 	end_status(SET, 1);
+	cmd->pipe_flag = -1;
 }
 
-void	builtin_exit(t_cmd *cmd)
+bool	builtin_exit(t_cmd *cmd)
 {
 	int		count;
 	long	*result;
@@ -103,15 +100,16 @@ void	builtin_exit(t_cmd *cmd)
 	if (count == 1)
 	{
 		end_status(SET, EXIT_SUCCESS);
-		return ;
+		return (true);
 	}
 	result = atol_pointer(cmd->cmd[1]);
 	if (count == 2 && !result)
-		numeric_error(cmd->cmd[1], cmd->pipe_flag);
+		numeric_error(cmd->cmd[1]);
 	else if (count == 2)
 		end_status(SET, *result);
 	else if (count >= 3 && result)
-		too_many_error(cmd->pipe_flag);
+		too_many_error(cmd);
 	else
-		numeric_error(cmd->cmd[1], cmd->pipe_flag);
+		numeric_error(cmd->cmd[1]);
+	return (true);
 }
