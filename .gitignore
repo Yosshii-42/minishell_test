@@ -12,3 +12,8 @@ outfile
 text
 .vscode/tasks.json
 .vscode/settings.json
+cmp_err
+exit42
+out_err
+print_args
+test.sh

@@ -18,8 +18,8 @@ static void	dup_stdio(int *stdio)
 {
 	stdio[0] = -1;
 	stdio[1] = -1;
-	stdio[0] = safe_dup(STDIN_FILENO);
-	stdio[1] = safe_dup(STDOUT_FILENO);
+	stdio[0] = dup(STDIN_FILENO);
+	stdio[1] = dup(STDOUT_FILENO);
 }
 
 static void	clear_process(void)
@@ -54,8 +54,6 @@ int	main(int argc, char **argv, char **envp)
 
 	env = NULL;
 	env = make_env(argc, argv, envp);
-	// if (!env)
-	// 	exit(EXIT_FAILURE);
 	env = set_env(SET, env);
 	rl_outstream = stdout;
 	g_sig_status = 0;

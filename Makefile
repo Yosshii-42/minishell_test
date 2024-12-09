@@ -70,9 +70,9 @@ test: all
 
 #################################################################
 
-OS := $(shell uname -s)
+# OS := $(shell uname -s)
 
-ifeq ($(OS), Linus)
-	# commands for Linux
-endif
+# ifeq ($(OS), Linus)
+# 	# commands for Linux
+# endif
 
