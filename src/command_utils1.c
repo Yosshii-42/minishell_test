@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/10 01:44:10 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/10 14:16:02 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,6 @@ char	*make_pwd_path(t_cmd *cmd)
 	char	*str;
 	char	*pwd;
 
-	if (!cmd->cmd[0][1])
-	{
-		cmd->err_msg = ft_strdup("bash: .: filename argument required\n");
-		return (ft_strdup(cmd->cmd[0]));	
-	}
 	if (ft_memcmp(cmd->cmd[0], "..", 3) == 0)
 	{
 		cmd->err_msg = ft_strdup("bash: ..: command not found\n");

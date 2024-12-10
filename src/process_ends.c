@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 00:48:07 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/10 16:08:13 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,23 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 
 void	execve_fail_process(t_cmd *cmd)
 {
-	if (cmd->cmd[0][0] == '.')
+	int	len;
+	len = ft_strlen(cmd->cmd[0]);
+	if (ft_memcmp(cmd->cmd[0], ".", 2) == 0)
 	{
-		ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(ENOENT));
+		ft_printf(2, "bash: .: filename argument required\n");
 		free_cmd(cmd);
-		exit (127);
+		exit(2);	
+	}
+	if (access(cmd->cmd[0], X_OK & F_OK) == 0 && !(cmd->cmd[0][len - 1] == '.' || cmd->cmd[0][len - 1] == '/'))
+	{
+		ft_printf(2, "%s: unsuported%s\n", cmd->cmd[0]);
+		free_cmd(cmd);
+		exit (EXIT_FAILURE);
 	}
 	else
 	{
-		ft_printf(2, "bash: %s: %s\n", cmd->pathname, strerror(EISDIR));
+		ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(EISDIR));
 		free_cmd(cmd);
 		exit (126);
 	}
