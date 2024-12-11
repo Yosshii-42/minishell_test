@@ -19,3 +19,4 @@ print_args
 test.sh
 error.log
 minishell_tester/
+ls

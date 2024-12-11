@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/07 01:18:04 by tsururukako       #+#    #+#             */
-/*   Updated: 2024/12/07 16:01:59 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-12-11 09:19:15 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:19:15 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

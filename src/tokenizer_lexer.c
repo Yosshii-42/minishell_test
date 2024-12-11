@@ -46,7 +46,7 @@ bool	find_not_suport(char *line)
 	while (line[++i])
 	{
 		if (line[i] == '$' && line[i + 1] && line[i + 1] == '$')
-			return (ft_printf(2, "$$: not suported\n"), false);
+			return (ft_printf(2, "$$: unsuported\n"), false);
 	}
 	return (true);
 }

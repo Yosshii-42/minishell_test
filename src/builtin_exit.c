@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/09 23:01:22 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:19:33 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:19:33 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

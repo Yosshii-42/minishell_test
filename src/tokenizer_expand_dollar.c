@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_expand_dollar.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/11 17:57:23 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-12-11 09:22:59 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:22:59 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

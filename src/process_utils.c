@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 06:28:47 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/11/27 01:16:33 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:21:51 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:21:51 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
