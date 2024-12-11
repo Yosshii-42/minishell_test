@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_expand_dollar.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 23:37:41 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/07 16:04:41 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-12-11 09:22:59 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:22:59 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,6 @@ static char	*handle_dollar(char *token_word, char *new, int *i, t_token *token)
 		new = strjoin_with_free(new, ft_itoa(end_status(GET, 0)), FREE_ALL);
 		return (*i += 1, token->is_dollar = true, new);
 	}
-	// else if (*token_word == '$')
-	// {
-	// 	while (*token_word && *token_word == '$')
-	// 	{
-	// 		len++;
-	// 		if  (*(token_word + len) && *(token_word + len) == '$')
-	// 		{
-	// 			new = strjoin_with_free(new, "$", FREE_S1);
-	// 		}
-	// 		else
-	// 			break ;
-	// 	}
-	// 	return (*i += len, new);
-	// }
 	else
 	{
 		env_key = find_env_key(token_word);

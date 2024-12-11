@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit.c                                     :+:      :+:    :+:   */
+/*   builtin_exit_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 19:39:37 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-12-11 09:19:03 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:19:03 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ long	*atol_pointer(char *nptr)
 	{
 		if (ft_isover(sign, num, (long)(*nptr - '0')))
 			return (NULL);
-		// else if (sign == -1 && ft_isover(sign, num, (long)(*nptr - '0')))
-		// 	return (NULL);
 		num = num * 10 + *nptr++ - '0';
 	}
 	while (*nptr)

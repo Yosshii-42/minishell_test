@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-12-07 06:07:07 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-07 06:07:07 by yotsurud         ###   ########.fr       */
+/*   Created: 2024-12-11 09:22:15 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:22:15 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ static int	wait_process(void)
 	if (exit_status > 255)
 		return (EXIT_FAILURE);
 	else
-	{
 		rl_on_new_line();
-	}
 	return (exit_status);
 }
 
@@ -76,8 +74,13 @@ int	parent_process(t_cmd *cmd, int count)
 	}
 	else if (count == NO_PIPE && cmd->err_msg)
 		return (ft_printf(2, "%s", cmd->err_msg), close_fds(cmd), EXIT_SUCCESS);
-	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
-		exit((free_all(cmd), end_status(GET, 0)));
+	if (count == NO_PIPE && cmd->status == BUILTIN)
+	{
+		if (do_builtin(cmd) == false)
+			exit((free_all(cmd), end_status(GET, 0)));
+		else
+			return (end_status(GET, 0));
+	}
 	else
 	{
 		if (cmd->pp[0] > 0)

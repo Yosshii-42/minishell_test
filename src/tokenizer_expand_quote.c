@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_expand_quote.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 23:37:36 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/05 23:16:58 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:23:11 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:23:11 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 06:49:30 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 15:59:11 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:01:23 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,19 @@ void	free_env(t_env *env)
 	while (env)
 	{
 		if (env->key)
-		{
-			free(env->key);
-			env->key = NULL;
-		}
+			free_string(env->key);
 		if (env->value)
-		{
-			free(env->value);
-			env->value = NULL;
-		}
+			free_string(env->value);
 		if (env->next)
 		{
 			tmp = env;
 			env = env->next;
-			// free(env->pre);
 			free(tmp);
 		}
 		else
 		{
 			free(env);
 			env = NULL;
-			// break ;
 		}
 	}
 }
@@ -53,10 +45,7 @@ void	free_token(t_token *token)
 		if (token->kind == LIMITTER)
 			unlink(FILE_NAME);
 		if (token->word)
-		{
-			free(token->word);
-			token->word = NULL;
-		}
+			free_string(token->word);
 		if (token->next)
 		{
 			token = token->next;
@@ -84,10 +73,7 @@ void	free_split(char **split)
 		return ;
 	}
 	while (split[++i])
-	{
-		free(split[i]);
-		split[i] = NULL;
-	}
+		free_string(split[i]);
 	free(split);
 	split = NULL;
 }
@@ -99,19 +85,13 @@ void	free_cmd(t_cmd *cmd)
 	if (cmd)
 	{
 		if (cmd->pathname)
-		{
-			free(cmd->pathname);
-			cmd->pathname = NULL;
-		}
+			free_string(cmd->pathname);
 		if (cmd->cmd)
 			free_split(cmd->cmd);
 		if (cmd->path)
 			free_split(cmd->path);
 		if (cmd->err_msg)
-		{
-			free(cmd->err_msg);
-			cmd->err_msg = NULL;
-		}
+			free_string(cmd->err_msg);
 		cmd->token = NULL;
 		free(cmd);
 		cmd = NULL;

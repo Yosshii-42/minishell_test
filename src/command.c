@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/07 06:06:50 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/09 23:12:51 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:18:50 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:18:50 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static char	*make_cmd_and_check_access(t_cmd *cmd)
 
 	str = NULL;
 	if (!cmd->path)
-		// return (make_pwd_path(cmd->cmd[0]));
 		return (make_pwd_path(cmd));
 	i = -1;
 	while (cmd->path[++i])
@@ -93,7 +92,6 @@ static bool	make_path_cmd(t_token *token, t_cmd *cmd, int *command_flag)
 		if (cmd->cmd[0][0] == '/')
 			cmd->pathname = ft_strdup(cmd->cmd[0]);
 		else if (cmd->cmd[0][0] == '.')
-			// cmd->pathname = make_pwd_path(cmd->cmd[0]);
 			cmd->pathname = make_pwd_path(cmd);
 		else
 			cmd->pathname = make_cmd_and_check_access(cmd);

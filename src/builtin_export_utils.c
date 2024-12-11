@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 07:19:29 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 21:56:53 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:19:43 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:19:43 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void	lstadd_front(t_env **start, t_env *new)
-// {
-
-// 	if (new)
-// 	{
-// 		new->next = *start;
-// 		*start = new;
-// 	}
-// }
 
 int	lstnew_export(t_env **start, char *env)
 {

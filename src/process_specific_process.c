@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_specific_process.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 06:38:46 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 00:47:33 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:21:35 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:21:35 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

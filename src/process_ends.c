@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_ends.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 05:20:14 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/07 00:48:07 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:21:25 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:21:25 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,22 @@ void	child_exit_process(t_cmd *cmd, int stdio[2])
 
 void	execve_fail_process(t_cmd *cmd)
 {
-	if (cmd->cmd[0][0] == '.')
+	int	len;
+
+	len = ft_strlen(cmd->cmd[0]);
+	if (ft_memcmp(cmd->cmd[0], ".", 2) == 0)
 	{
-		ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(ENOENT));
-		free_cmd(cmd);
-		exit (127);
+		ft_printf(2, "bash: .: filename argument required\n");
+		exit((free_cmd(cmd), 2));
 	}
-	else
+	if (access(cmd->cmd[0], X_OK & F_OK) == 0
+		&& !(cmd->cmd[0][len - 1] == '.' || cmd->cmd[0][len - 1] == '/'))
 	{
-		ft_printf(2, "bash: %s: %s\n", cmd->pathname, strerror(EISDIR));
-		free_cmd(cmd);
-		exit (126);
+		ft_printf(2, "%s: unsuported%s\n", cmd->cmd[0]);
+		exit((free_cmd(cmd), EXIT_FAILURE));
 	}
+	ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(EISDIR));
+	exit((free_cmd(cmd), 126));
 }
 
 int	builtin_end_process(t_cmd *cmd)

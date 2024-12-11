@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_main_pwd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/07 01:23:40 by tsururukako       #+#    #+#             */
-/*   Updated: 2024/12/10 01:24:29 by tsururukako      ###   ########.fr       */
+/*   Created: 2024-12-11 09:20:08 by yotsurud          #+#    #+#             */
+/*   Updated: 2024-12-11 09:20:08 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ bool	do_builtin(t_cmd *cmd)
 	else if (type == EXIT && builtin_exit(cmd))
 	{
 		if (cmd->pipe_flag == 1)
-			return (ft_printf(2, "exit\n"), false);
+			return (false);
 		else
 			return (true);
 	}

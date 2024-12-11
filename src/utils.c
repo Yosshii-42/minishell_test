@@ -53,3 +53,9 @@ size_t	strchr_len(const char *s, int c)
 	else
 		return (0);
 }
+
+void	free_string(char *str)
+{
+	free(str);
+	str = NULL;
+}
