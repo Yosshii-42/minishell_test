@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:55:33 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/10 01:24:05 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/11 18:00:53 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	builtin_unset(t_cmd *cmd)
 			return ;
 		}
 		else
-			search_and_delete(cmd->cmd[i], head, ptr);	
+			search_and_delete(cmd->cmd[i], head, ptr);
 	}
 	end_status(SET, EXIT_SUCCESS);
 }

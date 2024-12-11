@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:35:00 by hurabe            #+#    #+#             */
-/*   Updated: 2024/12/07 02:44:27 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/11 18:13:21 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,15 @@ bool	find_not_suport(char *line)
 		if (line[i] == '$' && line[i + 1] && line[i + 1] == '$')
 			return (ft_printf(2, "$$: not suported\n"), false);
 	}
-	return  (true);
+	return (true);
 }
 
 t_token	*lexer(char *line)
 {
 	t_token	*token;
 	t_token	*ptr;
-	if (!find_syntax_error(line)|| !find_not_suport(line))
+
+	if (!find_syntax_error(line) || !find_not_suport(line))
 		return (end_status(SET, 1), NULL);
 	token = NULL;
 	token = tokenizer(line);

@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/10 01:24:17 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/11 18:14:32 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ int		lstnew_export(t_env **start, char *env);
 // void	lstadd_front(t_env **start, t_env *new);
 
 // builtin_exit_utils
-long    *atol_pointer(char *nptr);
+long	*atol_pointer(char *nptr);
 
 // process
 int		run_process(t_token *token, int *stdio, int command_count);
@@ -230,6 +230,7 @@ void	close_fds(t_cmd *cmd);
 // utils
 char	*strjoin_with_free(char *s1, char *s2, int select);
 size_t	strchr_len(const char *s, int c);
+void	free_string(char *str);
 
 // signal
 int		event(void);

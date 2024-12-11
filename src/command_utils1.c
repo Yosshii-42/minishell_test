@@ -6,7 +6,7 @@
 /*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/09 23:23:22 by tsururukako      ###   ########.fr       */
+/*   Updated: 2024/12/11 17:56:31 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*make_pwd_path(t_cmd *cmd)
 	if (!cmd->cmd[0][1])
 	{
 		cmd->err_msg = ft_strdup("bash: .: filename argument required\n");
-		return (ft_strdup(cmd->cmd[0]));	
+		return (ft_strdup(cmd->cmd[0]));
 	}
 	if (cmd->cmd[0][1] && cmd->cmd[0][1] == '.')
 	{
@@ -58,7 +58,6 @@ char	*make_pwd_path(t_cmd *cmd)
 	if (!pwd)
 		pwd = getenv("OLDPWD");
 	str = strjoin_with_free(pwd, "/", NO_FREE);
-	// str = strjoin_with_free(str, command, FREE_S1);
 	str = strjoin_with_free(str, cmd->cmd[0], FREE_S1);
 	return (str);
 }

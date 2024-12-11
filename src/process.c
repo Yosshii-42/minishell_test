@@ -6,7 +6,7 @@
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024-12-07 06:07:07 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-07 06:07:07 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:59:27 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ static int	wait_process(void)
 	if (exit_status > 255)
 		return (EXIT_FAILURE);
 	else
-	{
 		rl_on_new_line();
-	}
 	return (exit_status);
 }
 
