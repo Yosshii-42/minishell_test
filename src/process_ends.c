@@ -58,10 +58,10 @@ void	execve_fail_process(t_cmd *cmd)
 		ft_printf(2, "bash: .: filename argument required\n");
 		exit((free_cmd(cmd), 2));
 	}
-	if (access(cmd->cmd[0], X_OK & F_OK) == 0
+	if (ft_memcmp(cmd->pathname, cmd->cmd[0], ft_strlen(cmd->cmd[0]))
 		&& !(cmd->cmd[0][len - 1] == '.' || cmd->cmd[0][len - 1] == '/'))
 	{
-		ft_printf(2, "%s: unsuported%s\n", cmd->cmd[0]);
+		ft_printf(2, "%s: unsuported\n", cmd->cmd[0]);
 		exit((free_cmd(cmd), EXIT_FAILURE));
 	}
 	ft_printf(2, "bash: %s: %s\n", cmd->cmd[0], strerror(EISDIR));
