@@ -55,7 +55,6 @@ int	main(int argc, char **argv, char **envp)
 	env = NULL;
 	env = make_env(argc, argv, envp);
 	env = set_env(SET, env);
-	rl_outstream = stdout;
 	g_sig_status = 0;
 	rl_event_hook = event;
 	while (1)
