@@ -3,10 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+<<<<<<< Updated upstream
 /*   Created: 2024-12-11 09:22:15 by yotsurud          #+#    #+#             */
 /*   Updated: 2024-12-11 09:22:15 by yotsurud         ###   ########.fr       */
+=======
+/*   Created: 2024/12/07 06:07:07 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/09 00:32:50 by hurabe           ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< Updated upstream
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024-12-11 09:20:46 by yotsurud          #+#    #+#             */
 /*   Updated: 2024-12-11 09:20:46 by yotsurud         ###   ########.fr       */
+=======
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/09 21:47:17 by hurabe           ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +88,7 @@ t_cmd	*command_return(t_cmd *cmd, t_token *token)
 	ptr = set_token(GET, NULL);
 	if (count_token(ptr) == 1 && ptr->is_dollar == true && !ptr->word[0])
 		return (cmd);
-	if (cmd->pathname && access(cmd->pathname, X_OK) != 0)
+	if (cmd->pathname && access(cmd->pathname, X_OK ) != 0)
 		set_err_message(cmd, cmd->cmd[0], strerror(errno));
 	else if ((!cmd->cmd || !cmd->cmd[0])
 		&& (cmd->readfd == -1 && cmd->writefd == -1))

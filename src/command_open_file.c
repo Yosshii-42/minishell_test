@@ -5,8 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+<<<<<<< Updated upstream
 /*   Created: 2024-12-11 09:20:27 by yotsurud          #+#    #+#             */
 /*   Updated: 2024-12-11 09:20:27 by yotsurud         ###   ########.fr       */
+=======
+/*   Created: 2024/11/23 06:49:07 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/11 22:23:48 by hurabe           ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +34,7 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	char	*str;
 	int		fd;
 
-	heredoc_signal();
+	//heredoc_signal();
 	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0644);
 	if (fd < 0)
 		return (false);
@@ -37,14 +42,26 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	cmd->count = 0;
 	while (1)
 	{
-		ft_printf(1, "> ");
-		str = get_next_line(0);
+		//ft_printf(1, "> ");
+		//str = get_next_line(0);
+		heredoc_child_signal();
+		g_sig_status = 0;
+		str = readline("> ");
+		if (g_sig_status != 0)
+		{
+			cmd->heredoc_sigint = true;
+			break;
+		}
 		if (!str)
-			return (ft_printf(1, "\n"), close(fd), true);
+		{
+			if (cmd->count == 0)
+				return (ft_printf(1, "\n"), close(fd), true);
+		}
 		(cmd->count)++;
-		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 10)
+		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 0)
 			return (free(str), close(fd), true);
 		ft_printf(fd, "%s", str);
+		ft_printf(fd, "\n");
 		free(str);
 		str = NULL;
 	}
@@ -55,6 +72,7 @@ static bool	open_read_file(t_cmd *cmd, t_token *token)
 {
 	if (token->kind == LIMITTER)
 	{
+		heredoc_signal();
 		if (heredoc_process(token->word, cmd) == false)
 			return (false);
 		cmd->readfd = open(FILE_NAME, O_RDONLY);
