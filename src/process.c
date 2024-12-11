@@ -74,8 +74,13 @@ int	parent_process(t_cmd *cmd, int count)
 	}
 	else if (count == NO_PIPE && cmd->err_msg)
 		return (ft_printf(2, "%s", cmd->err_msg), close_fds(cmd), EXIT_SUCCESS);
-	if (count == NO_PIPE && cmd->status == BUILTIN && do_builtin(cmd) == false)
-		exit((free_all(cmd), end_status(GET, 0)));
+	if (count == NO_PIPE && cmd->status == BUILTIN)
+	{
+		if (do_builtin(cmd) == false)
+			exit((free_all(cmd), end_status(GET, 0)));
+		else
+			return (end_status(GET, 0));
+	}
 	else
 	{
 		if (cmd->pp[0] > 0)

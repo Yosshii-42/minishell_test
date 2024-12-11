@@ -29,16 +29,6 @@ void	builtin_pwd(void)
 	}
 }
 
-bool	result_of_exit(t_cmd *cmd)
-{
-	if (cmd->pipe_flag == 1)
-		return (ft_printf(2, "exit\n"), false);
-	else if (cmd->pipe_flag == -1 && cmd->pp[0] < 0)
-		return (ft_printf(2, "exit\n"), true);
-	else
-		return (true);
-}
-
 bool	do_builtin(t_cmd *cmd)
 {
 	int		type;
@@ -59,6 +49,11 @@ bool	do_builtin(t_cmd *cmd)
 	else if (type == ENV)
 		return (builtin_env(), true);
 	else if (type == EXIT && builtin_exit(cmd))
-		return (result_of_exit(cmd));
+	{
+		if (cmd->pipe_flag == 1)
+			return (false);
+		else
+			return (true);
+	}
 	return (true);
 }
