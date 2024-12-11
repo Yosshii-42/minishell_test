@@ -25,9 +25,9 @@
 # include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "./libft/includes/libft.h"
-# include "./libft/includes/ft_printf.h"
-# include "./libft/includes/get_next_line.h"
+# include "../libft/includes/libft.h"
+# include "../libft/includes/ft_printf.h"
+# include "../libft/includes/get_next_line.h"
 // strjoin_with_free
 # define FREE_S1 1
 # define FREE_S2 2

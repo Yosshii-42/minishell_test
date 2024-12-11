@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "../minishell.h"
+#include "../src/minishell.h"
 
 static char	*ft_strjoin_gnl(char *s1, char c, int len)
 {

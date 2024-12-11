@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "../minishell.h"
+#include "../src/minishell.h"
 
 int	ft_cal_digit(int num)
 {

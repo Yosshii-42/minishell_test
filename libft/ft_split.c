@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "../minishell.h"
+#include "../src/minishell.h"
 
 static int	ft_count_i(char const *s, char c)
 {
