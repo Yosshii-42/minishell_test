@@ -74,7 +74,7 @@ int	builtin_end_process(t_cmd *cmd)
 
 	close_fds(cmd);
 	ft_printf(2, "%s", cmd->err_msg);
-	find_permission = ft_strnstr(cmd->err_msg, "fPermission", 10);
+	find_permission = ft_strnstr(cmd->err_msg, "Permission", 10);
 	if (cmd)
 		free_cmd(cmd);
 	if (set_token(GET, NULL))

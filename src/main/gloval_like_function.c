@@ -38,12 +38,3 @@ t_token	*set_token(int type, t_token *new_token)
 		token = new_token;
 	return (token);
 }
-
-char	*set_line(int type, char *new_line)
-{
-	static char	*line;
-
-	if (type == SET)
-		line = new_line;
-	return (line);
-}

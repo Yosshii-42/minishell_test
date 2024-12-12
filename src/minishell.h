@@ -25,9 +25,9 @@
 # include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "./libft/includes/libft.h"
-# include "./libft/includes/ft_printf.h"
-# include "./libft/includes/get_next_line.h"
+# include "../libft/includes/libft.h"
+# include "../libft/includes/ft_printf.h"
+# include "../libft/includes/get_next_line.h"
 // strjoin_with_free
 # define FREE_S1 1
 # define FREE_S2 2
@@ -124,7 +124,6 @@ typedef struct s_cmd
 
 // gloval like function
 int		end_status(int type, int end_status);
-char	*set_line(int type, char *new_line);
 t_env	*set_env(int type, t_env *new_env);
 t_token	*set_token(int type, t_token *new_token);
 

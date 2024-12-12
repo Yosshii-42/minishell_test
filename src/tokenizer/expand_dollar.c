@@ -20,10 +20,10 @@ static int	dollar_len(char *token_word)
 	while (token_word[len])
 	{
 		if (!(token_word[len] == '\'' || token_word[len] == '\"'
-				|| token_word[len] == '$'))
+				|| token_word[len] == '$' || ft_isspace(token_word[len])))
 			len++;
 		else if (token_word[len] == '\'' || token_word[len] == '\"'
-			|| token_word[len] == '$')
+			|| token_word[len] == '$' || ft_isspace(token_word[len]))
 			break ;
 	}
 	return (len);

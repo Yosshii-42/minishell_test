@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit_utils.c                               :+:      :+:    :+:   */
+/*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-12-11 09:19:03 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-11 09:19:03 by yotsurud         ###   ########.fr       */
+/*   Created: 2024/12/11 09:19:03 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/11 23:52:49 by tsururukako      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static bool	ft_isover(long long sign, long long num, long long next_num)
 static char	*init_process(char *nptr, long long *sign)
 {
 	while (*nptr && ft_isspace(*nptr) == true)
-		(*nptr)++;
+		nptr++;
 	if (*nptr == '-')
 		(*sign) = -1;
 	if (*nptr == '+' || *nptr == '-')

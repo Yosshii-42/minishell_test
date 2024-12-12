@@ -20,3 +20,5 @@ test.sh
 error.log
 minishell_tester/
 ls
+test_minishell.sh
+test/
