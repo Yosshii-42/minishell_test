@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 09:22:15 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/12 15:56:36 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:32:21 by yotsurud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ int	run_process(t_token *token, int *stdio, int command_count)
 		command_flag = 0;
 		cmd = make_cmd(token, cmd, command_flag);
 		if (cmd->status == SYNTAX || (!cmd->pathname && cmd->status != BUILTIN)
-			|| (pipe_count(ptr) == 0 && cmd->status == BUILTIN))
+			|| (pipe_count(ptr) == 0 && cmd->status == BUILTIN)
+			|| cmd->heredoc_sigint == true)
 			return (no_fork_process(cmd, stdio));
 		pipex_engine(cmd, stdio);
 		token = cmd->token;

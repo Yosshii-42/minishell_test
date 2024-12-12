@@ -17,7 +17,6 @@ SRCS	= ft_isdigit.c \
 		  ft_putstr_fd.c \
 		  ft_putnbr_fd.c \
 		  ft_itoa.c \
-		  get_next_line.c \
  		  ft_isdigit.c \
  		  ft_substr.c \
  		  ft_strjoin.c \

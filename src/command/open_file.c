@@ -40,20 +40,13 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 		g_sig_status = 0;
 		str = readline("> ");
 		if (g_sig_status != 0)
-		{
-			cmd->heredoc_sigint = true;
-			break ;
-		}
-		if (!str)
-		{
-			if (cmd->count == 0)
-				return (ft_printf(1, "\n"), close(fd), true);
-		}
+			return (cmd->heredoc_sigint = true, close(fd), true);
+		if (!str && cmd->count == 0)
+			return (ft_printf(1, "\n"), close(fd), true);
 		(cmd->count)++;
 		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 0)
 			return (free(str), close(fd), true);
-		ft_printf(fd, "%s", str);
-		ft_printf(fd, "\n");
+		ft_printf(fd, "%s\n", str);
 		free(str);
 		str = NULL;
 	}
@@ -67,7 +60,10 @@ static bool	open_read_file(t_cmd *cmd, t_token *token)
 		heredoc_signal();
 		if (heredoc_process(token->word, cmd) == false)
 			return (false);
-		cmd->readfd = open(FILE_NAME, O_RDONLY);
+		if (cmd->heredoc_sigint == false)
+			cmd->readfd = open(FILE_NAME, O_RDONLY);
+		else
+			return (end_status(SET, 130), true);
 		if (cmd->readfd < 0)
 			cmd->err_msg = set_file_err(FILE_NAME, strerror(errno));
 		else
