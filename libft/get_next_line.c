@@ -6,7 +6,7 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 12:46:06 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/05 08:41:17 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/09 18:56:03 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,21 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		c = ft_getchar(fd);
+
+		// EOF(Ctrl+D入力時の処理)
+		if (c == EOF)
+		{
+			if (c == EOF)
+			{
+				if (!result)
+					continue ;
+				break ;
+			}
+		}
 		if (c == FAILE)
 			return (free(result), NULL);
-		if (c == EOF)
-			break ;
+		//if (c == EOF)
+		//	break ;
 		result = ft_strjoin_gnl(result, c, len);
 		len++;
 		if (c == '\n')

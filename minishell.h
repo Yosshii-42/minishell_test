@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tsururukakou <tsururukakou@student.42.f    +#+  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:52 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/11 18:14:32 by yotsurud         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:02:37 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_cmd
 	struct s_token	*token;
 	t_kind			status;
 	int				pipe_flag;
+	bool			heredoc_sigint;
 }t_cmd;
 
 // gloval like function
@@ -233,13 +234,14 @@ size_t	strchr_len(const char *s, int c);
 void	free_string(char *str);
 
 // signal
-int		event(void);
 void	core_dump_signal(int status);
+void	heredoc_child_signal(void);
 void	heredoc_signal(void);
 void	exec_child_signal(void);
 void	init_signal(void);
 
 // signal_handler
+int		event(void);
 void	heredoc_handler(int signum);
 void	sig_handler(int signum);
 

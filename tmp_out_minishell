@@ -1,0 +1,7 @@
+minishell$ /bin/echo ""$?""
+0
+minishell$ 
+minishell$ 
+minishell$ 
+minishell$ 
+minishell$ 
