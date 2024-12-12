@@ -40,11 +40,11 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 		g_sig_status = 0;
 		str = readline("> ");
 		if (g_sig_status != 0)
-			return (cmd->heredoc_sigint = true, close(fd), true);
+			return (cmd->heredoc_sigint = true, free(str), close(fd), true);
 		if (!str && cmd->count == 0)
 			return (ft_printf(1, "\n"), close(fd), true);
 		(cmd->count)++;
-		if (ft_memcmp(str, eof, ft_strlen(eof) + 1) == 0)
+		if (!str || ft_memcmp(str, eof, ft_strlen(eof) + 1) == 0)
 			return (free(str), close(fd), true);
 		ft_printf(fd, "%s\n", str);
 		free(str);
