@@ -6,16 +6,11 @@
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 06:29:31 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/11 21:56:46 by hurabe           ###   ########.fr       */
+/*   Updated: 2024/12/12 16:02:55 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	event(void)
-{
-	return (0);
-}
 
 void	core_dump_signal(int status)
 {
@@ -37,7 +32,6 @@ void	heredoc_child_signal(void)
 	sa.sa_flags = 0;
 	sigaction(SIGQUIT, &sa, NULL);
 	sa.sa_handler = heredoc_handler;
-	//sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
 }
 

@@ -3,15 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_open_file.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
+/*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-<<<<<<< Updated upstream
-/*   Created: 2024-12-11 09:20:27 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-11 09:20:27 by yotsurud         ###   ########.fr       */
-=======
-/*   Created: 2024/11/23 06:49:07 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/11 22:23:48 by hurabe           ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Created: 2024/12/11 09:20:27 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/12 16:04:29 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +29,6 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	char	*str;
 	int		fd;
 
-	//heredoc_signal();
 	fd = open(FILE_NAME, O_CREAT | O_RDWR, 0644);
 	if (fd < 0)
 		return (false);
@@ -42,15 +36,13 @@ static bool	heredoc_process(char *eof, t_cmd *cmd)
 	cmd->count = 0;
 	while (1)
 	{
-		//ft_printf(1, "> ");
-		//str = get_next_line(0);
 		heredoc_child_signal();
 		g_sig_status = 0;
 		str = readline("> ");
 		if (g_sig_status != 0)
 		{
 			cmd->heredoc_sigint = true;
-			break;
+			break ;
 		}
 		if (!str)
 		{

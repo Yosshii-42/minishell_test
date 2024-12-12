@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< Updated upstream
-/*   By: yotsurud <yotsurud@student.42.fr>          #+#  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-12-11 09:20:46 by yotsurud          #+#    #+#             */
-/*   Updated: 2024-12-11 09:20:46 by yotsurud         ###   ########.fr       */
-=======
 /*   By: hurabe <hurabe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 06:27:24 by yotsurud          #+#    #+#             */
-/*   Updated: 2024/12/09 21:47:17 by hurabe           ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Created: 2024/12/11 09:20:46 by yotsurud          #+#    #+#             */
+/*   Updated: 2024/12/12 15:56:25 by hurabe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
