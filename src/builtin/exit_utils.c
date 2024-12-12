@@ -29,7 +29,7 @@ static bool	ft_isover(long long sign, long long num, long long next_num)
 static char	*init_process(char *nptr, long long *sign)
 {
 	while (*nptr && ft_isspace(*nptr) == true)
-		(*nptr)++;
+		nptr++;
 	if (*nptr == '-')
 		(*sign) = -1;
 	if (*nptr == '+' || *nptr == '-')
