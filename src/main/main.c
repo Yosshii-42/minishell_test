@@ -16,6 +16,11 @@ volatile sig_atomic_t	g_sig_status;
 
 static void	dup_stdio(int *stdio)
 {
+	int	fd;
+
+	fd = 3;
+	while (fd < 1024)
+		close(fd++);
 	stdio[0] = -1;
 	stdio[1] = -1;
 	stdio[0] = dup(STDIN_FILENO);
@@ -52,18 +57,17 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	char	*line;
 
+	g_sig_status = 0;
+	rl_event_hook = event;
 	env = NULL;
 	env = make_env(argc, argv, envp);
 	env = set_env(SET, env);
-	g_sig_status = 0;
-	rl_event_hook = event;
 	while (1)
 	{
 		init_signal();
 		line = readline("minishell$ ");
 		if (!line && ft_printf(1, "exit\n"))
 			break ;
-		set_line(SET, line);
 		do_minishell(line);
 		free(line);
 	}

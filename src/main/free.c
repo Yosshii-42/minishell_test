@@ -102,5 +102,4 @@ void	free_all(t_cmd *cmd)
 {
 	free_token(set_token(GET, NULL));
 	free_cmd(cmd);
-	free(set_line(GET, NULL));
 }

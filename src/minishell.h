@@ -123,7 +123,6 @@ typedef struct s_cmd
 
 // gloval like function
 int		end_status(int type, int end_status);
-char	*set_line(int type, char *new_line);
 t_env	*set_env(int type, t_env *new_env);
 t_token	*set_token(int type, t_token *new_token);
 
